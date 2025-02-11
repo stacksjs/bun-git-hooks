@@ -1,0 +1,85 @@
+{
+  "name": "bun-git-hooks",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "A modern, zero dependency tool for managing git hooks in Bun projects.",
+  "author": "Chris Breuer <chris@stacksjs.org>",
+  "license": "MIT",
+  "homepage": "https://github.com/stacksjs/bun-git-hooks#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stacksjs/bun-git-hooks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stacksjs/bun-git-hooks/issues"
+  },
+  "keywords": [
+    "bun-git-hooks",
+    "pre-commit",
+    "pre-push",
+    "git",
+    "hook",
+    "hooks",
+    "bun",
+    "simple-git-hooks",
+    "typescript",
+    "cli",
+    "library"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*"
+    }
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "git-hooks": "./dist/bin/cli.js",
+    "bun-git-hooks": "./dist/bin/cli.js"
+  },
+  "files": ["README.md", "dist"],
+  "scripts": {
+    "build": "bun --bun build.ts",
+    "postinstall": "bun ./scripts/postinstall.ts",
+    "uninstall": "bun ./scripts/uninstall.ts",
+    "lint": "bunx --bun eslint .",
+    "lint:fix": "bunx --bun eslint . --fix",
+    "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
+    "changelog": "bunx changelogen --output CHANGELOG.md",
+    "prepublishOnly": "bun --bun run build",
+    "release": "bun run changelog && bunx bumpp package.json --all",
+    "test": "bun test",
+    "dev:docs": "bun --bun vitepress dev docs",
+    "build:docs": "bun --bun vitepress build docs",
+    "preview:docs": "bun --bun vitepress preview docs",
+    "typecheck": "bun --bun tsc --noEmit"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "^1.2.6",
+    "@shikijs/vitepress-twoslash": "^2.3.2",
+    "@stacksjs/eslint-config": "^4.2.1-beta.1",
+    "@types/bun": "^1.2.2",
+    "@vite-pwa/vitepress": "^0.5.3",
+    "bumpp": "^10.0.3",
+    "bun-plugin-dtsx": "^0.21.9",
+    "bunfig": "^0.6.0",
+    "changelogen": "^0.5.7",
+    "lint-staged": "^15.4.3",
+    "typescript": "^5.7.3",
+    "unocss": "^65.4.3",
+    "unplugin-icons": "^22.0.0",
+    "unplugin-vue-components": "^28.0.0",
+    "vite-plugin-pwa": "^0.21.1",
+    "vitepress": "^1.6.3"
+  },
+  "overrides": {
+    "unconfig": "0.3.10"
+  },
+  "lint-staged": {
+    "*.{js,ts}": "bunx --bun eslint . --fix"
+  }
+}
