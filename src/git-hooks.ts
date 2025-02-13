@@ -191,8 +191,18 @@ function _getPackageJson(projectPath = process.cwd()) {
  * @param {string} projectRootPath
  */
 export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: { configFile?: string } = {}): void {
-  if (!config) {
-    throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or `git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or the `git-hooks` entry in your package.json.\r\nCheck README for details')
+  if (!config || Object.keys(config).length === 0) {
+    throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or `git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
+  }
+
+  // Validate config format
+  const isValidConfig = Object.keys(config).every(key =>
+    VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number]) ||
+    VALID_OPTIONS.includes(key as typeof VALID_OPTIONS[number])
+  )
+
+  if (!isValidConfig) {
+    throw new Error('[ERROR] Config was not in correct format. Please check git hooks or options name')
   }
 
   const preserveUnused = Array.isArray(config.preserveUnused) ? config.preserveUnused : config.preserveUnused ? VALID_GIT_HOOKS : []
@@ -222,24 +232,20 @@ function _setHook(hook: string, command: string, projectRoot: string = process.c
   const gitRoot = getGitProjectRoot(projectRoot)
 
   if (!gitRoot) {
-    // eslint-disable-next-line no-console
     console.info('[INFO] No `.git` root folder found, skipping')
     return
   }
 
   const hookCommand = PREPEND_SCRIPT + command
-  const hookDirectory = `${gitRoot}/hooks/`
-  const hookPath = path.normalize(hookDirectory + hook)
+  const hookDirectory = path.join(gitRoot, 'hooks')
+  const hookPath = path.normalize(path.join(hookDirectory, hook))
 
-  const normalizedHookDirectory = path.normalize(hookDirectory)
-  if (!fs.existsSync(normalizedHookDirectory))
-    fs.mkdirSync(normalizedHookDirectory)
+  // Ensure hooks directory exists
+  if (!fs.existsSync(hookDirectory)) {
+    fs.mkdirSync(hookDirectory, { recursive: true })
+  }
 
-  fs.writeFileSync(hookPath, hookCommand)
-  fs.chmodSync(hookPath, 0o0755)
-
-  // eslint-disable-next-line no-console
-  console.info(`[INFO] Successfully set the ${hook} with command: ${command}`)
+  fs.writeFileSync(hookPath, hookCommand, { mode: 0o755 })
 }
 
 /**

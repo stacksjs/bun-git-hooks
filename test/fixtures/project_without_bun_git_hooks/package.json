@@ -1,5 +1,5 @@
 {
-  "name": "bun-git-hooks-test-package",
+  "name": "test-package",
   "version": "1.0.0",
   "dependencies": {
   },

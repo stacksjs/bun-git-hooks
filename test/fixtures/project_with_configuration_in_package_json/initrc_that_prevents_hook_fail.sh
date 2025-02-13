@@ -1,1 +1,2 @@
-alias exit=echo
+#!/bin/sh
+exit 0

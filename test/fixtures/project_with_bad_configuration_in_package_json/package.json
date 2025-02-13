@@ -1,0 +1,6 @@
+{
+  "name": "test-package",
+  "git-hooks": {
+    "invalid-hook": "exit 1"
+  }
+}

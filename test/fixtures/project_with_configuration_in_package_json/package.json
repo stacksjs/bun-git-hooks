@@ -5,6 +5,7 @@
     "simple-pre-commit": "1.0.0"
   },
   "git-hooks": {
-    "pre-commit": "exit 1"
+    "pre-commit": "exit 1",
+    "pre-push": "exit 1"
   }
 }

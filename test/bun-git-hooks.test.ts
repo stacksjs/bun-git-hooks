@@ -71,34 +71,30 @@ describe('bun-git-hooks', () => {
     })
 
     describe('checkBunGitHooksInDependencies', () => {
-      const PROJECT_WITH_SIMPLE_GIT_HOOKS_IN_DEPS = path.normalize(
-        path.join(process.cwd(), '_tests', 'project_with_simple_git_hooks_in_deps'),
+      const PROJECT_WITH_BUN_GIT_HOOKS_IN_DEPS = path.normalize(
+        path.join(process.cwd(), 'test/fixtures', 'project_with_bun_git_hooks_in_deps'),
       )
-      const PROJECT_WITH_SIMPLE_GIT_HOOKS_IN_DEV_DEPS = path.normalize(
-        path.join(
-          process.cwd(),
-          '_tests',
-          'project_with_simple_git_hooks_in_dev_deps',
-        ),
+      const PROJECT_WITH_BUN_GIT_HOOKS_IN_DEV_DEPS = path.normalize(
+        path.join(process.cwd(), 'test/fixtures', 'project_with_bun_git_hooks_in_dev_deps'),
       )
-      const PROJECT_WITHOUT_SIMPLE_GIT_HOOKS = path.normalize(
-        path.join(process.cwd(), '_tests', 'project_without_simple_git_hooks'),
+      const PROJECT_WITHOUT_BUN_GIT_HOOKS = path.normalize(
+        path.join(process.cwd(), 'test/fixtures', 'project_without_bun_git_hooks'),
       )
       it('returns true if bun-git-hooks really in deps', () => {
         expect(
-          gitHooks.checkBunGitHooksInDependencies(PROJECT_WITH_SIMPLE_GIT_HOOKS_IN_DEPS),
+          gitHooks.checkBunGitHooksInDependencies(PROJECT_WITH_BUN_GIT_HOOKS_IN_DEPS),
         ).toBe(true)
       })
 
       it('returns true if bun-git-hooks really in devDeps', () => {
         expect(
-          gitHooks.checkBunGitHooksInDependencies(PROJECT_WITH_SIMPLE_GIT_HOOKS_IN_DEV_DEPS),
+          gitHooks.checkBunGitHooksInDependencies(PROJECT_WITH_BUN_GIT_HOOKS_IN_DEV_DEPS),
         ).toBe(true)
       })
 
       it('returns false if bun-git-hooks isn`t in deps', () => {
         expect(
-          gitHooks.checkBunGitHooksInDependencies(PROJECT_WITHOUT_SIMPLE_GIT_HOOKS),
+          gitHooks.checkBunGitHooksInDependencies(PROJECT_WITHOUT_BUN_GIT_HOOKS),
         ).toBe(false)
       })
     })
@@ -174,11 +170,19 @@ describe('bun-git-hooks', () => {
      * @param {string} root
      */
     function createGitHooksFolder(root: string) {
-      if (fs.existsSync(`${root}/.git`)) {
-        return
+      if (!fs.existsSync(root)) {
+        fs.mkdirSync(root, { recursive: true })
       }
-      fs.mkdirSync(`${root}/.git`)
-      fs.mkdirSync(`${root}/.git/hooks`)
+
+      const gitDir = path.join(root, '.git')
+      const hooksDir = path.join(gitDir, 'hooks')
+
+      if (!fs.existsSync(gitDir)) {
+        fs.mkdirSync(gitDir)
+      }
+      if (!fs.existsSync(hooksDir)) {
+        fs.mkdirSync(hooksDir)
+      }
     }
 
     /**
@@ -477,18 +481,18 @@ describe('bun-git-hooks', () => {
         })
       })
 
-      describe('sKIP_INSTALL_SIMPLE_GIT_HOOKS', () => {
+      describe('SKIP_INSTALL_BUN_GIT_HOOKS', () => {
         afterEach(() => {
           removeGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
         })
 
-        it('does not create git hooks when SKIP_INSTALL_SIMPLE_GIT_HOOKS is set to 1', () => {
+        it('does not create git hooks when SKIP_INSTALL_BUN_GIT_HOOKS is set to 1', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
           execSync(`node ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
             env: {
               ...process.env,
-              SKIP_INSTALL_SIMPLE_GIT_HOOKS: '1',
+              SKIP_INSTALL_BUN_GIT_HOOKS: '1',
             },
           })
           const installedHooks = getInstalledGitHooks(
@@ -499,13 +503,13 @@ describe('bun-git-hooks', () => {
           expect(installedHooks).toEqual({})
         })
 
-        it('creates git hooks when SKIP_INSTALL_SIMPLE_GIT_HOOKS is set to 0', () => {
+        it('creates git hooks when SKIP_INSTALL_BUN_GIT_HOOKS is set to 0', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
           execSync(`node ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
             env: {
               ...process.env,
-              SKIP_INSTALL_SIMPLE_GIT_HOOKS: '0',
+              SKIP_INSTALL_BUN_GIT_HOOKS: '0',
             },
           })
           const installedHooks = getInstalledGitHooks(
@@ -516,7 +520,7 @@ describe('bun-git-hooks', () => {
           expect(installedHooks).toEqual({ 'pre-commit': TEST_SCRIPT })
         })
 
-        it('creates git hooks when SKIP_INSTALL_SIMPLE_GIT_HOOKS is not set', () => {
+        it('creates git hooks when SKIP_INSTALL_BUN_GIT_HOOKS is not set', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
           execSync(`node ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
@@ -572,27 +576,27 @@ describe('bun-git-hooks', () => {
         gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
       })
 
-      describe('SKIP_SIMPLE_GIT_HOOKS', () => {
+      describe('SKIP_BUN_GIT_HOOKS', () => {
         afterEach(() => {
-          delete process.env.SKIP_SIMPLE_GIT_HOOKS
+          delete process.env.SKIP_BUN_GIT_HOOKS
         })
 
-        it('commits successfully when SKIP_SIMPLE_GIT_HOOKS is set to "1"', () => {
-          process.env.SKIP_SIMPLE_GIT_HOOKS = '1'
+        it('commits successfully when SKIP_BUN_GIT_HOOKS is set to "1"', () => {
+          process.env.SKIP_BUN_GIT_HOOKS = '1'
           expectCommitToSucceed(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
         })
 
-        it('fails to commit when SKIP_SIMPLE_GIT_HOOKS is not set', () => {
+        it('fails to commit when SKIP_BUN_GIT_HOOKS is not set', () => {
           expectCommitToFail(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
         })
 
-        it('fails to commit when SKIP_SIMPLE_GIT_HOOKS is set to "0"', () => {
-          process.env.SKIP_SIMPLE_GIT_HOOKS = '0'
+        it('fails to commit when SKIP_BUN_GIT_HOOKS is set to "0"', () => {
+          process.env.SKIP_BUN_GIT_HOOKS = '0'
           expectCommitToFail(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
         })
 
-        it('fails to commit when SKIP_SIMPLE_GIT_HOOKS is set to a random string', () => {
-          process.env.SKIP_SIMPLE_GIT_HOOKS = 'bun-git-hooks'
+        it('fails to commit when SKIP_BUN_GIT_HOOKS is set to a random string', () => {
+          process.env.SKIP_BUN_GIT_HOOKS = 'bun-git-hooks'
           expectCommitToFail(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
         })
       })
