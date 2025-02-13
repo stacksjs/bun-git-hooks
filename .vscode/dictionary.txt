@@ -62,6 +62,7 @@ scanstride
 sendemail
 shikijs
 socio
+softprops
 Solana
 Spatie
 stacksjs
