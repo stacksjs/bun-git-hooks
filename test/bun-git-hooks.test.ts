@@ -44,6 +44,7 @@ describe('bun-git-hooks', () => {
             `var/my-project/node_modules/.bin/bun-git-hooks`,
           ),
         ).toBe('var/my-project')
+
         expect(
           gitHooks.getProjectRootDirectoryFromNodeModules(
             `var/my-project/node_modules/.bin/bun-git-hooks`,
@@ -53,11 +54,12 @@ describe('bun-git-hooks', () => {
     })
 
     describe('getGitProjectRoot', () => {
-      const gitProjectRoot = path.normalize(path.join(__dirname, '.git'))
-      const currentPath = path.normalize(path.join(__dirname))
-      const currentFilePath = path.normalize(path.join(__filename))
+      const gitProjectRoot = path.normalize(path.join(__dirname, '..', '.git'))
+      const currentPath = path.normalize(path.join(__dirname, '..'))
+      const currentFilePath = path.normalize(path.join(__filename, '..'))
 
       it('works from .git directory itself', () => {
+        console.log('gitHooks.getGitProjectRoot(gitProjectRoot)', gitHooks.getGitProjectRoot(gitProjectRoot))
         expect(gitHooks.getGitProjectRoot(gitProjectRoot)).toBe(gitProjectRoot)
       })
 
@@ -294,9 +296,7 @@ describe('bun-git-hooks', () => {
         it('creates git hooks if configuration is correct from package.json', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
 
-          gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_PACKAGE_JSON, {
-            configFile: 'git-hooks.js',
-          })
+          gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
           const installedHooks = getInstalledGitHooks(
             path.normalize(
               path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks'),

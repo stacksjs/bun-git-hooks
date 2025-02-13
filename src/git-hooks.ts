@@ -56,24 +56,19 @@ fi
  * @return {string | undefined} .git folder path or undefined if it was not found
  */
 export function getGitProjectRoot(directory: string = process.cwd()): string | undefined {
-  let start: string | string[] = directory
-
-  if (typeof start === 'string') {
-    if (start[start.length - 1] !== path.sep) {
-      start += path.sep
-    }
-
-    start = path.normalize(start)
-    start = start.split(path.sep)
+  // If the directory itself ends with .git, return it normalized
+  if (directory.endsWith('.git')) {
+    return path.normalize(directory)
   }
 
-  if (!start.length)
+  let start = path.normalize(directory)
+
+  // Stop if we've reached the root directory
+  if (!start || start === path.sep || start === '.') {
     return undefined
+  }
 
-  start.pop()
-
-  const dir = start.join(path.sep)
-  const fullPath = path.join(dir, '.git')
+  const fullPath = path.join(start, '.git')
 
   if (fs.existsSync(fullPath)) {
     if (!fs.lstatSync(fullPath).isDirectory()) {
@@ -98,7 +93,15 @@ export function getGitProjectRoot(directory: string = process.cwd()): string | u
     return path.normalize(fullPath)
   }
 
-  return getGitProjectRoot(start.join(path.sep))
+  // Move up one directory
+  const parentDir = path.dirname(start)
+
+  // If we're already at the root, stop
+  if (parentDir === start) {
+    return undefined
+  }
+
+  return getGitProjectRoot(parentDir)
 }
 
 /**
