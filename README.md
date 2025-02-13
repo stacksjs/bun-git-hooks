@@ -33,17 +33,23 @@ bun add -D bun-git-hooks
 
 ### Basic Configuration
 
-Create a `git-hooks.config.ts` (or `.js`, `.mjs`, `.cjs`, `.mts`, `.cts`, `.json`) file in your project root:
+Create a `git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` _(`git-hooks.ts` works too)_ file in your project root:
 
 ```ts
-export default {
+// git-hooks.config.ts
+import type { GitHooksConfig } from 'bun-git-hooks'
+
+const config: GitHooksConfig = {
   'pre-commit': 'bun run lint && bun run test',
   'commit-msg': 'bun commitlint --edit $1',
-  'pre-push': 'bun run build'
+  'pre-push': 'bun run build',
+  'verbose': true,
 }
+
+export default config
 ```
 
-Or add to your `package.json`:
+### JSON Configuration
 
 ```json
 {
@@ -82,6 +88,9 @@ Skip hook installation when needed:
 ```bash
 # Skip hook installation
 SKIP_INSTALL_GIT_HOOKS=1 bun install
+
+# Skip hook execution
+SKIP_BUN_GIT_HOOKS=1 git commit -m "skipping hooks"
 
 # Set custom environment for hooks
 BUN_GIT_HOOKS_RC=/path/to/env git-hooks

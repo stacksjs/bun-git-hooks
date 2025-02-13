@@ -1,8 +1,8 @@
 {
-  "name": "bun-git-hooks-test-package",
+  "name": "test-package",
   "version": "1.0.0",
   "devDependencies": {
-    "simple-pre-commit": "1.0.0"
+    "bun-git-hooks": "^0.1.0"
   },
   "git-hooks": {
     "pre-commit": "exit 1",

@@ -152,14 +152,14 @@ export function checkBunGitHooksInDependencies(projectRootPath: string): boolean
   // if bun-git-hooks in dependencies -> note user that he should remove move it to devDeps
   if ('dependencies' in packageJsonContent && 'bun-git-hooks' in packageJsonContent.dependencies) {
     console.warn('[WARN] You should move `bun-git-hooks` to your devDependencies!')
-
-    return true // We only check that we are in the correct package, e.g not in a dependency of a dependency
+    return true
   }
 
-  if (!('devDependencies' in packageJsonContent))
+  if (!('devDependencies' in packageJsonContent)) {
     return false
+  }
 
-  return 'git-hooks' in packageJsonContent.devDependencies
+  return 'bun-git-hooks' in packageJsonContent.devDependencies
 }
 
 /**
@@ -191,33 +191,27 @@ function _getPackageJson(projectPath = process.cwd()) {
  * @param {string} projectRootPath
  */
 export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: { configFile?: string } = {}): void {
-  if (!config || Object.keys(config).length === 0) {
+  if (!config || Object.keys(config).length === 0)
     throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or `git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
-  }
 
-  // Validate config format
-  const isValidConfig = Object.keys(config).every(key =>
-    VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number]) ||
-    VALID_OPTIONS.includes(key as typeof VALID_OPTIONS[number])
-  )
+  // Only validate hook names that aren't options
+  const hookKeys = Object.keys(config).filter(key => key !== 'preserveUnused')
+  const isValidConfig = hookKeys.every(key => VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number]))
 
-  if (!isValidConfig) {
+  if (!isValidConfig)
     throw new Error('[ERROR] Config was not in correct format. Please check git hooks or options name')
-  }
 
   const preserveUnused = Array.isArray(config.preserveUnused) ? config.preserveUnused : config.preserveUnused ? VALID_GIT_HOOKS : []
 
   for (const hook of VALID_GIT_HOOKS) {
     if (Object.prototype.hasOwnProperty.call(config, hook)) {
-      if (!config[hook]) {
+      if (!config[hook])
         throw new Error(`[ERROR] Command for ${hook} is not set`)
-      }
 
       _setHook(hook, config[hook], projectRootPath)
     }
-    else if (!preserveUnused.includes(hook)) {
+    else if (!preserveUnused.includes(hook))
       _removeHook(hook, projectRootPath)
-    }
   }
 }
 
@@ -241,9 +235,8 @@ function _setHook(hook: string, command: string, projectRoot: string = process.c
   const hookPath = path.normalize(path.join(hookDirectory, hook))
 
   // Ensure hooks directory exists
-  if (!fs.existsSync(hookDirectory)) {
+  if (!fs.existsSync(hookDirectory))
     fs.mkdirSync(hookDirectory, { recursive: true })
-  }
 
   fs.writeFileSync(hookPath, hookCommand, { mode: 0o755 })
 }
@@ -253,9 +246,8 @@ function _setHook(hook: string, command: string, projectRoot: string = process.c
  * @param {string} projectRoot
  */
 export function removeHooks(projectRoot: string = process.cwd(), verbose = false): void {
-  for (const configEntry of VALID_GIT_HOOKS) {
+  for (const configEntry of VALID_GIT_HOOKS)
     _removeHook(configEntry, projectRoot, verbose)
-  }
 }
 
 /**
@@ -268,14 +260,12 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
   const gitRoot = getGitProjectRoot(projectRoot)
   const hookPath = path.normalize(`${gitRoot}/hooks/${hook}`)
 
-  if (fs.existsSync(hookPath)) {
+  if (fs.existsSync(hookPath))
     fs.unlinkSync(hookPath)
-  }
 
-  if (verbose) {
+  if (verbose)
     // eslint-disable-next-line no-console
     console.info(`[INFO] Successfully removed the ${hook} hook`)
-  }
 }
 
 /**
@@ -285,9 +275,8 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
  */
 function _validateHooks(config: Record<string, string>) {
   for (const hookOrOption in config) {
-    if (!VALID_GIT_HOOKS.includes(hookOrOption as typeof VALID_GIT_HOOKS[number]) && !VALID_OPTIONS.includes(hookOrOption as typeof VALID_OPTIONS[number])) {
+    if (!VALID_GIT_HOOKS.includes(hookOrOption as typeof VALID_GIT_HOOKS[number]) && !VALID_OPTIONS.includes(hookOrOption as typeof VALID_OPTIONS[number]))
       return false
-    }
   }
 
   return true

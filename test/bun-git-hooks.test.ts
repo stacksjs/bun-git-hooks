@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
-import gitHooks from '../src/git-hooks'
+import gitHooks, { VALID_GIT_HOOKS } from '../src/git-hooks'
 
 // Util functions:
 
@@ -199,15 +199,18 @@ describe('bun-git-hooks', () => {
      * Returns all installed git hooks
      * @return { {string: string} }
      */
-    function getInstalledGitHooks(hooksDir: string) {
+    function getInstalledGitHooks(hooksPath: string) {
+      if (!fs.existsSync(hooksPath)) {
+        return {}
+      }
+
+      const hooks = fs.readdirSync(hooksPath)
       const result: Record<string, string> = {}
 
-      const hooks = fs.readdirSync(hooksDir)
-
       for (const hook of hooks) {
-        result[hook] = fs
-          .readFileSync(path.normalize(path.join(hooksDir, hook)))
-          .toString()
+        if (VALID_GIT_HOOKS.includes(hook as typeof VALID_GIT_HOOKS[number])) {
+          result[hook] = fs.readFileSync(path.join(hooksPath, hook), 'utf-8')
+        }
       }
 
       return result
@@ -456,10 +459,10 @@ describe('bun-git-hooks', () => {
     describe('CLI tests', () => {
       const testCases = [
         ['bunx', 'bun-git-hooks', './git-hooks.config.ts'],
-        ['bun', require.resolve(`../bin/cli`), './git-hooks.config.ts'],
+        ['bun', require.resolve('../bin/cli.ts'), './git-hooks.config.ts'],
         [
           'node',
-          require.resolve(`../bin/cli`),
+          require.resolve('../bin/cli.ts'),
           require.resolve(`${PROJECT_WITH_CUSTOM_CONF}/git-hooks.config.ts`),
         ],
       ]
@@ -481,18 +484,18 @@ describe('bun-git-hooks', () => {
         })
       })
 
-      describe('SKIP_INSTALL_BUN_GIT_HOOKS', () => {
+      describe('SKIP_INSTALL_GIT_HOOKS', () => {
         afterEach(() => {
           removeGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
         })
 
-        it('does not create git hooks when SKIP_INSTALL_BUN_GIT_HOOKS is set to 1', () => {
+        it('does not create git hooks when SKIP_INSTALL_GIT_HOOKS is set to 1', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
           execSync(`node ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
             env: {
               ...process.env,
-              SKIP_INSTALL_BUN_GIT_HOOKS: '1',
+              SKIP_INSTALL_GIT_HOOKS: '1',
             },
           })
           const installedHooks = getInstalledGitHooks(
@@ -503,13 +506,13 @@ describe('bun-git-hooks', () => {
           expect(installedHooks).toEqual({})
         })
 
-        it('creates git hooks when SKIP_INSTALL_BUN_GIT_HOOKS is set to 0', () => {
+        it('creates git hooks when SKIP_INSTALL_GIT_HOOKS is set to 0', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
           execSync(`node ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
             env: {
               ...process.env,
-              SKIP_INSTALL_BUN_GIT_HOOKS: '0',
+              SKIP_INSTALL_GIT_HOOKS: '0',
             },
           })
           const installedHooks = getInstalledGitHooks(
@@ -520,7 +523,7 @@ describe('bun-git-hooks', () => {
           expect(installedHooks).toEqual({ 'pre-commit': TEST_SCRIPT })
         })
 
-        it('creates git hooks when SKIP_INSTALL_BUN_GIT_HOOKS is not set', () => {
+        it('creates git hooks when SKIP_INSTALL_GIT_HOOKS is not set', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
           execSync(`node ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
@@ -540,11 +543,18 @@ describe('bun-git-hooks', () => {
       const GIT_USER_EMAIL = 'github-actions@github.com'
 
       const initializeGitRepository = (path: string) => {
+        if (!fs.existsSync(path)) {
+          fs.mkdirSync(path, { recursive: true })
+        }
+
         execSync(
-          `git init \
-            && git config user.name ${GIT_USER_NAME} \
-            && git config user.email ${GIT_USER_EMAIL}`,
-          { cwd: path },
+          `cd "${path}" && \
+          git init && \
+          git config user.name "test" && \
+          git config user.email "test@test.com" && \
+          git config commit.gpgsign false && \
+          git config --global init.defaultBranch main`,
+          { stdio: 'ignore' },
         )
       }
 
