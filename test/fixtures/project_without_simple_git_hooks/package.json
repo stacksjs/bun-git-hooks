@@ -1,8 +1,8 @@
 {
-  "name": "simple-git-hooks-test-package",
+  "name": "bun-git-hooks-test-package",
   "version": "1.0.0",
-  "devDependencies": {
-  },
   "dependencies": {
+  },
+  "devDependencies": {
   }
 }

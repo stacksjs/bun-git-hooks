@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
-import { version as packageVersion } from '../package.json'
 import gitHooks from '../src/git-hooks'
 
 // Util functions:
@@ -59,7 +58,6 @@ describe('bun-git-hooks', () => {
       const currentFilePath = path.normalize(path.join(__filename, '..'))
 
       it('works from .git directory itself', () => {
-        console.log('gitHooks.getGitProjectRoot(gitProjectRoot)', gitHooks.getGitProjectRoot(gitProjectRoot))
         expect(gitHooks.getGitProjectRoot(gitProjectRoot)).toBe(gitProjectRoot)
       })
 
@@ -86,19 +84,19 @@ describe('bun-git-hooks', () => {
       const PROJECT_WITHOUT_SIMPLE_GIT_HOOKS = path.normalize(
         path.join(process.cwd(), '_tests', 'project_without_simple_git_hooks'),
       )
-      it('returns true if simple-git-hooks really in deps', () => {
+      it('returns true if bun-git-hooks really in deps', () => {
         expect(
           gitHooks.checkBunGitHooksInDependencies(PROJECT_WITH_SIMPLE_GIT_HOOKS_IN_DEPS),
         ).toBe(true)
       })
 
-      it('returns true if simple-git-hooks really in devDeps', () => {
+      it('returns true if bun-git-hooks really in devDeps', () => {
         expect(
           gitHooks.checkBunGitHooksInDependencies(PROJECT_WITH_SIMPLE_GIT_HOOKS_IN_DEV_DEPS),
         ).toBe(true)
       })
 
-      it('returns false if simple-git-hooks isn`t in deps', () => {
+      it('returns false if bun-git-hooks isn`t in deps', () => {
         expect(
           gitHooks.checkBunGitHooksInDependencies(PROJECT_WITHOUT_SIMPLE_GIT_HOOKS),
         ).toBe(false)
@@ -110,7 +108,7 @@ describe('bun-git-hooks', () => {
    * This section of tests should test end 2 end use scenarios.
    * If you are adding a new feature, you should create an e2e test suite (describe) for it
    */
-  describe('e2E tests', () => {
+  describe('E2E tests', () => {
     const TEST_SCRIPT = `${gitHooks.PREPEND_SCRIPT}exit 1`
     const COMMON_GIT_HOOKS = { 'pre-commit': TEST_SCRIPT, 'pre-push': TEST_SCRIPT }
 
@@ -129,6 +127,14 @@ describe('bun-git-hooks', () => {
     )
     const PROJECT_WITH_CONF_IN_SEPARATE_JS_ALT = path.normalize(
       path.join(testsFolder, 'project_with_configuration_in_alternative_separate_js'),
+    )
+
+    // Configuration in .ts file
+    const PROJECT_WITH_CONF_IN_SEPARATE_TS = path.normalize(
+      path.join(testsFolder, 'project_with_configuration_in_separate_ts'),
+    )
+    const PROJECT_WITH_CONF_IN_SEPARATE_TS_ALT = path.normalize(
+      path.join(testsFolder, 'project_with_configuration_in_alternative_separate_ts'),
     )
 
     // Configuration in .cjs file
@@ -205,7 +211,39 @@ describe('bun-git-hooks', () => {
 
     describe('configuration tests', () => {
       describe('valid configurations', () => {
-        it('creates git hooks if configuration is correct from .simple-git-hooks.js', () => {
+        it('creates git hooks if configuration is correct from .git-hooks.config.ts', () => {
+          createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_TS_ALT)
+
+          gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_SEPARATE_TS_ALT)
+          const installedHooks = getInstalledGitHooks(
+            path.normalize(
+              path.join(
+                PROJECT_WITH_CONF_IN_SEPARATE_TS_ALT,
+                '.git',
+                'hooks',
+              ),
+            ),
+          )
+          expect(installedHooks).toEqual(COMMON_GIT_HOOKS)
+        })
+
+        it('creates git hooks if configuration is correct from git-hooks.config.ts', () => {
+          createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_TS)
+
+          gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_SEPARATE_TS)
+          const installedHooks = getInstalledGitHooks(
+            path.normalize(
+              path.join(
+                PROJECT_WITH_CONF_IN_SEPARATE_TS,
+                '.git',
+                'hooks',
+              ),
+            ),
+          )
+          expect(installedHooks).toEqual(COMMON_GIT_HOOKS)
+        })
+
+        it('creates git hooks if configuration is correct from .git-hooks.config.js', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_JS_ALT)
 
           gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_SEPARATE_JS_ALT)
@@ -221,7 +259,23 @@ describe('bun-git-hooks', () => {
           expect(installedHooks).toEqual(COMMON_GIT_HOOKS)
         })
 
-        it('creates git hooks if configuration is correct from .simple-git-hooks.cjs', () => {
+        it('creates git hooks if configuration is correct from git-hooks.config.js', () => {
+          createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_JS)
+
+          gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_SEPARATE_JS)
+          const installedHooks = getInstalledGitHooks(
+            path.normalize(
+              path.join(
+                PROJECT_WITH_CONF_IN_SEPARATE_JS,
+                '.git',
+                'hooks',
+              ),
+            ),
+          )
+          expect(installedHooks).toEqual(COMMON_GIT_HOOKS)
+        })
+
+        it('creates git hooks if configuration is correct from .git-hooks.config.cjs', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_CJS_ALT)
 
           gitHooks.setHooksFromConfig(
@@ -239,7 +293,7 @@ describe('bun-git-hooks', () => {
           expect(installedHooks).toEqual(COMMON_GIT_HOOKS)
         })
 
-        it('creates git hooks if configuration is correct from simple-git-hooks.cjs', () => {
+        it('creates git hooks if configuration is correct from git-hooks.config.cjs', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_CJS)
 
           gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_SEPARATE_CJS)
@@ -251,19 +305,7 @@ describe('bun-git-hooks', () => {
           expect(installedHooks).toEqual(COMMON_GIT_HOOKS)
         })
 
-        it('creates git hooks if configuration is correct from simple-git-hooks.js', () => {
-          createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_JS)
-
-          gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_SEPARATE_JS)
-          const installedHooks = getInstalledGitHooks(
-            path.normalize(
-              path.join(PROJECT_WITH_CONF_IN_SEPARATE_JS, '.git', 'hooks'),
-            ),
-          )
-          expect(installedHooks).toEqual(COMMON_GIT_HOOKS)
-        })
-
-        it('creates git hooks if configuration is correct from .simple-git-hooks.json', () => {
+        it('creates git hooks if configuration is correct from .git-hooks.config.json', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_JSON_ALT)
 
           gitHooks.setHooksFromConfig(
@@ -281,7 +323,7 @@ describe('bun-git-hooks', () => {
           expect(installedHooks).toEqual(COMMON_GIT_HOOKS)
         })
 
-        it('creates git hooks if configuration is correct from simple-git-hooks.json', () => {
+        it('creates git hooks if configuration is correct from git-hooks.config.json', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_SEPARATE_JSON)
 
           gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_SEPARATE_JSON)
@@ -321,7 +363,7 @@ describe('bun-git-hooks', () => {
           createGitHooksFolder(PROJECT_WO_CONF)
 
           expect(() => gitHooks.setHooksFromConfig(PROJECT_WO_CONF)).toThrow(
-            '[ERROR] Config was not found! Please add `.simple-git-hooks.js` or `simple-git-hooks.js` or `.simple-git-hooks.json` or `simple-git-hooks.json` or `simple-git-hooks` entry in package.json.',
+            '[ERROR] Config was not found! Please add `.git-hooks.config.js` or `git-hooks.config.js` or `.git-hooks.config.json` or `git-hooks.config.json` or `bun-git-hooks` entry in package.json.',
           )
         })
       })
@@ -489,7 +531,7 @@ describe('bun-git-hooks', () => {
       })
     })
 
-    describe('eNV vars features tests', () => {
+    describe('ENV vars features tests', () => {
       const GIT_USER_NAME = 'github-actions'
       const GIT_USER_EMAIL = 'github-actions@github.com'
 
@@ -530,7 +572,7 @@ describe('bun-git-hooks', () => {
         gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
       })
 
-      describe('sKIP_SIMPLE_GIT_HOOKS', () => {
+      describe('SKIP_SIMPLE_GIT_HOOKS', () => {
         afterEach(() => {
           delete process.env.SKIP_SIMPLE_GIT_HOOKS
         })
@@ -550,7 +592,7 @@ describe('bun-git-hooks', () => {
         })
 
         it('fails to commit when SKIP_SIMPLE_GIT_HOOKS is set to a random string', () => {
-          process.env.SKIP_SIMPLE_GIT_HOOKS = 'simple-git-hooks'
+          process.env.SKIP_SIMPLE_GIT_HOOKS = 'bun-git-hooks'
           expectCommitToFail(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
         })
       })
