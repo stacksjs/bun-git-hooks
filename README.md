@@ -59,16 +59,20 @@ Or add to your `package.json`:
 
 ```bash
 # Install hooks from config
-bun-git-hooks
+git-hooks
+
+# alternatively, trigger the CLI with bunx
+bunx git-hooks
+bunx bun-git-hooks
 
 # Use specific config file
-bun-git-hooks ./custom-config.ts
+git-hooks ./custom-config.ts
 
 # Remove all hooks
-bun-git-hooks uninstall
+git-hooks uninstall
 
 # Enable verbose logging
-bun-git-hooks --verbose
+git-hooks --verbose
 ```
 
 ### Environment Variables
@@ -80,7 +84,7 @@ Skip hook installation when needed:
 SKIP_INSTALL_GIT_HOOKS=1 bun install
 
 # Set custom environment for hooks
-BUN_GIT_HOOKS_RC=/path/to/env bun-git-hooks
+BUN_GIT_HOOKS_RC=/path/to/env git-hooks
 ```
 
 ### Advanced Configuration
