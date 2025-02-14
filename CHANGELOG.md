@@ -1,7 +1,6 @@
 
 ## ...main
 
-
 ### 🏡 Chore
 
 - Initial commit ([d2d31d4](https://github.com/stacksjs/bun-git-hooks/commit/d2d31d4))
@@ -13,15 +12,3 @@
 ### ❤️ Contributors
 
 - Chris ([@chrisbbreuer](http://github.com/chrisbbreuer))
-
-## ...main
-
-
-### 🏡 Chore
-
-- Initial commit ([e9f2dd3](https://github.com/stacksjs/ts-jpeg/commit/e9f2dd3))
-
-### ❤️ Contributors
-
-- Chris ([@chrisbbreuer](http://github.com/chrisbbreuer))
-
