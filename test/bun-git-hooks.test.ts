@@ -458,12 +458,12 @@ describe('bun-git-hooks', () => {
 
     describe('CLI tests', () => {
       const testCases = [
-        ['bunx', 'bun-git-hooks', './git-hooks.config.ts'],
-        ['bun', require.resolve('../bin/cli.ts'), './git-hooks.config.ts'],
+        ['bunx', 'bun-git-hooks', './git-hooks.config'],
+        ['bun', require.resolve('../bin/cli'), './git-hooks.config'],
         [
           'node',
-          require.resolve('../bin/cli.ts'),
-          require.resolve(`${PROJECT_WITH_CUSTOM_CONF}/git-hooks.config.ts`),
+          require.resolve('../bin/cli'),
+          require.resolve(`${PROJECT_WITH_CUSTOM_CONF}/git-hooks.config`),
         ],
       ]
 
@@ -491,7 +491,7 @@ describe('bun-git-hooks', () => {
 
         it('does not create git hooks when SKIP_INSTALL_GIT_HOOKS is set to 1', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
-          execSync(`node ${require.resolve('./cli')}`, {
+          execSync(`bun ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
             env: {
               ...process.env,
@@ -508,7 +508,7 @@ describe('bun-git-hooks', () => {
 
         it('creates git hooks when SKIP_INSTALL_GIT_HOOKS is set to 0', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
-          execSync(`node ${require.resolve('./cli')}`, {
+          execSync(`bun ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
             env: {
               ...process.env,
@@ -525,7 +525,7 @@ describe('bun-git-hooks', () => {
 
         it('creates git hooks when SKIP_INSTALL_GIT_HOOKS is not set', () => {
           createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
-          execSync(`node ${require.resolve('./cli')}`, {
+          execSync(`bun ${require.resolve('./cli')}`, {
             cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
           })
           const installedHooks = getInstalledGitHooks(

@@ -195,7 +195,7 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
     throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or `git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
 
   // Only validate hook names that aren't options
-  const hookKeys = Object.keys(config).filter(key => key !== 'preserveUnused')
+  const hookKeys = Object.keys(config).filter(key => key !== 'preserveUnused' && key !== 'verbose')
   const isValidConfig = hookKeys.every(key => VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number]))
 
   if (!isValidConfig)
