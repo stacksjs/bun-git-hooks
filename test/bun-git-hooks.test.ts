@@ -106,7 +106,9 @@ describe('bun-git-hooks', () => {
    */
   describe('E2E tests', () => {
     const TEST_SCRIPT = `${gitHooks.PREPEND_SCRIPT}exit 1`
-    const COMMON_GIT_HOOKS = { 'pre-commit': TEST_SCRIPT, 'pre-push': TEST_SCRIPT }
+    const COMMON_GIT_HOOKS = {
+      'pre-commit': `${gitHooks.PREPEND_SCRIPT}bun run lint && bun run test`,
+    }
 
     // To test this package, we often need to create and manage files.
     // Best to use real file system and real files under _tests folder
