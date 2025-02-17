@@ -1,58 +1,65 @@
-<p align="center"><img src="https://github.com/stacksjs/rpx/blob/main/.github/art/cover.jpg?raw=true" alt="Social Card of this repo"></p>
-
-# A Better Developer Experience
-
-> A TypeScript Starter Kit that will help you bootstrap your next project without minimal opinion.
-
 # bun-git-hooks
 
-This is an opinionated TypeScript Starter kit to help kick-start development of your next Bun package.
+> A modern, zero-dependency tool for managing git hooks in Bun projects with a robust set of configuration options.
 
-## Get Started
+<p align="center"><img src="https://github.com/stacksjs/bun-git-hooks/blob/main/.github/art/cover.jpg?raw=true" alt="Social Card of bun-git-hooks"></p>
 
-It's rather simple to get your package development started:
+## Introduction
+
+`bun-git-hooks` is a powerful tool designed to simplify git hooks management in your Bun projects. It provides a type-safe, flexible way to configure and manage your git hooks with minimal setup.
+
+## Key Features
+
+- 🎯 **Simple Configuration**: Easy setup through multiple config file formats
+- 🔄 **Automatic Installation**: Hooks are installed automatically during package installation
+- 🛡️ **Type Safe**: Written in TypeScript with comprehensive type definitions
+- 🔧 **Flexible Config**: Supports `.ts`, `.js`, `.mjs`, `.json` configurations
+- 💪 **Robust**: Handles complex Git workspace configurations
+- 🚫 **Skip Option**: Environment variables to skip hook installation or execution
+- 🧹 **Cleanup**: Optional cleanup of unused hooks
+- 📦 **Zero Dependencies**: Minimal footprint
+- ⚡ **Fast**: Built for Bun with performance in mind
+- 🔍 **Verbose Mode**: Detailed logging for troubleshooting
+
+## Why bun-git-hooks?
+
+Git hooks are powerful tools for automating tasks in your development workflow, but they can be challenging to manage and distribute across a team. `bun-git-hooks` solves this by:
+
+1. **Simplifying Configuration**: Use TypeScript/JavaScript/JSON to define your hooks
+2. **Ensuring Consistency**: Automatically install hooks for all team members
+3. **Providing Flexibility**: Skip hooks when needed with environment variables
+4. **Type Safety**: Get IDE autocompletion and type checking for your configurations
+
+## Quick Start
+
+1. Install the package:
 
 ```bash
-# you may use this GitHub template or the following command:
-bunx degit stacksjs/ts-starter my-pkg
-cd my-pkg
-
-bun i # install all deps
-bun run build # builds the library for production-ready use
-
-# after you have successfully committed, you may create a "release"
-bun run release # automates git commits, versioning, and changelog generations
+bun add -D bun-git-hooks
 ```
 
-_Check out the package.json scripts for more commands._
+2. Create a configuration file (e.g., `git-hooks.config.ts`):
 
-### Developer Experience (DX)
+```ts
+import type { GitHooksConfig } from 'bun-git-hooks'
 
-This Starter Kit comes pre-configured with the following:
+const config: GitHooksConfig = {
+  'pre-commit': 'bun run lint && bun run test',
+  'commit-msg': 'bun commitlint --edit $1',
+  'pre-push': 'bun run build',
+  'verbose': true,
+}
 
-- [Powerful Build Process](https://github.com/oven-sh/bun) - via Bun
-- [Fully Typed APIs](https://www.typescriptlang.org/) - via TypeScript
-- [Documentation-ready](https://vitepress.dev/) - via VitePress
-- [CLI & Binary](https://www.npmjs.com/package/bunx) - via Bun & CAC
-- [Be a Good Commitizen](https://www.npmjs.com/package/git-cz) - pre-configured Commitizen & git-cz setup to simplify semantic git commits, versioning, and changelog generations
-- [Built With Testing In Mind](https://bun.sh/docs/cli/test) - pre-configured unit-testing powered by [Bun](https://bun.sh/docs/cli/test)
-- [Renovate](https://renovatebot.com/) - optimized & automated PR dependency updates
-- [ESLint](https://eslint.org/) - for code linting _(and formatting)_
-- [GitHub Actions](https://github.com/features/actions) - runs your CI _(fixes code style issues, tags releases & creates its changelogs, runs the test suite, etc.)_
+export default config
+```
 
-## Changelog
-
-Please see our [releases](https://github.com/stacksjs/stacks/releases) page for more information on what has changed recently.
-
-## Contributing
-
-Please review the [Contributing Guide](https://github.com/stacksjs/contributing) for details.
+3. The hooks will be automatically installed when you run `bun install`
 
 ## Community
 
 For help, discussion about best practices, or any other conversation that would benefit from being searchable:
 
-[Discussions on GitHub](https://github.com/stacksjs/stacks/discussions)
+[Discussions on GitHub](https://github.com/stacksjs/bun-git-hooks/discussions)
 
 For casual chit-chat with others using this package:
 
@@ -60,7 +67,7 @@ For casual chit-chat with others using this package:
 
 ## Postcardware
 
-Two things are true: Stacks OSS will always stay open-source, and we do love to receive postcards from wherever Stacks is used! 🌍 _We also publish them on our website. And thank you, Spatie_
+Two things are true: Stacks OSS will always stay open-source, and we do love to receive postcards from wherever Stacks is used! 🌍
 
 Our address: Stacks.js, 12665 Village Ln #2306, Playa Vista, CA 90094
 
@@ -71,14 +78,9 @@ We would like to extend our thanks to the following sponsors for funding Stacks 
 - [JetBrains](https://www.jetbrains.com/)
 - [The Solana Foundation](https://solana.com/)
 
-## Credits
-
-- [Chris Breuer](https://github.com/chrisbbreuer)
-- [All Contributors](https://github.com/stacksjs/rpx/graphs/contributors)
-
 ## License
 
-The MIT License (MIT). Please see [LICENSE](https://github.com/stacksjs/ts-starter/tree/main/LICENSE.md) for more information.
+The MIT License (MIT). Please see [LICENSE](LICENSE.md) for more information.
 
 Made with 💙
 

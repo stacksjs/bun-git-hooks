@@ -19,50 +19,41 @@ const analyticsHead: HeadConfig[] = [
 ]
 
 const nav = [
-  { text: 'News', link: 'https://stacksjs.org/news' },
-  {
-    text: 'Changelog',
-    link: 'https://github.com/stacksjs/bun-git-hooks/blob/main/CHANGELOG.md',
-  },
-  // { text: 'Blog', link: 'https://updates.ow3.org' },
-  {
-    text: 'Resources',
-    items: [
-      { text: 'Team', link: '/team' },
-      { text: 'Sponsors', link: '/sponsors' },
-      { text: 'Partners', link: '/partners' },
-      { text: 'Postcardware', link: '/postcardware' },
-      { text: 'License', link: '/license' },
-      {
-        items: [
-          {
-            text: 'Awesome Stacks',
-            link: 'https://github.com/stacksjs/awesome-stacks',
-          },
-          {
-            text: 'Contributing',
-            link: 'https://github.com/stacksjs/stacks/blob/main/.github/CONTRIBUTING.md',
-          },
-        ],
-      },
-    ],
-  },
+  { text: 'Home', link: '/' },
+  { text: 'Guide', link: '/intro' },
+  { text: 'Config', link: '/config' },
+  { text: 'GitHub', link: 'https://github.com/stacksjs/bun-git-hooks' },
 ]
 
 const sidebar = [
   {
-    text: 'Get Started',
+    text: 'Introduction',
     items: [
-      { text: 'Intro', link: '/intro' },
-      { text: 'Install', link: '/install' },
-      { text: 'Usage', link: '/usage' },
-      { text: 'Config', link: '/config' },
+      { text: 'What is bun-git-hooks?', link: '/intro' },
+      { text: 'Getting Started', link: '/usage' },
+      { text: 'Configuration', link: '/config' },
     ],
   },
-  { text: 'Showcase', link: '/Showcase' },
+  {
+    text: 'Advanced',
+    items: [
+      { text: 'Environment Variables', link: '/usage#environment-variables' },
+      { text: 'Advanced Configuration', link: '/config#advanced-configuration' },
+      { text: 'Best Practices', link: '/config#best-practices' },
+    ],
+  },
+  {
+    text: 'Community',
+    items: [
+      { text: 'Team', link: '/team' },
+      { text: 'Sponsors', link: '/sponsors' },
+      { text: 'Showcase', link: '/showcase' },
+    ],
+  },
 ]
-const description = 'A TypeScript Starter Kit. For a better Development Experience.'
-const title = 'bun-git-hooks | A TypeScript Starter Kit. For a better Development Experience.'
+
+const description = 'A modern, zero-dependency tool for managing git hooks in Bun projects'
+const title = 'bun-git-hooks'
 
 export default withPwa(
   defineConfig({
@@ -116,12 +107,10 @@ export default withPwa(
 
       footer: {
         message: 'Released under the MIT License.',
-        copyright: 'Copyright © 2025-present Stacks.js, Inc.',
+        copyright: 'Copyright © 2024-present Stacks.js',
       },
 
       socialLinks: [
-        { icon: 'twitter', link: 'https://twitter.com/stacksjs' },
-        { icon: 'bluesky', link: 'https://bsky.app/profile/chrisbreuer.dev' },
         { icon: 'github', link: 'https://github.com/stacksjs/bun-git-hooks' },
         { icon: 'discord', link: 'https://discord.gg/stacksjs' },
       ],

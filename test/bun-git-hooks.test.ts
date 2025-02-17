@@ -539,8 +539,8 @@ describe('bun-git-hooks', () => {
     })
 
     describe('ENV vars features tests', () => {
-      const GIT_USER_NAME = 'github-actions'
-      const GIT_USER_EMAIL = 'github-actions@github.com'
+      const _GIT_USER_NAME = 'github-actions'
+      const _GIT_USER_EMAIL = 'github-actions@github.com'
 
       const initializeGitRepository = (path: string) => {
         if (!fs.existsSync(path)) {

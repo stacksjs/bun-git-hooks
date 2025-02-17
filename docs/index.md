@@ -4,36 +4,112 @@ layout: home
 
 hero:
   name: "bun-git-hooks"
-  text: "TypeScript JPEG Image Processing"
-  tagline: "High-performance JPEG encoding & decoding with type safety."
-  image: /images/logo-white.png
+  text: "Modern Git Hooks Management"
+  tagline: A zero-dependency, type-safe tool for managing git hooks in Bun projects
+  image:
+    src: /images/logo.png
+    alt: bun-git-hooks logo
   actions:
     - theme: brand
       text: Get Started
       link: /intro
     - theme: alt
       text: View on GitHub
-      link: https://github.com/stacksjs/rpx
+      link: https://github.com/stacksjs/bun-git-hooks
 
 features:
-  - title: "Complete JPEG Support"
-    icon: "📸"
-    details: "Full implementation of JPEG encoding and decoding with memory safety features."
-  - title: "Type Safety First"
-    icon: "🛡️"
-    details: "Built with TypeScript, offering comprehensive type definitions and IDE support."
-  - title: "Color Space Control"
-    icon: "🎨"
-    details: "Handle RGB, CMYK, and Grayscale color spaces with automatic conversion."
-  - title: "Memory Management"
-    icon: "💾"
-    details: "Built-in memory limits and safeguards to prevent out-of-memory errors."
-  - title: "EXIF Support"
-    icon: "📊"
-    details: "Preserve and extract EXIF metadata from your JPEG images."
-  - title: "Performance Optimized"
-    icon: "⚡"
-    details: "Efficient DCT and color transformation algorithms for fast processing."
+  - icon: 🎯
+    title: Simple Configuration
+    details: Configure your git hooks using TypeScript, JavaScript, or JSON. Supports multiple config formats for maximum flexibility.
+
+  - icon: 🔄
+    title: Automatic Installation
+    details: Hooks are installed automatically during package installation. No manual setup required.
+
+  - icon: 🛡️
+    title: Type Safe
+    details: Written in TypeScript with comprehensive type definitions. Get full IDE support and catch errors early.
+
+  - icon: 📦
+    title: Zero Dependencies
+    details: Lightweight and fast. No external dependencies to slow you down or create security risks.
+
+  - icon: ⚡
+    title: Bun Optimized
+    details: Built specifically for Bun with performance in mind. Takes advantage of Bun's speed and features.
+
+  - icon: 🔧
+    title: Flexible & Powerful
+    details: Support for all git hooks, environment variables, and advanced configuration options.
+
 ---
+
+## Quick Start
+
+```bash
+# Install the package
+bun add -D bun-git-hooks
+
+# Create a configuration file
+cat > git-hooks.config.ts << EOL
+import type { GitHooksConfig } from 'bun-git-hooks'
+
+const config: GitHooksConfig = {
+  'pre-commit': 'bun run lint && bun run test',
+  'commit-msg': 'bun commitlint --edit $1',
+  'pre-push': 'bun run build',
+}
+
+export default config
+EOL
+
+# Hooks are automatically installed!
+```
+
+## Why bun-git-hooks?
+
+- 🎯 **Simple Yet Powerful**: Easy to set up, but packed with features
+- 🔄 **Team Friendly**: Automatically install hooks for all team members
+- 🛡️ **Type Safe**: Full TypeScript support with great IDE integration
+- 📦 **Zero Dependencies**: Minimal footprint in your project
+- ⚡ **Fast**: Built for Bun with performance in mind
+- 🔧 **Flexible**: Multiple configuration formats and options
+
+## Popular Use Cases
+
+```ts
+// Lint and test before commits
+'pre-commit': 'bun run lint && bun run test'
+
+// Validate commit messages
+'commit-msg': 'bun commitlint --edit $1'
+
+// Build and test before pushing
+'pre-push': 'bun run build && bun run test:e2e'
+
+// Update dependencies after checkout
+'post-checkout': 'bun install'
+```
+
+## Community
+
+Join our community to get help, share ideas, and contribute:
+
+- 📖 [Documentation](/intro)
+- 💬 [Discord Chat](https://discord.gg/stacksjs)
+- 🐙 [GitHub Discussions](https://github.com/stacksjs/bun-git-hooks/discussions)
+- 🐦 [Twitter Updates](https://twitter.com/stacksjs)
+
+## Support
+
+If you find this project useful, please consider:
+
+- ⭐ [Starring the repository](https://github.com/stacksjs/bun-git-hooks)
+- 🤝 [Contributing](https://github.com/stacksjs/bun-git-hooks/blob/main/.github/CONTRIBUTING.md)
+- 💙 [Becoming a sponsor](https://github.com/sponsors/stacksjs)
+
+## License
+
+[MIT License](https://github.com/stacksjs/bun-git-hooks/blob/main/LICENSE.md) © 2024-present [Stacks.js](https://github.com/stacksjs)
 
 <Home />

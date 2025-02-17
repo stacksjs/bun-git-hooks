@@ -1,89 +1,190 @@
-# Get Started
+# Usage Guide
 
-There are two ways of using this reverse proxy: _as a library or as a CLI._
+## Installation
 
-## Library
-
-Given the npm package is installed:
-
-```ts
-import type { TlsConfig } from '@stacksjs/rpx'
-import { startProxy } from '@stacksjs/rpx'
-
-export interface CleanupConfig {
-  hosts: boolean // clean up /etc/hosts, defaults to false
-  certs: boolean // clean up certificates, defaults to false
-}
-
-export interface ReverseProxyConfig {
-  from: string // domain to proxy from, defaults to localhost:3000
-  to: string // domain to proxy to, defaults to stacks.localhost
-  cleanUrls?: boolean // removes the .html extension from URLs, defaults to false
-  https: boolean | TlsConfig // automatically uses https, defaults to true, also redirects http to https
-  cleanup?: boolean | CleanupConfig // automatically cleans up /etc/hosts, defaults to false
-  verbose: boolean // log verbose output, defaults to false
-}
-
-const config: ReverseProxyOptions = {
-  from: 'localhost:3000',
-  to: 'my-docs.localhost',
-  cleanUrls: true,
-  https: true,
-  cleanup: false,
-}
-
-startProxy(config)
+```bash
+bun add -D bun-git-hooks
 ```
 
-In case you are trying to start multiple proxies, you may use this configuration:
+## Basic Usage
+
+### Configuration File
+
+Create a `git-hooks.config.{ts,js,mjs,cjs,json}` file in your project root:
 
 ```ts
-// reverse-proxy.config.{ts,js}
-import type { ReverseProxyOptions } from '@stacksjs/rpx'
-import os from 'node:os'
-import path from 'node:path'
+// git-hooks.config.ts
+import type { GitHooksConfig } from 'bun-git-hooks'
 
-const config: ReverseProxyOptions = {
-  https: { // https: true -> also works with sensible defaults
-    caCertPath: path.join(os.homedir(), '.stacks', 'ssl', `stacks.localhost.ca.crt`),
-    certPath: path.join(os.homedir(), '.stacks', 'ssl', `stacks.localhost.crt`),
-    keyPath: path.join(os.homedir(), '.stacks', 'ssl', `stacks.localhost.crt.key`),
-  },
-
-  cleanup: {
-    hosts: true,
-    certs: false,
-  },
-
-  proxies: [
-    {
-      from: 'localhost:5173',
-      to: 'my-app.localhost',
-      cleanUrls: true,
-    },
-    {
-      from: 'localhost:5174',
-      to: 'my-api.local',
-    },
-  ],
-
-  verbose: true,
+const config: GitHooksConfig = {
+  'pre-commit': 'bun run lint && bun run test',
+  'commit-msg': 'bun commitlint --edit $1',
+  'pre-push': 'bun run build',
+  'verbose': true,
 }
 
 export default config
 ```
 
-## CLI
+### Package.json Configuration
 
-```bash
-rpx --from localhost:3000 --to my-project.localhost
-rpx --from localhost:8080 --to my-project.test --keyPath ./key.pem --certPath ./cert.pem
-rpx --help
-rpx --version
+You can also use JSON format in your `package.json`:
+
+```json
+{
+  "git-hooks": {
+    "pre-commit": "bun run lint && bun run test",
+    "commit-msg": "bun commitlint --edit $1",
+    "pre-push": "bun run build"
+  }
+}
 ```
 
-## Testing
+## CLI Commands
 
 ```bash
-bun test
+# Install hooks from config
+git-hooks
+
+# Use specific config file
+git-hooks ./custom-config.ts
+
+# Remove all hooks
+git-hooks uninstall
+git-hooks remove  # alias
+
+# Enable verbose logging
+git-hooks --verbose
+```
+
+## Environment Variables
+
+### SKIP_INSTALL_GIT_HOOKS
+
+Skip hook installation during package installation:
+
+```bash
+# Skip hook installation
+SKIP_INSTALL_GIT_HOOKS=1 bun install
+```
+
+### SKIP_BUN_GIT_HOOKS
+
+Skip hook execution for a specific git command:
+
+```bash
+# Skip hook execution
+SKIP_BUN_GIT_HOOKS=1 git commit -m "skipping hooks"
+```
+
+### BUN_GIT_HOOKS_RC
+
+Set custom environment for hooks:
+
+```bash
+# Set custom environment
+BUN_GIT_HOOKS_RC=/path/to/env git-hooks
+```
+
+## Advanced Usage
+
+### Multiple Commands in a Hook
+
+You can combine multiple commands in a single hook:
+
+```ts
+const config: GitHooksConfig = {
+  // Using && operator
+  'pre-commit': 'bun run lint && bun run test && bun run build',
+
+  // Using array join for better readability
+  'pre-push': [
+    'bun run build',
+    'bun run test:e2e',
+    'bun run deploy'
+  ].join(' && ')
+}
+```
+
+### Preserving Specific Hooks
+
+You can preserve specific hooks while removing others:
+
+```ts
+const config: GitHooksConfig = {
+  'pre-commit': 'bun run lint && bun run test',
+
+  // Preserve these hooks even if not configured
+  'preserveUnused': ['post-merge', 'post-checkout']
+}
+```
+
+## Available Git Hooks
+
+The following git hooks are supported:
+
+- `pre-commit`: Run before committing
+- `prepare-commit-msg`: Run before the commit message editor is opened
+- `commit-msg`: Run to verify commit message
+- `post-commit`: Run after committing
+- `pre-push`: Run before pushing
+- `post-merge`: Run after merging
+- `post-checkout`: Run after checking out
+- `pre-rebase`: Run before rebasing
+- `post-rewrite`: Run after rewriting commits
+
+## Error Handling
+
+The library provides clear error messages and proper error handling:
+
+```ts
+try {
+  await setHooksFromConfig()
+}
+catch (err) {
+  if (err.message.includes('Config was not found')) {
+    console.error('Missing configuration file')
+  }
+  else if (err.message.includes('git root')) {
+    console.error('Not a Git repository')
+  }
+}
+```
+
+## TypeScript Support
+
+Full TypeScript support with detailed type definitions:
+
+```ts
+interface GitHooksConfig {
+  'pre-commit'?: string
+  'pre-push'?: string
+  'commit-msg'?: string
+  'post-merge'?: string
+  // ... other git hooks
+  'preserveUnused'?: Array<string> | boolean
+  'verbose'?: boolean
+}
+```
+
+## Testing Your Hooks
+
+To test if your hooks are working:
+
+1. Make a change to your codebase
+2. Try to commit the change:
+
+```bash
+git add .
+git commit -m "test: checking if hooks work"
+```
+
+3. Your pre-commit hook should run
+4. Your commit-msg hook should validate the message
+5. When pushing, your pre-push hook should run
+
+If you need to bypass hooks temporarily:
+
+```bash
+SKIP_BUN_GIT_HOOKS=1 git commit -m "bypass: temporary commit"
 ```
