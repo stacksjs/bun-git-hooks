@@ -69,7 +69,7 @@
     "@iconify-json/carbon": "^1.2.7",
     "@shikijs/vitepress-twoslash": "^2.3.2",
     "@stacksjs/eslint-config": "^4.2.1-beta.1",
-    "@types/bun": "^1.2.2",
+    "@types/bun": "^1.2.3",
     "@types/node": "^22.13.4",
     "@vite-pwa/vitepress": "^0.5.3",
     "bumpp": "^10.0.3",
