@@ -79,7 +79,7 @@
     "changelogen": "^0.6.1",
     "lint-staged": "^15.5.0",
     "typescript": "^5.8.2",
-    "unocss": "^65.5.0",
+    "unocss": "^66.0.0",
     "unplugin-icons": "^22.1.0",
     "unplugin-vue-components": "^28.4.1",
     "vite-plugin-pwa": "^0.21.1",
