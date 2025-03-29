@@ -71,7 +71,7 @@
     "@stacksjs/eslint-config": "^4.2.1-beta.1",
     "@types/bun": "^1.2.5",
     "@types/node": "^22.13.10",
-    "@vite-pwa/vitepress": "^0.5.3",
+    "@vite-pwa/vitepress": "^0.5.4",
     "bumpp": "^10.1.0",
     "bun-plugin-dtsx": "^0.21.9",
     "bunfig": "^0.8.2",
@@ -82,7 +82,7 @@
     "unocss": "^66.0.0",
     "unplugin-icons": "^22.1.0",
     "unplugin-vue-components": "^28.4.1",
-    "vite-plugin-pwa": "^0.21.1",
+    "vite-plugin-pwa": "^0.21.2",
     "vitepress": "^1.6.3"
   },
   "overrides": {
