@@ -43,10 +43,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            bin/git-hooks-linux-x64
-            bin/git-hooks-linux-arm64
-            bin/git-hooks-windows-x64.exe
-            bin/git-hooks-darwin-x64
-            bin/git-hooks-darwin-arm64
+            bin/git-hooks-linux-x64.zip
+            bin/git-hooks-linux-arm64.zip
+            bin/git-hooks-windows-x64.zip
+            bin/git-hooks-darwin-x64.zip
+            bin/git-hooks-darwin-arm64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

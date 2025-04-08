@@ -7,7 +7,7 @@ hero:
   text: "Modern Git Hooks Management"
   tagline: A zero-dependency, type-safe tool for managing git hooks in Bun projects
   image:
-    src: /images/logo.png
+    src: /images/logo-white.png
     alt: bun-git-hooks logo
   actions:
     - theme: brand
@@ -75,6 +75,22 @@ EOL
 - ⚡ **Fast**: Built for Bun with performance in mind
 - 🔧 **Flexible**: Multiple configuration formats and options
 
+## Configuration Options
+
+### Supported Config Files
+
+- `git-hooks.config.ts` (TypeScript)
+- `git-hooks.config.js` (JavaScript)
+- `git-hooks.config.cjs` (CommonJS)
+- `git-hooks.config.json` (JSON)
+- `package.json` (with `gitHooks` field)
+
+### Environment Variables
+
+- `SKIP_BUN_GIT_HOOKS`: Set to "1" to skip hook execution
+- `BUN_GIT_HOOKS_RC`: Path to initialization script
+- `SKIP_INSTALL_GIT_HOOKS`: Set to "1" to skip hook installation
+
 ## Popular Use Cases
 
 ```ts
@@ -89,6 +105,34 @@ EOL
 
 // Update dependencies after checkout
 'post-checkout': 'bun install'
+
+// Run security checks before push
+'pre-push': 'bun run security:check'
+
+// Format code before commit
+'pre-commit': 'bun run format && bun run lint'
+```
+
+## Advanced Features
+
+### Custom Initialization Scripts
+
+Create a `.git-hooks.rc` file to set up environment variables or perform custom initialization:
+
+```bash
+#!/bin/bash
+export NODE_ENV=development
+export CUSTOM_VAR=value
+```
+
+### Skip Hooks Temporarily
+
+```bash
+# Skip hooks for a single command
+SKIP_BUN_GIT_HOOKS=1 git commit -m "message"
+
+# Skip hook installation
+SKIP_INSTALL_GIT_HOOKS=1 bun install
 ```
 
 ## Community

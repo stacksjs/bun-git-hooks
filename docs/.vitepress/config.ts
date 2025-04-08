@@ -19,10 +19,34 @@ const analyticsHead: HeadConfig[] = [
 ]
 
 const nav = [
-  { text: 'Home', link: '/' },
-  { text: 'Guide', link: '/intro' },
-  { text: 'Config', link: '/config' },
-  { text: 'GitHub', link: 'https://github.com/stacksjs/bun-git-hooks' },
+  { text: 'News', link: 'https://stacksjs.org/news' },
+  {
+    text: 'Changelog',
+    link: 'https://github.com/stacksjs/bun-git-hooks/blob/main/CHANGELOG.md',
+  },
+  {
+    text: 'Resources',
+    items: [
+      { text: 'Team', link: '/team' },
+      { text: 'Sponsors', link: '/sponsors' },
+      { text: 'Partners', link: '/partners' },
+      { text: 'Postcardware', link: '/postcardware' },
+      { text: 'Stargazers', link: '/stargazers' },
+      { text: 'License', link: '/license' },
+      {
+        items: [
+          {
+            text: 'Awesome Stacks',
+            link: 'https://github.com/stacksjs/awesome-stacks',
+          },
+          {
+            text: 'Contributing',
+            link: 'https://github.com/stacksjs/stacks/blob/main/.github/CONTRIBUTING.md',
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 const sidebar = [
@@ -30,6 +54,7 @@ const sidebar = [
     text: 'Introduction',
     items: [
       { text: 'What is bun-git-hooks?', link: '/intro' },
+      { text: 'Install', link: '/install' },
       { text: 'Getting Started', link: '/usage' },
       { text: 'Configuration', link: '/config' },
     ],
@@ -50,6 +75,7 @@ const sidebar = [
       { text: 'Showcase', link: '/showcase' },
     ],
   },
+  { text: 'Showcase', link: '/Showcase' },
 ]
 
 const description = 'A modern, zero-dependency tool for managing git hooks in Bun projects'
@@ -107,10 +133,12 @@ export default withPwa(
 
       footer: {
         message: 'Released under the MIT License.',
-        copyright: 'Copyright © 2024-present Stacks.js',
+        copyright: 'Copyright © 2025-present Stacks.js, Inc.',
       },
 
       socialLinks: [
+        { icon: 'twitter', link: 'https://twitter.com/stacksjs' },
+        { icon: 'bluesky', link: 'https://bsky.app/profile/chrisbreuer.dev' },
         { icon: 'github', link: 'https://github.com/stacksjs/bun-git-hooks' },
         { icon: 'discord', link: 'https://discord.gg/stacksjs' },
       ],

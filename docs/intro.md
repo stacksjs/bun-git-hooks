@@ -55,6 +55,66 @@ export default config
 
 3. The hooks will be automatically installed when you run `bun install`
 
+## Configuration Options
+
+### Supported Config Files
+
+- `git-hooks.config.ts` (TypeScript)
+- `git-hooks.config.js` (JavaScript)
+- `git-hooks.config.cjs` (CommonJS)
+- `git-hooks.config.json` (JSON)
+- `package.json` (with `gitHooks` field)
+
+### Environment Variables
+
+- `SKIP_BUN_GIT_HOOKS`: Set to "1" to skip hook execution
+- `BUN_GIT_HOOKS_RC`: Path to initialization script
+- `SKIP_INSTALL_GIT_HOOKS`: Set to "1" to skip hook installation
+
+## Advanced Features
+
+### Custom Initialization Scripts
+
+Create a `.git-hooks.rc` file to set up environment variables or perform custom initialization:
+
+```bash
+#!/bin/bash
+export NODE_ENV=development
+export CUSTOM_VAR=value
+```
+
+### Skip Hooks Temporarily
+
+```bash
+# Skip hooks for a single command
+SKIP_BUN_GIT_HOOKS=1 git commit -m "message"
+
+# Skip hook installation
+SKIP_INSTALL_GIT_HOOKS=1 bun install
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Hooks not installing**
+   - Ensure `bun-git-hooks` is in your `devDependencies`
+   - Check if `SKIP_INSTALL_GIT_HOOKS` is not set to "1"
+   - Verify your configuration file is valid
+
+2. **Hooks not executing**
+   - Check if `SKIP_BUN_GIT_HOOKS` is not set to "1"
+   - Verify hook scripts have execute permissions
+   - Enable verbose mode in config for detailed logs
+
+3. **TypeScript configuration issues**
+   - Ensure you're using the correct type imports
+   - Check your `tsconfig.json` includes the package types
+
+## Stargazers
+
+[![Stargazers over time](https://starchart.cc/stacksjs/bun-git-hooks.svg?variant=adaptive)](https://starchart.cc/stacksjs/bun-git-hooks)
+
 ## Community
 
 For help, discussion about best practices, or any other conversation that would benefit from being searchable:
