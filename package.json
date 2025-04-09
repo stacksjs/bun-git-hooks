@@ -75,7 +75,7 @@
   "devDependencies": {
     "@iconify-json/carbon": "^1.2.8",
     "@shikijs/vitepress-twoslash": "^3.2.1",
-    "@stacksjs/eslint-config": "^4.2.1-beta.1",
+    "@stacksjs/eslint-config": "^4.10.2-beta.3",
     "@types/bun": "^1.2.8",
     "@types/node": "^22.13.14",
     "@vite-pwa/vitepress": "^1.0.0",
