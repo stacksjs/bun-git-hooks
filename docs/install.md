@@ -170,5 +170,3 @@ If you encounter any issues during installation:
 2. Check that your configuration file is valid
 3. Verify that `bun-git-hooks` is in your `devDependencies`
 4. Try running with verbose mode enabled in your config
-
-For more detailed troubleshooting, see the [Troubleshooting Guide](/troubleshooting).
