@@ -14,3 +14,5 @@ export const config: GitHooksConfig = await loadConfig({
   cwd: resolve(__dirname, '..'),
   defaultConfig,
 })
+
+console.log('cwd', resolve(__dirname, '..'))
