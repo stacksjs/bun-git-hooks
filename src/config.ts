@@ -1,5 +1,5 @@
 import type { GitHooksConfig } from './types'
-import { resolve } from 'node:path'
+import process from 'node:process'
 import { loadConfig } from 'bunfig'
 
 export const defaultConfig: GitHooksConfig = {
@@ -11,8 +11,8 @@ export const defaultConfig: GitHooksConfig = {
 // eslint-disable-next-line antfu/no-top-level-await
 export const config: GitHooksConfig = await loadConfig({
   name: 'git-hooks',
-  cwd: resolve(__dirname, '..'),
+  cwd: process.cwd(),
   defaultConfig,
 })
 
-console.log('cwd', resolve(__dirname, '..'))
+console.log('config', process.cwd())
