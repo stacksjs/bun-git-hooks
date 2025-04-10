@@ -194,9 +194,15 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
   if (!config || Object.keys(config).length === 0)
     throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or `git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
 
+
+  console.log('setHooksFromConfig config', config)
   // Only validate hook names that aren't options
   const hookKeys = Object.keys(config).filter(key => key !== 'preserveUnused' && key !== 'verbose')
+
+  console.log('hookKeys', hookKeys)
   const isValidConfig = hookKeys.every(key => VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number]))
+
+  console.log('isValidConfig', isValidConfig)
 
   if (!isValidConfig)
     throw new Error('[ERROR] Config was not in correct format. Please check git hooks or options name')
@@ -204,15 +210,19 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
   const preserveUnused = Array.isArray(config.preserveUnused) ? config.preserveUnused : config.preserveUnused ? VALID_GIT_HOOKS : []
 
   for (const hook of VALID_GIT_HOOKS) {
+    console.log('hook', hook)
     if (Object.prototype.hasOwnProperty.call(config, hook)) {
+      console.log('hook in config')
       if (!config[hook])
         throw new Error(`[ERROR] Command for ${hook} is not set`)
 
       console.log(`Hook ${hook}: `, config[hook])
       _setHook(hook, config[hook], projectRootPath)
     }
-    else if (!preserveUnused.includes(hook))
+    else if (!preserveUnused.includes(hook)) {
+      console.log('Remove hook', hook)
       _removeHook(hook, projectRootPath)
+    }
   }
 }
 
