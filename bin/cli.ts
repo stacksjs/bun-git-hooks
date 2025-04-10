@@ -17,7 +17,7 @@ cli
   .command('[configPath]', 'Install git hooks, optionally from specified config file')
   .option('--verbose', 'Enable verbose logging')
   .example('bun-git-hooks')
-  .example('bun-git-hooks ./config.ts')
+  .example('bun-git-hooks ../src/config.ts')
   .example('bun-git-hooks --verbose')
   .action(async (configPath?: string, options?: { verbose?: boolean }) => {
     try {

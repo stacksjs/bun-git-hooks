@@ -1,11 +1,14 @@
 #!/usr/bin/env bun
+
+import { mkdir, symlink } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
 import process from 'node:process'
 import { checkBunGitHooksInDependencies, getProjectRootDirectoryFromNodeModules, setHooksFromConfig } from '../src/git-hooks'
 
 /**
  * Creates the pre-commit from command in config by default
  */
-function postinstall() {
+async function postinstall() {
   let projectDirectory
 
   /* When script is run after install, the process.cwd() would be like <project_folder>/node_modules/simple-git-hooks
@@ -17,6 +20,22 @@ function postinstall() {
   }
   else {
     projectDirectory = process.cwd()
+  }
+
+  // Link the binary
+  const binDir = join(projectDirectory, 'node_modules', '.bin')
+  await mkdir(binDir, { recursive: true })
+
+  const sourcePath = join(process.cwd(), 'dist', 'bin', 'cli.js')
+  const targetPath = join(binDir, 'bun-git-hooks')
+
+  try {
+    await symlink(sourcePath, targetPath, 'file')
+  }
+  catch (err) {
+    if ((err as NodeJS.ErrnoException).code !== 'EEXIST') {
+      console.error(`[ERROR] Failed to link binary: ${err}`)
+    }
   }
 
   if (checkBunGitHooksInDependencies(projectDirectory)) {

@@ -1,7 +1,7 @@
 {
   "name": "bun-git-hooks",
   "type": "module",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "A modern, zero dependency tool for managing git hooks in Bun projects.",
   "author": "Chris Breuer <chris@stacksjs.org>",
   "license": "MIT",

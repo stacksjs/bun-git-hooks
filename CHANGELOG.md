@@ -1,4 +1,12 @@
 
+## v0.2.1...v0.2.1
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.1...v0.2.1)
+
+## v0.2.1...v0.2.1
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.1...v0.2.1)
+
 ## v0.2.0...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.0...main)
