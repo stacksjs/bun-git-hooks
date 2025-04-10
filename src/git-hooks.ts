@@ -208,6 +208,7 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
       if (!config[hook])
         throw new Error(`[ERROR] Command for ${hook} is not set`)
 
+      console.log(`Hook ${hook}: `, config[hook])
       _setHook(hook, config[hook], projectRootPath)
     }
     else if (!preserveUnused.includes(hook))
@@ -234,10 +235,14 @@ function _setHook(hook: string, command: string, projectRoot: string = process.c
   const hookDirectory = path.join(gitRoot, 'hooks')
   const hookPath = path.normalize(path.join(hookDirectory, hook))
 
+  console.log('hook', { hookPath, hookCommand, hookDirectory })
   // Ensure hooks directory exists
-  if (!fs.existsSync(hookDirectory))
+  if (!fs.existsSync(hookDirectory)){
+    console.log('hook folder not exists')
     fs.mkdirSync(hookDirectory, { recursive: true })
+  }
 
+  console.log('Create/Write hook')
   fs.writeFileSync(hookPath, hookCommand, { mode: 0o755 })
 }
 

@@ -1,4 +1,4 @@
-import type { GitHooksConfig } from 'bun-git-hooks'
+import type { GitHooksConfig } from './types'
 import { resolve } from 'node:path'
 import { loadConfig } from 'bunfig'
 
