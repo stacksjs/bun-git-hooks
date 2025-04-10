@@ -1,4 +1,16 @@
 
+## v0.2.6...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.6...main)
+
+### 🏡 Chore
+
+- More debug console ([cc16b51](https://github.com/stacksjs/bun-git-hooks/commit/cc16b51))
+
+### ❤️ Contributors
+
+- Cab-mikee ([@cab-mikee](https://github.com/cab-mikee))
+
 ## v0.2.5...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.5...main)
