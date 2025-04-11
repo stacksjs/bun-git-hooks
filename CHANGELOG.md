@@ -1,4 +1,16 @@
 
+## v0.2.11...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.11...main)
+
+### 🏡 Chore
+
+- Improve cli build ([2078b2d](https://github.com/stacksjs/bun-git-hooks/commit/2078b2d))
+
+### ❤️ Contributors
+
+- Cab-mikee ([@cab-mikee](https://github.com/cab-mikee))
+
 ## v0.2.10...v0.2.10
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.10...v0.2.10)
