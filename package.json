@@ -38,8 +38,8 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "git-hooks": "./dist/bin/cli.js",
-    "bun-git-hooks": "./dist/bin/cli.js"
+    "git-hooks": "./dist/cli.js",
+    "bun-git-hooks": "./dist/cli.js"
   },
   "files": ["README.md", "dist"],
   "scripts": {

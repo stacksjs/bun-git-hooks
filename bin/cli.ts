@@ -26,8 +26,6 @@ cli
         console.log('[DEBUG] Working directory:', process.cwd())
       }
 
-      console.log('setHooksFromConfig', { configFile: configPath })
-
       setHooksFromConfig(process.cwd(), { configFile: configPath })
       console.log('[INFO] Successfully set all git hooks')
     }

@@ -14,5 +14,3 @@ export const config: GitHooksConfig = await loadConfig({
   cwd: process.cwd(),
   defaultConfig,
 })
-
-console.log('config', process.cwd())
