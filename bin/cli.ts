@@ -2,7 +2,7 @@
 import process from 'node:process'
 import { CAC } from 'cac'
 import { version } from '../package.json'
-import { removeHooks, setHooksFromConfig } from '../src/git-hooks'
+import { removeHooks, runStagedLint, setHooksFromConfig } from '../src/git-hooks'
 
 const cli = new CAC('git-hooks')
 
@@ -60,6 +60,34 @@ cli
     }
     catch (err) {
       console.error('[ERROR] Was not able to remove git hooks. Error:', err)
+      process.exit(1)
+    }
+  })
+
+cli
+  .command('run-staged-lint <hook>', 'Run staged lint for a specific git hook')
+  .option('--verbose', 'Enable verbose logging')
+  .example('git-hooks run-staged-lint pre-commit')
+  .example('git-hooks run-staged-lint pre-push --verbose')
+  .action(async (hook: string, options?: { verbose?: boolean }) => {
+    try {
+      if (options?.verbose) {
+        console.log('[DEBUG] Running staged lint for hook:', hook)
+        console.log('[DEBUG] Working directory:', process.cwd())
+      }
+
+      const success = await runStagedLint(hook)
+
+      if (success) {
+        console.log('[INFO] Staged lint completed successfully')
+      }
+      else {
+        console.error('[ERROR] Staged lint failed')
+        process.exit(1)
+      }
+    }
+    catch (err) {
+      console.error('[ERROR] Was not able to run staged lint. Error:', err)
       process.exit(1)
     }
   })

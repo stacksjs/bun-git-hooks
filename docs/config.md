@@ -66,22 +66,22 @@ export default config
 Any valid git hook can be configured with a command string:
 
 ```ts
-{
+const config: GitHooksConfig = {
   // Pre-commit phase
-  'pre-commit': string,         // Run before git commits the changes
+  'pre-commit': string, // Run before git commits the changes
   'prepare-commit-msg': string, // Modify commit message before editor
-  'commit-msg': string,         // Validate/modify commit message
-  'post-commit': string,        // Run after commit is created
+  'commit-msg': string, // Validate/modify commit message
+  'post-commit': string, // Run after commit is created
 
   // Push phase
-  'pre-push': string,          // Run before git pushes commits
-  'post-push': string,         // Run after git pushes commits
+  'pre-push': string, // Run before git pushes commits
+  'post-push': string, // Run after git pushes commits
 
   // Other hooks
-  'post-merge': string,        // Run after git merges
-  'post-checkout': string,     // Run after git checkout
-  'pre-rebase': string,        // Run before git rebase
-  'post-rewrite': string       // Run after git rewrite (rebase/commit --amend)
+  'post-merge': string, // Run after git merges
+  'post-checkout': string, // Run after git checkout
+  'pre-rebase': string, // Run before git rebase
+  'post-rewrite': string // Run after git rewrite (rebase/commit --amend)
 }
 ```
 

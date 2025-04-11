@@ -94,23 +94,25 @@ EOL
 ## Popular Use Cases
 
 ```ts
-// Lint and test before commits
-'pre-commit': 'bun run lint && bun run test'
+const config: GitHooksConfig = {
+  // Lint and test before commits
+  'pre-commit': 'bun run lint && bun run test',
 
-// Validate commit messages
-'commit-msg': 'bun commitlint --edit $1'
+  // Validate commit messages
+  'commit-msg': 'bun commitlint --edit $1',
 
-// Build and test before pushing
-'pre-push': 'bun run build && bun run test:e2e'
+  // Build and test before pushing
+  'pre-push': 'bun run build && bun run test:e2e',
 
-// Update dependencies after checkout
-'post-checkout': 'bun install'
+  // Update dependencies after checkout
+  'post-checkout': 'bun install',
 
-// Run security checks before push
-'pre-push': 'bun run security:check'
+  // Run security checks before push
+  'pre-push': 'bun run security:check',
 
-// Format code before commit
-'pre-commit': 'bun run format && bun run lint'
+  // Format code before commit
+  'pre-commit': 'bun run format && bun run lint',
+}
 ```
 
 ## Advanced Features

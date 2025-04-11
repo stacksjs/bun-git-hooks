@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { mkdir, symlink } from 'node:fs/promises'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
 import process from 'node:process'
 import { checkBunGitHooksInDependencies, getProjectRootDirectoryFromNodeModules, setHooksFromConfig } from '../src/git-hooks'
 

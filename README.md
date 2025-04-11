@@ -12,16 +12,17 @@
 
 ## Features
 
-- 🎯 **Simple Configuration**: Easy setup through multiple config file formats
-- 🔄 **Automatic Installation**: Hooks are installed on package installation
-- 🛡️ **Type Safe**: Written in TypeScript with comprehensive type definitions
-- 🔧 **Flexible Config**: Supports `.ts`, `.js`, `.mjs`, `.json` configurations
-- 💪 **Robust**: Handles complex Git workspace configurations
-- 🚫 **Skip Option**: Environment variable to skip hook installation
-- 🧹 **Cleanup**: Optional cleanup of unused hooks
-- 📦 **Zero Dependencies**: Minimal footprint
-- ⚡ **Fast**: Built for Bun with performance in mind
-- 🔍 **Verbose Mode**: Detailed logging for troubleshooting
+- 🎯 **Simple Configuration** _Easy setup through multiple config file formats_
+- 🔄 **Automatic Installation** _Hooks are installed on package installation_
+- 🛡️ **Type Safe** _Written in TypeScript with comprehensive type definitions_
+- 🔧 **Flexible Config** _Supports `.ts`, `.js`, `.mjs`, `.json` configurations_
+- 💪 **Robust** _Handles complex Git workspace configurations_
+- 🚫 **Skip Option** _Environment variable to skip hook installation_
+- 🧹 **Cleanup** _Optional cleanup of unused hooks_
+- 📦 **Zero Dependencies** _Minimal footprint_
+- ⚡ **Fast** _Built for Bun with performance in mind_
+- 🔍 **Verbose Mode** _Detailed logging for troubleshooting_
+- 🔀 **Staged Lint** _Run commands only on staged files that match specific patterns_
 
 ## Installation
 
@@ -79,6 +80,9 @@ git-hooks uninstall
 
 # Enable verbose logging
 git-hooks --verbose
+
+# Run staged lint for a specific hook manually
+git-hooks run-staged-lint pre-commit
 ```
 
 ### Environment Variables
@@ -113,6 +117,73 @@ export default {
     'bun run test:e2e'
   ].join(' && ')
 }
+```
+
+### Staged Lint (Lint Only Changed Files)
+
+You can run linters and formatters only on staged files that match specific patterns, similar to lint-staged. This is particularly useful in pre-commit hooks to ensure quality checks run only on the files being committed.
+
+#### Configuration
+
+Add a `stagedLint` property to your hook configuration:
+
+```ts
+// git-hooks.config.ts
+export default {
+  'pre-commit': {
+    stagedLint: {
+      '*.js': 'eslint --fix',
+      '*.{ts,tsx}': ['eslint --fix', 'prettier --write'],
+      '*.css': 'stylelint --fix',
+      '*.md': 'prettier --write'
+    }
+  },
+  'verbose': true
+}
+```
+
+#### Manual CLI Usage
+
+You can also run the staged lint manually using the CLI:
+
+```bash
+# Run staged lint for pre-commit
+git-hooks run-staged-lint pre-commit
+
+# Run with verbose output
+git-hooks run-staged-lint pre-commit --verbose
+```
+
+#### Pattern Matching
+
+For each file pattern, you can specify either a single command or an array of commands that will run in sequence. The commands will only receive the staged files that match the pattern.
+
+For example:
+
+```ts
+// git-hooks.config.ts
+export default {
+  '*.{js,jsx}': 'eslint --fix', // Run eslint only on JavaScript files
+  '*.{ts,tsx}': ['eslint --fix', 'prettier --write'], // Run eslint and then prettier on TypeScript files
+  '*.css': 'stylelint --fix', // Run stylelint only on CSS files
+  '*.md': 'prettier --write' // Run prettier only on Markdown files
+}
+```
+
+The output will show which files are being processed and which tasks are being run:
+
+```bash
+$ git commit
+
+❯ Running tasks for staged files...
+  ❯ *.js — 2 files
+    ⠼ eslint --fix
+  ❯ *.{ts,tsx} — 3 files
+    ⠹ eslint --fix
+    ⠹ prettier --write
+  ❯ *.css — 1 file
+    ⠼ stylelint --fix
+  ❯ *.md — no files [SKIPPED]
 ```
 
 ### Error Handling

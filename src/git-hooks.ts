@@ -2,7 +2,12 @@ import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import { config } from './config'
-import type { SetHooksFromConfigOptions } from './types'
+import type { GitHooksConfig, StagedLintConfig, StagedLintTask, SetHooksFromConfigOptions } from './types'
+import { exec } from 'node:child_process'
+import { promisify } from 'node:util'
+
+const execAsync = promisify(exec)
+
 export const VALID_GIT_HOOKS = [
   'applypatch-msg',
   'pre-applypatch',
@@ -52,8 +57,6 @@ fi
 
 /**
  * Recursively gets the .git folder path from provided directory
- * @param {string} directory
- * @return {string | undefined} .git folder path or undefined if it was not found
  */
 export function getGitProjectRoot(directory: string = process.cwd()): string | undefined {
   // If the directory itself ends with .git, return it normalized
@@ -106,8 +109,6 @@ export function getGitProjectRoot(directory: string = process.cwd()): string | u
 
 /**
  * Transforms the <project>/node_modules/bun-git-hooks to <project>
- * @param projectPath - path to the bun-git-hooks in node modules
- * @return {string | undefined} - an absolute path to the project or undefined if projectPath is not in node_modules
  */
 export function getProjectRootDirectoryFromNodeModules(projectPath: string): string | undefined {
   function _arraysAreEqual(a1: any[], a2: any[]) {
@@ -138,9 +139,6 @@ export function getProjectRootDirectoryFromNodeModules(projectPath: string): str
 
 /**
  * Checks the 'bun-git-hooks' in dependencies of the project
- * @param {string} projectRootPath
- * @throws TypeError if packageJsonData not an object
- * @return {boolean}
  */
 export function checkBunGitHooksInDependencies(projectRootPath: string): boolean {
   if (typeof projectRootPath !== 'string') {
@@ -164,13 +162,8 @@ export function checkBunGitHooksInDependencies(projectRootPath: string): boolean
 
 /**
  * Reads package.json file, returns package.json content and path
- * @param {string} projectPath - a path to the project, defaults to process.cwd
- * @return {{packageJsonContent: any, packageJsonPath: string}}
- * @throws TypeError if projectPath is not a string
- * @throws Error if cant read package.json
- * @private
  */
-function _getPackageJson(projectPath = process.cwd()) {
+function _getPackageJson(projectPath = process.cwd()): { packageJsonContent: any; packageJsonPath: string } {
   if (typeof projectPath !== 'string') {
     throw new TypeError('projectPath is not a string')
   }
@@ -188,7 +181,6 @@ function _getPackageJson(projectPath = process.cwd()) {
 
 /**
  * Parses the config and sets git hooks
- * @param {string} projectRootPath
  */
 export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: SetHooksFromConfigOptions): void {
   if (!config || Object.keys(config).length === 0)
@@ -218,13 +210,113 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
 }
 
 /**
- * Creates or replaces an existing executable script in .git/hooks/<hook> with provided command
- * @param {string} hook
- * @param {string} command
- * @param {string} projectRoot
- * @private
+ * Gets the list of staged files in the git repository
  */
-function _setHook(hook: string, command: string, projectRoot: string = process.cwd()) {
+async function getStagedFiles(projectRoot: string = process.cwd()): Promise<string[]> {
+  try {
+    const { stdout } = await execAsync('git diff --staged --name-only --diff-filter=ACMR', { cwd: projectRoot })
+    return stdout.trim().split('\n').filter(Boolean)
+  } catch (error) {
+    console.error('[ERROR] Failed to get staged files:', error)
+    return []
+  }
+}
+
+/**
+ * Checks if a file matches a glob pattern
+ */
+function matchesGlob(file: string, pattern: string): boolean {
+  // Simple implementation - can be expanded with micromatch for more complex patterns
+  if (pattern.includes('*')) {
+    const regexPattern = pattern
+      .replace(/\./g, '\\.')
+      .replace(/\*/g, '.*')
+      .replace(/\?/g, '.')
+
+    const regex = new RegExp(`^${regexPattern}$`)
+    return regex.test(file)
+  }
+
+  return file === pattern
+}
+
+/**
+ * Filters files by glob pattern
+ */
+function filterFilesByPattern(files: string[], pattern: string): string[] {
+  return files.filter(file => matchesGlob(file, pattern))
+}
+
+/**
+ * Run a command on staged files that match a pattern
+ */
+async function runCommandOnStagedFiles(
+  command: string | string[],
+  files: string[],
+  projectRoot: string = process.cwd(),
+  verbose = false
+): Promise<boolean> {
+  if (files.length === 0) {
+    if (verbose) console.info('[INFO] No matching files for pattern')
+    return true
+  }
+
+  const commands = Array.isArray(command) ? command : [command]
+
+  for (const cmd of commands) {
+    try {
+      const fullCommand = `${cmd} ${files.join(' ')}`
+      if (verbose) console.info(`[INFO] Running: ${fullCommand}`)
+
+      const { stdout, stderr } = await execAsync(fullCommand, { cwd: projectRoot })
+
+      if (verbose) {
+        if (stdout) console.info(stdout)
+        if (stderr) console.error(stderr)
+      }
+    } catch (error) {
+      console.error(`[ERROR] Command failed: ${cmd}`, error)
+      return false
+    }
+  }
+
+  return true
+}
+
+/**
+ * Process a stagedLint configuration for a git hook
+ */
+async function processStagedLint(
+  stagedLintConfig: StagedLintConfig,
+  projectRoot: string,
+  verbose = false
+): Promise<boolean> {
+  const stagedFiles = await getStagedFiles(projectRoot)
+
+  if (stagedFiles.length === 0) {
+    if (verbose) console.info('[INFO] No staged files found')
+    return true
+  }
+
+  let success = true
+
+  for (const [pattern, task] of Object.entries(stagedLintConfig)) {
+    const matchedFiles = filterFilesByPattern(stagedFiles, pattern)
+    const taskResult = await runCommandOnStagedFiles(task, matchedFiles, projectRoot, verbose)
+
+    if (!taskResult) {
+      success = false
+      break
+    }
+  }
+
+  return success
+}
+
+/**
+ * Creates or replaces an existing executable script in .git/hooks/<hook> with provided command or stagedLint config
+ */
+function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedLintConfig }, projectRoot: string = process.cwd()): void {
   const gitRoot = getGitProjectRoot(projectRoot)
 
   if (!gitRoot) {
@@ -232,7 +324,19 @@ function _setHook(hook: string, command: string, projectRoot: string = process.c
     return
   }
 
-  const hookCommand = PREPEND_SCRIPT + command
+  let hookCommand: string
+
+  if (typeof commandOrConfig === 'string') {
+    hookCommand = PREPEND_SCRIPT + commandOrConfig
+  } else if (commandOrConfig.stagedLint) {
+    // Create a command that will execute the bun-git-hooks stagedLint handler
+    // Use the CLI command directly
+    hookCommand = PREPEND_SCRIPT + `git-hooks run-staged-lint ${hook}`
+  } else {
+    console.error(`[ERROR] Invalid command or config for hook ${hook}`)
+    return
+  }
+
   const hookDirectory = path.join(gitRoot, 'hooks')
   const hookPath = path.normalize(path.join(hookDirectory, hook))
 
@@ -246,7 +350,6 @@ function _setHook(hook: string, command: string, projectRoot: string = process.c
 
 /**
  * Deletes all git hooks
- * @param {string} projectRoot
  */
 export function removeHooks(projectRoot: string = process.cwd(), verbose = false): void {
   for (const configEntry of VALID_GIT_HOOKS)
@@ -255,11 +358,8 @@ export function removeHooks(projectRoot: string = process.cwd(), verbose = false
 
 /**
  * Removes the pre-commit hook from .git/hooks
- * @param {string} hook
- * @param {string} projectRoot
- * @private
  */
-function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false) {
+function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false): void {
   const gitRoot = getGitProjectRoot(projectRoot)
   const hookPath = path.normalize(`${gitRoot}/hooks/${hook}`)
 
@@ -272,11 +372,39 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
 }
 
 /**
- * Validates the config, checks that every git hook or option is named correctly
- * @return {boolean}
- * @param {{string: string}} config
+ * Runs the staged lint tasks defined in the config file
  */
-function _validateHooks(config: Record<string, string>) {
+export async function runStagedLint(hook: string): Promise<boolean> {
+  try {
+    // Get the stagedLint config for the specific hook from the config
+    // Use type assertion to handle the index
+    const hookConfig = config[hook as keyof typeof config]
+
+    // Check if it has the expected structure
+    if (!hookConfig || typeof hookConfig !== 'object' || !('stagedLint' in hookConfig)) {
+      console.error(`[ERROR] No stagedLint configuration found for hook ${hook}`)
+      return false
+    }
+
+    const stagedLintConfig = (hookConfig as { stagedLint?: StagedLintConfig }).stagedLint
+
+    if (!stagedLintConfig) {
+      console.error(`[ERROR] Invalid stagedLint configuration for hook ${hook}`)
+      return false
+    }
+
+    const verbose = config.verbose === true
+    return await processStagedLint(stagedLintConfig, process.cwd(), verbose)
+  } catch (error) {
+    console.error('[ERROR] Failed to run staged lint:', error)
+    return false
+  }
+}
+
+/**
+ * Validates the config, checks that every git hook or option is named correctly
+ */
+function _validateHooks(config: Record<string, any>): boolean {
   for (const hookOrOption in config) {
     if (!VALID_GIT_HOOKS.includes(hookOrOption as typeof VALID_GIT_HOOKS[number]) && !VALID_OPTIONS.includes(hookOrOption as typeof VALID_OPTIONS[number]))
       return false
@@ -292,6 +420,8 @@ const gitHooks: {
   checkBunGitHooksInDependencies: typeof checkBunGitHooksInDependencies
   getProjectRootDirectoryFromNodeModules: typeof getProjectRootDirectoryFromNodeModules
   getGitProjectRoot: typeof getGitProjectRoot
+  runStagedLint: typeof runStagedLint
+  getStagedFiles: typeof getStagedFiles
 } = {
   PREPEND_SCRIPT,
   setHooksFromConfig,
@@ -299,6 +429,8 @@ const gitHooks: {
   checkBunGitHooksInDependencies,
   getProjectRootDirectoryFromNodeModules,
   getGitProjectRoot,
+  runStagedLint,
+  getStagedFiles
 }
 
 export default gitHooks
