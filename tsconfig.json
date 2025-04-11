@@ -5,6 +5,9 @@
     "moduleDetection": "force",
     "module": "esnext",
     "moduleResolution": "bundler",
+    "paths": {
+      "bun-git-hooks": ["./src/*"]
+    },
     "resolveJsonModule": true,
     "types": ["bun", "node"],
     "allowImportingTsExtensions": true,
@@ -20,5 +23,7 @@
     "verbatimModuleSyntax": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
-  }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
