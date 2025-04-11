@@ -77,14 +77,12 @@
     "@shikijs/vitepress-twoslash": "^3.2.2",
     "@stacksjs/eslint-config": "^4.10.2-beta.3",
     "@types/bun": "^1.2.9",
-    "@types/node": "^22.14.0",
     "@vite-pwa/vitepress": "^1.0.0",
     "bumpp": "^10.1.0",
     "bun-plugin-dtsx": "^0.21.9",
     "bunfig": "^0.8.2",
     "cac": "^6.7.14",
     "changelogen": "^0.6.1",
-    "lint-staged": "^15.5.0",
     "typescript": "^5.8.3",
     "unocss": "^66.0.0",
     "unplugin-icons": "^22.1.0",
@@ -94,8 +92,5 @@
   },
   "overrides": {
     "unconfig": "0.3.10"
-  },
-  "lint-staged": {
-    "*.{js,ts}": "bunx --bun eslint . --fix"
   }
 }
