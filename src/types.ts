@@ -44,3 +44,7 @@ export type GitHooksConfig = {
   preserveUnused?: boolean | typeof VALID_GIT_HOOKS[number][]
   verbose?: boolean
 }
+
+export interface SetHooksFromConfigOptions {
+  configFile?: GitHooksConfig
+}

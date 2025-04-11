@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import { config } from './config'
-
+import type { SetHooksFromConfigOptions } from './types'
 export const VALID_GIT_HOOKS = [
   'applypatch-msg',
   'pre-applypatch',
@@ -190,25 +190,26 @@ function _getPackageJson(projectPath = process.cwd()) {
  * Parses the config and sets git hooks
  * @param {string} projectRootPath
  */
-export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: { configFile?: string } = {}): void {
+export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: SetHooksFromConfigOptions): void {
   if (!config || Object.keys(config).length === 0)
     throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or `git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
 
+  const configFile = options?.configFile ? options.configFile : config
   // Only validate hook names that aren't options
-  const hookKeys = Object.keys(config).filter(key => key !== 'preserveUnused' && key !== 'verbose')
+  const hookKeys = Object.keys(configFile).filter(key => key !== 'preserveUnused' && key !== 'verbose')
   const isValidConfig = hookKeys.every(key => VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number]))
 
   if (!isValidConfig)
     throw new Error('[ERROR] Config was not in correct format. Please check git hooks or options name')
 
-  const preserveUnused = Array.isArray(config.preserveUnused) ? config.preserveUnused : config.preserveUnused ? VALID_GIT_HOOKS : []
+  const preserveUnused = Array.isArray(configFile.preserveUnused) ? configFile.preserveUnused : configFile.preserveUnused ? VALID_GIT_HOOKS : []
 
   for (const hook of VALID_GIT_HOOKS) {
-    if (Object.prototype.hasOwnProperty.call(config, hook)) {
-      if (!config[hook])
+    if (Object.prototype.hasOwnProperty.call(configFile, hook)) {
+      if (!configFile[hook])
         throw new Error(`[ERROR] Command for ${hook} is not set`)
 
-      _setHook(hook, config[hook], projectRootPath)
+      _setHook(hook, configFile[hook], projectRootPath)
     }
     else if (!preserveUnused.includes(hook)) {
       _removeHook(hook, projectRootPath)
