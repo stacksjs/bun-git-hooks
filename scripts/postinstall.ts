@@ -28,9 +28,11 @@ async function postinstall() {
 
   const sourcePath = join(process.cwd(), 'dist', 'bin', 'cli.js')
   const targetPath = join(binDir, 'bun-git-hooks')
+  const targetPath2 = join(binDir, 'git-hooks')
 
   try {
     await symlink(sourcePath, targetPath, 'file')
+    await symlink(sourcePath, targetPath2, 'file')
   }
   catch (err) {
     if ((err as NodeJS.ErrnoException).code !== 'EEXIST') {

@@ -12,6 +12,6 @@ await Bun.build({
 await Bun.build({
   entrypoints: ['bin/cli.ts'],
   target: 'bun',
-  outdir: './dist',
+  outdir: './dist/bin',
   plugins: [dts()],
 })

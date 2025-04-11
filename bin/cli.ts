@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 import process from 'node:process'
 import { CAC } from 'cac'
 import { version } from '../package.json'
@@ -16,9 +16,9 @@ if (['1', 'true'].includes(SKIP_INSTALL_GIT_HOOKS || '')) {
 cli
   .command('[configPath]', 'Install git hooks, optionally from specified config file')
   .option('--verbose', 'Enable verbose logging')
-  .example('bun-git-hooks')
-  .example('bun-git-hooks ../src/config.ts')
-  .example('bun-git-hooks --verbose')
+  .example('git-hooks')
+  .example('git-hooks ../src/config.ts')
+  .example('git-hooks --verbose')
   .action(async (configPath?: string, options?: { verbose?: boolean }) => {
     try {
       if (options?.verbose) {
@@ -26,7 +26,14 @@ cli
         console.log('[DEBUG] Working directory:', process.cwd())
       }
 
-      setHooksFromConfig(process.cwd(), { configFile: configPath })
+      if (configPath) {
+        const config = await import(configPath)
+        setHooksFromConfig(process.cwd(), { configFile: config })
+      }
+      else {
+        setHooksFromConfig(process.cwd())
+      }
+
       console.log('[INFO] Successfully set all git hooks')
     }
     catch (err) {
@@ -37,11 +44,11 @@ cli
 
 cli
   .command('uninstall', 'Remove all git hooks')
-  .alias('remove') // Add alias for uninstall
+  .alias('remove')
   .option('--verbose', 'Enable verbose logging')
-  .example('bun-git-hooks uninstall')
-  .example('bunx bun-git-hooks remove')
-  .example('bunx git-hooks uninstall --verbose')
+  .example('git-hooks uninstall')
+  .example('git-hooks remove')
+  .example('git-hooks uninstall --verbose')
   .action(async (options?: { verbose?: boolean }) => {
     try {
       if (options?.verbose) {
@@ -59,4 +66,6 @@ cli
 
 cli.version(version)
 cli.help()
+
+// Parse CLI args
 cli.parse()
