@@ -1,9 +1,6 @@
-import { mkdir } from 'node:fs/promises'
 import { dts } from 'bun-plugin-dtsx'
 
-// // Ensure dist/bin directory exists
-// await mkdir('./dist/bin', { recursive: true })
-
+// Build the main package
 await Bun.build({
   entrypoints: ['src/index.ts'],
   target: 'browser',
@@ -11,6 +8,7 @@ await Bun.build({
   plugins: [dts()],
 })
 
+// Build the CLI
 await Bun.build({
   entrypoints: ['bin/cli.ts'],
   target: 'bun',
