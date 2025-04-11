@@ -1,4 +1,18 @@
 
+## v0.2.7...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.7...main)
+
+### 🏡 Chore
+
+- Disable dependabot ([609db78](https://github.com/stacksjs/bun-git-hooks/commit/609db78))
+- Clean up debug logs ([57bcf78](https://github.com/stacksjs/bun-git-hooks/commit/57bcf78))
+
+### ❤️ Contributors
+
+- Cab-mikee ([@cab-mikee](https://github.com/cab-mikee))
+- Chris ([@chrisbbreuer](https://github.com/chrisbbreuer))
+
 ## v0.2.6...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.6...main)
