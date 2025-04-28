@@ -1,4 +1,27 @@
 
+## v0.2.12...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.12...main)
+
+### 🚀 Enhancements
+
+- Add staged lint functionality ([681482a](https://github.com/stacksjs/bun-git-hooks/commit/681482a))
+
+### 🏡 Chore
+
+- Remove unused types ([60bf608](https://github.com/stacksjs/bun-git-hooks/commit/60bf608))
+- Improve tsconfig ([d4c7b00](https://github.com/stacksjs/bun-git-hooks/commit/d4c7b00))
+- Wip ([97f1d0d](https://github.com/stacksjs/bun-git-hooks/commit/97f1d0d))
+- Improve deps ([15a4f56](https://github.com/stacksjs/bun-git-hooks/commit/15a4f56))
+- Adjust config ([4a22321](https://github.com/stacksjs/bun-git-hooks/commit/4a22321))
+- Add stacksjs/docs ([9b7d6ae](https://github.com/stacksjs/bun-git-hooks/commit/9b7d6ae))
+- Change browser to node ([7af061d](https://github.com/stacksjs/bun-git-hooks/commit/7af061d))
+
+### ❤️ Contributors
+
+- Cab-mikee ([@cab-mikee](https://github.com/cab-mikee))
+- Chris ([@chrisbbreuer](https://github.com/chrisbbreuer))
+
 ## v0.2.11...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.11...main)
