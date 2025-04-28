@@ -3,7 +3,7 @@ import { dts } from 'bun-plugin-dtsx'
 // Build the main package
 await Bun.build({
   entrypoints: ['src/index.ts'],
-  target: 'browser',
+  target: 'node',
   outdir: './dist',
   plugins: [dts()],
 })
