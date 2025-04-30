@@ -17,7 +17,13 @@ Create a `git-hooks.config.{ts,js,mjs,cjs,json}` file in your project root:
 import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint && bun run test',
+  // Using staged-lint for efficient file-specific linting
+  'pre-commit': {
+    'staged-lint': {
+      '*.{js,ts}': 'bunx --bun eslint . --fix',
+      '*.{css,scss}': 'stylelint --fix'
+    }
+  },
   'commit-msg': 'bun commitlint --edit $1',
   'pre-push': 'bun run build',
   'verbose': true,
@@ -33,7 +39,12 @@ You can also use JSON format in your `package.json`:
 ```json
 {
   "git-hooks": {
-    "pre-commit": "bun run lint && bun run test",
+    "pre-commit": {
+      "staged-lint": {
+        "*.{js,ts}": "bunx --bun eslint . --fix",
+        "*.{css,scss}": "stylelint --fix"
+      }
+    },
     "commit-msg": "bun commitlint --edit $1",
     "pre-push": "bun run build"
   }
@@ -55,6 +66,68 @@ git-hooks remove  # alias
 
 # Enable verbose logging
 git-hooks --verbose
+
+# Run staged lint for a specific hook
+git-hooks run-staged-lint pre-commit
+```
+
+## Staged Lint Usage
+
+The `staged-lint` feature allows you to run specific commands on staged files matching certain patterns. This is more efficient than running commands on all files.
+
+### Basic Staged Lint
+
+```ts
+const config: GitHooksConfig = {
+  'pre-commit': {
+    'staged-lint': {
+      // Run ESLint on JavaScript and TypeScript files
+      '*.{js,ts}': 'bunx --bun eslint . --fix',
+
+      // Run Stylelint on CSS and SCSS files
+      '*.{css,scss}': 'stylelint --fix'
+    }
+  }
+}
+```
+
+### Multiple Commands
+
+You can run multiple commands on the same file pattern:
+
+```ts
+const config: GitHooksConfig = {
+  'pre-commit': {
+    'staged-lint': {
+      // Run both ESLint and Prettier on TypeScript files
+      '*.{ts,tsx}': [
+        'eslint . --fix',
+        'prettier --write'
+      ]
+    }
+  }
+}
+```
+
+### Global Staged Lint
+
+You can define staged lint rules globally that apply to all hooks:
+
+```ts
+const config: GitHooksConfig = {
+  // Global staged lint configuration
+  'staged-lint': {
+    '*.{js,ts}': 'bunx --bun eslint . --fix',
+    '*.{css,scss}': 'stylelint --fix'
+  },
+
+  // Hook-specific configuration (takes precedence)
+  'pre-commit': {
+    'staged-lint': {
+      '*.{js,ts}': 'bunx --bun eslint . --fix --max-warnings=0'
+    }
+  }
+}
 ```
 
 ## Environment Variables
@@ -157,11 +230,18 @@ Full TypeScript support with detailed type definitions:
 
 ```ts
 interface GitHooksConfig {
-  'pre-commit'?: string
+  'pre-commit'?: string | {
+    'staged-lint'?: {
+      [pattern: string]: string | string[]
+    }
+  }
   'pre-push'?: string
   'commit-msg'?: string
   'post-merge'?: string
   // ... other git hooks
+  'staged-lint'?: {
+    [pattern: string]: string | string[]
+  }
   'preserveUnused'?: Array<string> | boolean
   'verbose'?: boolean
 }
@@ -179,7 +259,7 @@ git add .
 git commit -m "test: checking if hooks work"
 ```
 
-3. Your pre-commit hook should run
+3. Your pre-commit hook should run staged linting on the changed files
 4. Your commit-msg hook should validate the message
 5. When pushing, your pre-push hook should run
 

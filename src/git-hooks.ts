@@ -5,8 +5,12 @@ import { config } from './config'
 import type { GitHooksConfig, StagedLintConfig, StagedLintTask, SetHooksFromConfigOptions } from './types'
 import { exec } from 'node:child_process'
 import { promisify } from 'node:util'
+import { Logger, italic } from '@stacksjs/clarity'
 
 const execAsync = promisify(exec)
+const log = new Logger('git-hooks', {
+  showTags: true
+})
 
 export const VALID_GIT_HOOKS = [
   'applypatch-msg',
@@ -39,7 +43,7 @@ export const VALID_GIT_HOOKS = [
   'post-index-change',
 ] as const
 
-export const VALID_OPTIONS = ['preserveUnused'] as const
+export const VALID_OPTIONS = ['preserveUnused', 'verbose', 'staged-lint'] as const
 
 export const PREPEND_SCRIPT
   = `#!/bin/sh
@@ -188,7 +192,7 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
 
   const configFile = options?.configFile ? options.configFile : config
   // Only validate hook names that aren't options
-  const hookKeys = Object.keys(configFile).filter(key => key !== 'preserveUnused' && key !== 'verbose')
+  const hookKeys = Object.keys(configFile).filter(key => !VALID_OPTIONS.includes(key as typeof VALID_OPTIONS[number]))
   const isValidConfig = hookKeys.every(key => VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number]))
 
   if (!isValidConfig)
@@ -196,6 +200,8 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
 
   const preserveUnused = Array.isArray(configFile.preserveUnused) ? configFile.preserveUnused : configFile.preserveUnused ? VALID_GIT_HOOKS : []
 
+  const logKeys = Object.keys(configFile).filter(key => !VALID_OPTIONS.includes(key as typeof VALID_OPTIONS[number])).sort().map(key => italic(key)).join(', ')
+  log.debug(`Hook Keys: ${logKeys}`)
   for (const hook of VALID_GIT_HOOKS) {
     if (Object.prototype.hasOwnProperty.call(configFile, hook)) {
       if (!configFile[hook])
@@ -316,7 +322,7 @@ async function processStagedLint(
 /**
  * Creates or replaces an existing executable script in .git/hooks/<hook> with provided command or stagedLint config
  */
-function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedLintConfig }, projectRoot: string = process.cwd()): void {
+function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig }, projectRoot: string = process.cwd()): void {
   const gitRoot = getGitProjectRoot(projectRoot)
 
   if (!gitRoot) {
@@ -328,7 +334,7 @@ function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedL
 
   if (typeof commandOrConfig === 'string') {
     hookCommand = PREPEND_SCRIPT + commandOrConfig
-  } else if (commandOrConfig.stagedLint) {
+  } else if (commandOrConfig.stagedLint || commandOrConfig['staged-lint']) {
     // Create a command that will execute the bun-git-hooks stagedLint handler
     // Use the CLI command directly
     hookCommand = PREPEND_SCRIPT + `git-hooks run-staged-lint ${hook}`
@@ -344,6 +350,9 @@ function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedL
   if (!fs.existsSync(hookDirectory)){
     fs.mkdirSync(hookDirectory, { recursive: true })
   }
+
+  const addOrModify = fs.existsSync(hookPath) ? 'Modify' : 'Add'
+  log.debug(`${addOrModify} ${italic(hook)} hook`)
 
   fs.writeFileSync(hookPath, hookCommand, { mode: 0o755 })
 }
@@ -363,42 +372,47 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
   const gitRoot = getGitProjectRoot(projectRoot)
   const hookPath = path.normalize(`${gitRoot}/hooks/${hook}`)
 
-  if (fs.existsSync(hookPath))
+  if (fs.existsSync(hookPath)){
+    log.debug(`Hook ${hook} is not set, removing!`)
     fs.unlinkSync(hookPath)
+  }
 
   if (verbose)
     // eslint-disable-next-line no-console
-    console.info(`[INFO] Successfully removed the ${hook} hook`)
+    log.success(`Successfully removed the ${hook} hook`)
 }
 
 /**
  * Runs the staged lint tasks defined in the config file
  */
 export async function runStagedLint(hook: string): Promise<boolean> {
-  try {
-    // Get the stagedLint config for the specific hook from the config
-    // Use type assertion to handle the index
-    const hookConfig = config[hook as keyof typeof config]
+  const projectRoot = process.cwd()
+  const configFile = config
 
-    // Check if it has the expected structure
-    if (!hookConfig || typeof hookConfig !== 'object' || !('stagedLint' in hookConfig)) {
-      console.error(`[ERROR] No stagedLint configuration found for hook ${hook}`)
-      return false
-    }
-
-    const stagedLintConfig = (hookConfig as { stagedLint?: StagedLintConfig }).stagedLint
-
-    if (!stagedLintConfig) {
-      console.error(`[ERROR] Invalid stagedLint configuration for hook ${hook}`)
-      return false
-    }
-
-    const verbose = config.verbose === true
-    return await processStagedLint(stagedLintConfig, process.cwd(), verbose)
-  } catch (error) {
-    console.error('[ERROR] Failed to run staged lint:', error)
+  if (!configFile) {
+    console.error(`[ERROR] No configuration found`)
     return false
   }
+
+  // First check for hook-specific configuration
+  if (hook in configFile) {
+    const hookConfig = configFile[hook as keyof typeof configFile]
+    if (typeof hookConfig === 'object' && !Array.isArray(hookConfig)) {
+      const stagedLintConfig = (hookConfig as { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig }).stagedLint ||
+                              (hookConfig as { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig })['staged-lint']
+      if (stagedLintConfig) {
+        return processStagedLint(stagedLintConfig, projectRoot, configFile.verbose)
+      }
+    }
+  }
+
+  // If no hook-specific configuration, check for global staged-lint
+  if (configFile['staged-lint']) {
+    return processStagedLint(configFile['staged-lint'], projectRoot, configFile.verbose)
+  }
+
+  console.error(`[ERROR] No staged lint configuration found for hook ${hook}`)
+  return false
 }
 
 /**

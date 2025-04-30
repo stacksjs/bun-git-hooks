@@ -1,17 +1,14 @@
 import type { GitHooksConfig } from './src/types'
 
 const config: GitHooksConfig = {
+
+  // Hook-specific configuration (takes precedence)
   'pre-commit': {
-    stagedLint: {
-      '*.{js,ts,json,yaml,yml,md}': 'bunx --bun eslint . --fix',
-      // '*.{ts,tsx}': ['eslint . --fix', 'prettier --write'],
-      // '*.css': 'stylelint --fix',
-      // '*.md': 'prettier --write'
+    'staged-lint': {
+      '*.{js,ts}': 'bunx --bun eslint . --fix --max-warnings=0'
     }
   },
-  // Example of a regular command hook
-  'commit-msg': 'bun commitlint --edit $1',
-  'verbose': true,
+  verbose: true
 }
 
 export default config

@@ -7,10 +7,14 @@ export interface StagedLintConfig {
 }
 
 export type GitHooksConfig = {
-  [K in typeof VALID_GIT_HOOKS[number]]?: string | { stagedLint?: StagedLintConfig }
+  [K in typeof VALID_GIT_HOOKS[number]]?: string | {
+    'stagedLint'?: StagedLintConfig
+    'staged-lint'?: StagedLintConfig
+  }
 } & {
-  preserveUnused?: boolean | typeof VALID_GIT_HOOKS[number][]
-  verbose?: boolean
+  'preserveUnused'?: boolean | typeof VALID_GIT_HOOKS[number][]
+  'verbose'?: boolean
+  'staged-lint'?: StagedLintConfig
 }
 
 export interface SetHooksFromConfigOptions {
