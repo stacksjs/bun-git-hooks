@@ -1,4 +1,16 @@
 
+## v0.2.13...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.13...main)
+
+### 🏡 Chore
+
+- Improve staged lint ([b6158da](https://github.com/stacksjs/bun-git-hooks/commit/b6158da))
+
+### ❤️ Contributors
+
+- Cab-mikee ([@cab-mikee](https://github.com/cab-mikee))
+
 ## v0.2.12...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.12...main)
