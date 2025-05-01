@@ -41,7 +41,7 @@ cli
       log.success('Successfully set all git hooks')
     }
     catch (err) {
-      log.error('Was not able to set git hooks. Error:', err)
+      log.error(err)
       process.exit(1)
     }
   })

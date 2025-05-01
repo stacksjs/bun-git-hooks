@@ -188,9 +188,13 @@ function _getPackageJson(projectPath = process.cwd()): { packageJsonContent: any
  */
 export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: SetHooksFromConfigOptions): void {
   if (!config || Object.keys(config).length === 0)
-    throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or `git-hooks.config.{ts,js,mjs,cjs,mts,cts,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
+    throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,json}` or `git-hooks.config.{ts,js,mjs,cjs,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
 
-  const configFile = options?.configFile ? options.configFile : config
+  // Always use the provided configFile if available, otherwise use the cached config
+  const configFile = options?.configFile || { ...config }
+
+  _validateStagedLintConfig(configFile)
+
   // Only validate hook names that aren't options
   const hookKeys = Object.keys(configFile).filter(key => !VALID_OPTIONS.includes(key as typeof VALID_OPTIONS[number]))
   const isValidConfig = hookKeys.every(key => VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number]))
@@ -425,6 +429,17 @@ function _validateHooks(config: Record<string, any>): boolean {
   }
 
   return true
+}
+
+function _validateStagedLintConfig(config: GitHooksConfig): void {
+  for (const hook of VALID_GIT_HOOKS) {
+    if (hook !== 'pre-commit' && config[hook] && typeof config[hook] === 'object') {
+      const hookConfig = config[hook] as { 'stagedLint'?: StagedLintConfig; 'staged-lint'?: StagedLintConfig }
+      if (hookConfig['stagedLint'] || hookConfig['staged-lint']) {
+        throw new Error(`staged-lint is only allowed in pre-commit hook. Found in ${hook} hook.`)
+      }
+    }
+  }
 }
 
 const gitHooks: {

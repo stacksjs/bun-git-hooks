@@ -17,7 +17,7 @@ Create a `git-hooks.config.{ts,js,mjs,cjs,json}` file in your project root:
 import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
-  // Using staged-lint for efficient file-specific linting
+  // Note: staged-lint is only available in pre-commit hook
   'pre-commit': {
     'staged-lint': {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
@@ -67,13 +67,13 @@ git-hooks remove  # alias
 # Enable verbose logging
 git-hooks --verbose
 
-# Run staged lint for a specific hook
+# Run staged lint for pre-commit hook
 git-hooks run-staged-lint pre-commit
 ```
 
 ## Staged Lint Usage
 
-The `staged-lint` feature allows you to run specific commands on staged files matching certain patterns. This is more efficient than running commands on all files.
+The `staged-lint` feature is only available in the pre-commit hook. It allows you to run specific commands on staged files matching certain patterns. This is more efficient than running commands on all files.
 
 ### Basic Staged Lint
 
@@ -104,27 +104,6 @@ const config: GitHooksConfig = {
         'eslint . --fix',
         'prettier --write'
       ]
-    }
-  }
-}
-```
-
-### Global Staged Lint
-
-You can define staged lint rules globally that apply to all hooks:
-
-```ts
-const config: GitHooksConfig = {
-  // Global staged lint configuration
-  'staged-lint': {
-    '*.{js,ts}': 'bunx --bun eslint . --fix',
-    '*.{css,scss}': 'stylelint --fix'
-  },
-
-  // Hook-specific configuration (takes precedence)
-  'pre-commit': {
-    'staged-lint': {
-      '*.{js,ts}': 'bunx --bun eslint . --fix --max-warnings=0'
     }
   }
 }
@@ -196,7 +175,7 @@ const config: GitHooksConfig = {
 
 The following git hooks are supported:
 
-- `pre-commit`: Run before committing
+- `pre-commit`: Run before committing (supports staged-lint)
 - `prepare-commit-msg`: Run before the commit message editor is opened
 - `commit-msg`: Run to verify commit message
 - `post-commit`: Run after committing
@@ -221,6 +200,9 @@ catch (err) {
   else if (err.message.includes('git root')) {
     console.error('Not a Git repository')
   }
+  else if (err.message.includes('staged-lint is only allowed in pre-commit hook')) {
+    console.error('Staged-lint can only be used in pre-commit hook')
+  }
 }
 ```
 
@@ -239,9 +221,6 @@ interface GitHooksConfig {
   'commit-msg'?: string
   'post-merge'?: string
   // ... other git hooks
-  'staged-lint'?: {
-    [pattern: string]: string | string[]
-  }
   'preserveUnused'?: Array<string> | boolean
   'verbose'?: boolean
 }

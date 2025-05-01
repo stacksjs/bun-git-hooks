@@ -32,7 +32,7 @@ You can configure your git hooks using any of these file formats:
 import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
-  // Git hook commands
+  // Note: staged-lint is only available in pre-commit hook
   'pre-commit': {
     'staged-lint': {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
@@ -62,9 +62,7 @@ export default config
       }
     },
     "commit-msg": "bun commitlint --edit $1",
-    "pre-push": "bun run build",
-    "verbose": true,
-    "preserveUnused": false
+    "pre-push": "bun run build"
   }
 }
 ```
@@ -73,32 +71,26 @@ export default config
 
 ### Hook Commands
 
-Any valid git hook can be configured with either a command string or a staged-lint configuration:
+Any valid git hook can be configured with either a command string or a staged-lint configuration (pre-commit only):
 
 ```ts
 const config: GitHooksConfig = {
   // Simple command
   'pre-commit': 'bun run lint',
 
-  // Staged lint configuration
+  // Staged lint configuration (pre-commit only)
   'pre-commit': {
     'staged-lint': {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
-  },
-
-  // Global staged lint configuration
-  'staged-lint': {
-    '*.{js,ts}': 'bunx --bun eslint . --fix',
-    '*.{css,scss}': 'stylelint --fix'
   }
 }
 ```
 
 ### Staged Lint Configuration
 
-The `staged-lint` feature allows you to run specific commands on staged files matching certain patterns:
+The `staged-lint` feature is only available in the pre-commit hook. It allows you to run specific commands on staged files matching certain patterns:
 
 ```ts
 const config: GitHooksConfig = {
@@ -118,25 +110,6 @@ const config: GitHooksConfig = {
 
       // Run Prettier on Markdown files
       '*.md': 'prettier --write'
-    }
-  }
-}
-```
-
-You can also use `staged-lint` as a top-level configuration to apply the same rules to all hooks:
-
-```ts
-const config: GitHooksConfig = {
-  // Global staged lint configuration
-  'staged-lint': {
-    '*.{js,ts}': 'bunx --bun eslint . --fix',
-    '*.{css,scss}': 'stylelint --fix'
-  },
-
-  // Hook-specific staged lint configuration (takes precedence)
-  'pre-commit': {
-    'staged-lint': {
-      '*.{js,ts}': 'bunx --bun eslint . --fix --max-warnings=0'
     }
   }
 }
@@ -219,4 +192,5 @@ If no configuration is found, an error will be thrown.
 4. **Preserve Critical Hooks**: Use `preserveUnused` for important custom hooks
 5. **Enable Verbose Mode**: When debugging hook issues
 6. **Use Exit Codes**: Hooks should exit with non-zero for failures
-7. **Use Staged Lint**: For efficient file-specific linting
+7. **Use Staged Lint**: For efficient file-specific linting (pre-commit only)
+8. **Follow Restrictions**: Remember that staged-lint is only available in pre-commit hook

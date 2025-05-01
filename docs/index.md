@@ -55,7 +55,12 @@ cat > git-hooks.config.ts << EOL
 import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint && bun run test',
+  // Note: staged-lint is only available in pre-commit hook
+  'pre-commit': {
+    'staged-lint': {
+      '*.{js,ts}': 'bunx --bun eslint . --fix --max-warnings=0'
+    }
+  },
   'commit-msg': 'bun commitlint --edit $1',
   'pre-push': 'bun run build',
 }
@@ -74,6 +79,7 @@ EOL
 - 📦 **Zero Dependencies**: Minimal footprint in your project
 - ⚡ **Fast**: Built for Bun with performance in mind
 - 🔧 **Flexible**: Multiple configuration formats and options
+- 🚫 **Restricted Features**: Clear boundaries for features like staged-lint (pre-commit only)
 
 ## Configuration Options
 
@@ -95,8 +101,13 @@ EOL
 
 ```ts
 const config: GitHooksConfig = {
-  // Lint and test before commits
-  'pre-commit': 'bun run lint && bun run test',
+  // Lint and test before commits (using staged-lint)
+  'pre-commit': {
+    'staged-lint': {
+      '*.{js,ts}': 'bunx --bun eslint . --fix --max-warnings=0',
+      '*.{css,scss}': 'stylelint --fix'
+    }
+  },
 
   // Validate commit messages
   'commit-msg': 'bun commitlint --edit $1',
@@ -108,10 +119,7 @@ const config: GitHooksConfig = {
   'post-checkout': 'bun install',
 
   // Run security checks before push
-  'pre-push': 'bun run security:check',
-
-  // Format code before commit
-  'pre-commit': 'bun run format && bun run lint',
+  'pre-push': 'bun run security:check'
 }
 ```
 
