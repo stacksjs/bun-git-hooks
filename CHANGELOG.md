@@ -1,4 +1,16 @@
 
+## v0.2.14...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.14...main)
+
+### 🏡 Chore
+
+- Add stagedLint validations ([6f22387](https://github.com/stacksjs/bun-git-hooks/commit/6f22387))
+
+### ❤️ Contributors
+
+- Cab-mikee ([@cab-mikee](https://github.com/cab-mikee))
+
 ## v0.2.13...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.13...main)
