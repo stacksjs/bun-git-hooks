@@ -79,7 +79,7 @@
     "@types/bun": "^1.2.12",
     "bumpp": "^10.1.0",
     "bun-plugin-dtsx": "^0.21.12",
-    "bunfig": "^0.8.4",
+    "bunfig": "^0.8.5",
     "cac": "^6.7.14",
     "changelogen": "^0.6.1",
     "typescript": "^5.8.3"
