@@ -60,22 +60,20 @@ const sidebar = [
     ],
   },
   {
-    text: 'Advanced',
+    text: 'Features',
     items: [
-      { text: 'Environment Variables', link: '/usage#environment-variables' },
-      { text: 'Advanced Configuration', link: '/config#advanced-configuration' },
-      { text: 'Best Practices', link: '/config#best-practices' },
+      { text: 'Staged Linting', link: '/features/staged-linting' },
+      { text: 'Hook Management', link: '/features/hook-management' },
     ],
   },
   {
-    text: 'Community',
+    text: 'Advanced',
     items: [
-      { text: 'Team', link: '/team' },
-      { text: 'Sponsors', link: '/sponsors' },
-      { text: 'Showcase', link: '/showcase' },
+      { text: 'Custom Initialization', link: '/advanced/custom-initialization' },
+      { text: 'Configuration', link: '/advanced/configuration' },
     ],
   },
-  { text: 'Showcase', link: '/Showcase' },
+  { text: 'API Reference', link: '/api-reference' },
 ]
 
 const description = 'A modern, zero-dependency tool for managing git hooks in Bun projects'
@@ -110,7 +108,6 @@ export default withPwa(
       ['meta', { property: 'og:site_name', content: 'bun-git-hooks' }],
       ['meta', { property: 'og:image', content: './images/og-image.png' }],
       ['meta', { property: 'og:url', content: 'https://bun-git-hooks.netlify.app/' }],
-      // ['script', { 'src': 'https://cdn.usefathom.com/script.js', 'data-site': '', 'data-spa': 'auto', 'defer': '' }],
       ...analyticsHead,
     ],
 
@@ -162,10 +159,6 @@ export default withPwa(
         light: 'github-light',
         dark: 'github-dark',
       },
-
-      codeTransformers: [
-        transformerTwoslash(),
-      ],
     },
 
     vite: viteConfig,

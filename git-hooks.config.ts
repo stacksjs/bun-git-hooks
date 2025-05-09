@@ -8,6 +8,7 @@ const config: GitHooksConfig = {
       '*.{js,ts}': 'bunx --bun eslint . --fix --max-warnings=0'
     }
   },
+  'commit-msg': 'bunx gitlint .git/COMMIT_EDITMSG',
   verbose: true
 }
 
