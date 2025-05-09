@@ -29,19 +29,19 @@ const config: GitHooksConfig = {
 
 You can use any glob pattern supported by Git:
 
-```ts
+```json
 {
   // Single extension
-  '*.js': 'eslint --fix',
+  "*.js": "eslint --fix",
 
   // Multiple extensions
-  '*.{js,ts,jsx,tsx}': ['eslint --fix', 'prettier --write'],
+  "*.{js,ts,jsx,tsx}": ["eslint --fix", "prettier --write"],
 
   // Specific directories
-  'src/**/*.ts': 'tsc --noEmit',
+  "src/**/*.ts": "tsc --noEmit",
 
   // Exclude patterns
-  '!(*test).ts': 'eslint'
+  "!(*test).ts": "eslint"
 }
 ```
 
@@ -51,17 +51,21 @@ Commands can be specified in two ways:
 
 1. **Single Command String**:
 
-   ```ts
-   '*.js': 'eslint --fix'
+   ```json
+   {
+     "*.js": "eslint --fix"
+   }
    ```
 
 2. **Array of Commands**:
 
-   ```ts
-   '*.js': [
-     'eslint --fix',
-     'prettier --write'
-   ]
+   ```json
+   {
+     "*.js": [
+       "eslint --fix",
+       "prettier --write"
+     ]
+   }
    ```
 
 ## Best Practices
@@ -75,11 +79,11 @@ Commands can be specified in two ways:
 
 ### Basic JavaScript/TypeScript Linting
 
-```ts
+```json
 {
-  'pre-commit': {
-    'staged-lint': {
-      '*.{js,ts}': 'bunx --bun eslint . --fix'
+  "pre-commit": {
+    "staged-lint": {
+      "*.{js,ts}": "bunx --bun eslint . --fix"
     }
   }
 }
@@ -87,25 +91,25 @@ Commands can be specified in two ways:
 
 ### Comprehensive Code Quality Checks
 
-```ts
+```json
 {
-  'pre-commit': {
-    'staged-lint': {
+  "pre-commit": {
+    "staged-lint": {
       // Lint and format TypeScript files
-      '*.{ts,tsx}': [
-        'bunx --bun eslint . --fix',
-        'prettier --write',
-        'tsc --noEmit'
+      "*.{ts,tsx}": [
+        "bunx --bun eslint . --fix",
+        "prettier --write",
+        "tsc --noEmit"
       ],
 
       // Style files
-      '*.{css,scss}': 'stylelint --fix',
+      "*.{css,scss}": "stylelint --fix",
 
       // Markdown files
-      '*.md': 'prettier --write',
+      "*.md": "prettier --write",
 
       // JSON files
-      '*.json': 'prettier --write'
+      "*.json": "prettier --write"
     }
   }
 }
@@ -113,14 +117,14 @@ Commands can be specified in two ways:
 
 ### Custom Script Integration
 
-```ts
+```json
 {
-  'pre-commit': {
-    'staged-lint': {
-      '*.{js,ts}': [
-        'bun run test:unit',
-        'bun run lint:fix',
-        'bun run type-check'
+  "pre-commit": {
+    "staged-lint": {
+      "*.{js,ts}": [
+        "bun run test:unit",
+        "bun run lint:fix",
+        "bun run type-check"
       ]
     }
   }

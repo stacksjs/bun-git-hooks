@@ -17,10 +17,13 @@ git-hooks.config.cjs
 
 # JSON
 git-hooks.config.json
+```
 
-# Package.json
+### Package.json Format
+
+```json
 {
-  "gitHooks": {
+  "git-hooks": {
     "pre-commit": "..."
   }
 }
@@ -75,9 +78,6 @@ export default getConfig()
 ```ts
 // base.config.ts
 // dev.config.ts
-import { baseConfig } from './base.config'
-
-// prod.config.ts
 import { baseConfig } from './base.config'
 
 export const baseConfig: GitHooksConfig = {

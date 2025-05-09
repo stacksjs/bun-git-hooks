@@ -1,5 +1,4 @@
 import type { HeadConfig } from 'vitepress'
-import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { withPwa } from '@vite-pwa/vitepress'
 import { defineConfig } from 'vitepress'
 

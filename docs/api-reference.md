@@ -116,7 +116,7 @@ Or in `package.json`:
 
 ```json
 {
-  "gitHooks": {
+  "git-hooks": {
     "pre-commit": "bun run lint"
   }
 }

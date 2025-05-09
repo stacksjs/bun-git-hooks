@@ -129,7 +129,7 @@ module.exports = {
 
 ```json [package.json]
 {
-  "gitHooks": {
+  "git-hooks": {
     "pre-commit": "bun run lint && bun run test",
     "commit-msg": "bun commitlint --edit $1",
     "pre-push": "bun run build"
