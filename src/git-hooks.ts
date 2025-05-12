@@ -5,7 +5,7 @@ import { config } from './config'
 import type { GitHooksConfig, StagedLintConfig, StagedLintTask, SetHooksFromConfigOptions } from './types'
 import { exec } from 'node:child_process'
 import { promisify } from 'node:util'
-import { Logger, italic } from '@stacksjs/clarity'
+import { Logger, italic, bgRed, green, bgYellow } from '@stacksjs/clarity'
 
 const execAsync = promisify(exec)
 const log = new Logger('git-hooks', {
@@ -80,7 +80,6 @@ export function getGitProjectRoot(directory: string = process.cwd()): string | u
   if (fs.existsSync(fullPath)) {
     if (!fs.lstatSync(fullPath).isDirectory()) {
       const content = fs.readFileSync(fullPath, { encoding: 'utf-8' })
-      // eslint-disable-next-line regexp/no-super-linear-backtracking
       const match = /^gitdir: (.*)\s*$/.exec(content)
 
       if (match) {
@@ -224,8 +223,14 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
  */
 async function getStagedFiles(projectRoot: string = process.cwd()): Promise<string[]> {
   try {
-    const { stdout } = await execAsync('git diff --staged --name-only --diff-filter=ACMR', { cwd: projectRoot })
-    return stdout.trim().split('\n').filter(Boolean)
+    const { stdout } = await execAsync('git diff --cached --name-only --diff-filter=ACMR', { cwd: projectRoot })
+    const files = stdout.trim().split('\n').filter(Boolean)
+
+    if (config.verbose && files.length > 0) {
+      console.info('[INFO] Staged files found:', files)
+    }
+
+    return files
   } catch (error) {
     console.error('[ERROR] Failed to get staged files:', error)
     return []
@@ -233,28 +238,73 @@ async function getStagedFiles(projectRoot: string = process.cwd()): Promise<stri
 }
 
 /**
- * Checks if a file matches a glob pattern
+ * Expands brace patterns like {js,ts} into [js, ts]
  */
-function matchesGlob(file: string, pattern: string): boolean {
-  // Simple implementation - can be expanded with micromatch for more complex patterns
-  if (pattern.includes('*')) {
-    const regexPattern = pattern
-      .replace(/\./g, '\\.')
-      .replace(/\*/g, '.*')
-      .replace(/\?/g, '.')
+function expandBracePattern(pattern: string): string[] {
+  const braceMatch = pattern.match(/{([^}]+)}/g)
+  if (!braceMatch) return [pattern]
 
-    const regex = new RegExp(`^${regexPattern}$`)
-    return regex.test(file)
-  }
+  const results: string[] = [pattern]
+  braceMatch.forEach((brace) => {
+    const options = brace.slice(1, -1).split(',')
+    const newResults: string[] = []
 
-  return file === pattern
+    results.forEach((result) => {
+      options.forEach((option) => {
+        newResults.push(result.replace(brace, option.trim()))
+      })
+    })
+
+    results.length = 0
+    results.push(...newResults)
+  })
+
+  return results
 }
 
 /**
- * Filters files by glob pattern
+ * Checks if a file matches a glob pattern
+ */
+function matchesGlob(file: string, pattern: string): boolean {
+  // Handle negation patterns (e.g., !node_modules/**)
+  if (pattern.startsWith('!')) {
+    return !matchesGlob(file, pattern.slice(1))
+  }
+
+  // Convert glob pattern to regex
+  const regexPattern = pattern
+    // Escape special regex characters except * and ?
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    // Handle double-star pattern (matches zero or more directories)
+    .replace(/\*\*/g, '(?:.*?)')
+    // Handle single-star pattern (matches within directory)
+    .replace(/\*/g, '[^/]*')
+    // Handle single character match
+    .replace(/\?/g, '[^/]')
+
+  const regex = new RegExp(`^${regexPattern}$`)
+  return regex.test(file)
+}
+
+/**
+ * Filters files by glob pattern, supporting brace expansion and negation
  */
 function filterFilesByPattern(files: string[], pattern: string): string[] {
-  return files.filter(file => matchesGlob(file, pattern))
+  // Handle brace expansion
+  const expandedPatterns = expandBracePattern(pattern)
+
+  // Split into include and exclude patterns
+  const includePatterns = expandedPatterns.filter(p => !p.startsWith('!'))
+  const excludePatterns = expandedPatterns.filter(p => p.startsWith('!'))
+
+  return files.filter(file => {
+    // File must match at least one include pattern
+    const isIncluded = includePatterns.some(p => matchesGlob(file, p))
+    // File must not match any exclude pattern
+    const isExcluded = excludePatterns.some(p => matchesGlob(file, p.slice(1)))
+
+    return isIncluded && !isExcluded
+  })
 }
 
 /**
@@ -272,20 +322,30 @@ async function runCommandOnStagedFiles(
   }
 
   const commands = Array.isArray(command) ? command : [command]
+  const fileList = files.join(' ')
 
   for (const cmd of commands) {
     try {
-      const fullCommand = `${cmd} ${files.join(' ')}`
-      if (verbose) console.info(`[INFO] Running: ${fullCommand}`)
+      const fullCommand = `${cmd} ${fileList}`
+      if (verbose) {
+        console.info('[INFO] Running command:', cmd)
+        console.info('[INFO] On files:', files)
+      }
 
       const { stdout, stderr } = await execAsync(fullCommand, { cwd: projectRoot })
 
-      if (verbose) {
-        if (stdout) console.info(stdout)
-        if (stderr) console.error(stderr)
+      if (stdout && (verbose || stdout.includes('error') || stdout.includes('warning'))) {
+        console.info(stdout)
       }
-    } catch (error) {
-      console.error(`[ERROR] Command failed: ${cmd}`, error)
+      if (stderr) {
+        console.error('[ERROR] Command output:', stderr)
+        return false
+      }
+    } catch (error: any) {
+      // Display the error output which contains the linting issues
+      if (error.stdout) console.info(error.stdout)
+      if (error.stderr) console.error('[ERROR] Command stderr:', error.stderr)
+      console.error(`[ERROR] Command failed: ${cmd}`)
       return false
     }
   }
@@ -382,7 +442,6 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
   }
 
   if (verbose)
-    // eslint-disable-next-line no-console
     log.success(`Successfully removed the ${hook} hook`)
 }
 
