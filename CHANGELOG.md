@@ -1,4 +1,18 @@
 
+## v0.2.15...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.15...main)
+
+### 🏡 Chore
+
+- Improve documentation ([ed474bb](https://github.com/stacksjs/bun-git-hooks/commit/ed474bb))
+- Fix lint issue ([d74c6ca](https://github.com/stacksjs/bun-git-hooks/commit/d74c6ca))
+- Improve staged-lint ([d56b0b1](https://github.com/stacksjs/bun-git-hooks/commit/d56b0b1))
+
+### ❤️ Contributors
+
+- Cab-mikee ([@cab-mikee](https://github.com/cab-mikee))
+
 ## v0.2.14...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.14...main)
