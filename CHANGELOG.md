@@ -1,4 +1,16 @@
 
+## v0.2.16...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.16...main)
+
+### 🏡 Chore
+
+- Add bun prefix to hook call ([faca4ab](https://github.com/stacksjs/bun-git-hooks/commit/faca4ab))
+
+### ❤️ Contributors
+
+- Adelino Ngomacha <Adelinob335@gmail.com>
+
 ## v0.2.15...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.15...main)
