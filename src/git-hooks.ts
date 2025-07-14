@@ -401,7 +401,7 @@ function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedL
   } else if (commandOrConfig.stagedLint || commandOrConfig['staged-lint']) {
     // Create a command that will execute the bun-git-hooks stagedLint handler
     // Use the CLI command directly
-    hookCommand = PREPEND_SCRIPT + `git-hooks run-staged-lint ${hook}`
+    hookCommand = PREPEND_SCRIPT + `bun git-hooks run-staged-lint ${hook}`
   } else {
     console.error(`[ERROR] Invalid command or config for hook ${hook}`)
     return
