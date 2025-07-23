@@ -1,4 +1,16 @@
 
+## v0.2.18...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.18...main)
+
+### 🏡 Chore
+
+- Update bunfig config ([a0e14e9](https://github.com/stacksjs/bun-git-hooks/commit/a0e14e9))
+
+### ❤️ Contributors
+
+- Adelino Ngomacha <Adelinob335@gmail.com>
+
 ## v0.2.17...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.17...main)
