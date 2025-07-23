@@ -1,4 +1,16 @@
 
+## v0.2.17...main
+
+[compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.17...main)
+
+### 🏡 Chore
+
+- Update tests ([3b1f54e](https://github.com/stacksjs/bun-git-hooks/commit/3b1f54e))
+
+### ❤️ Contributors
+
+- Adelino Ngomacha <Adelinob335@gmail.com>
+
 ## v0.2.16...main
 
 [compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.16...main)
