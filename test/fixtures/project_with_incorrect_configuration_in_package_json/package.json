@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "devDependencies": {
     "bun-git-hooks": "0.1.0"
+  },
+  "git-hooks": {
+    "invalid-hook-name": "echo test",
+    "pre-commit": "exit 1"
   }
 }

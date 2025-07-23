@@ -11,3 +11,4 @@ node_modules
 temp
 docs/.vitepress/cache
 git-hooks*
+!test/fixtures/**/git-hooks*
