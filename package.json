@@ -77,12 +77,12 @@
     "@stacksjs/docs": "^0.70.23",
     "@stacksjs/eslint-config": "^4.10.2-beta.3",
     "@stacksjs/gitlint": "^0.1.5",
-    "@types/bun": "^1.2.17",
+    "@types/bun": "^1.2.19",
     "bumpp": "^10.2.0",
     "bun-plugin-dtsx": "^0.21.12",
-    "bunfig": "^0.10.0",
+    "bunfig": "^0.10.1",
     "cac": "^6.7.14",
-    "changelogen": "^0.6.1",
+    "changelogen": "^0.6.2",
     "typescript": "^5.8.3"
   },
   "overrides": {
