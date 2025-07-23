@@ -1,6 +1,6 @@
 import type { GitHooksConfig } from './types'
 import process from 'node:process'
-import { config as loadConfig } from 'bunfig'
+import { loadConfig } from 'bunfig'
 import defaultConfig from '../git-hooks.config.ts'
 
 // eslint-disable-next-line antfu/no-top-level-await
