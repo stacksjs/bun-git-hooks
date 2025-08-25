@@ -39,7 +39,7 @@
   "types": "./dist/index.d.ts",
   "bin": {
     "git-hooks": "./dist/bin/cli.js",
-    "bun-git-hooks": "./dist/bin/cli.js"
+    "bun-git-hooks": "^0.2.19"
   },
   "files": ["README.md", "dist"],
   "scripts": {
