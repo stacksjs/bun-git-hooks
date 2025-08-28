@@ -50,6 +50,8 @@ describe('bun-git-hooks', () => {
           ),
         ).toBe('var/my-project')
       })
+
+      
     })
 
     describe('getGitProjectRoot', () => {
@@ -168,6 +170,34 @@ describe('bun-git-hooks', () => {
       path.join(testsFolder, 'project_without_configuration'),
     )
 
+    // CLI verbose behavior
+    describe('CLI verbose', () => {
+      beforeEach(() => {
+        createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
+      })
+
+      afterEach(() => {
+        removeGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
+      })
+
+      it('does not print debug logs by default', () => {
+        const output = execSync(`bun ${require.resolve('../bin/cli')} 2>&1`,
+          { cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON, env: { ...process.env } },
+        ).toString()
+
+        expect(output).not.toContain('Hook Keys:')
+        expect(output).not.toMatch(/(Add|Modify) .* hook/)
+      })
+
+      it('prints debug logs when --verbose is passed', () => {
+        const output = execSync(`bun ${require.resolve('../bin/cli')} --verbose 2>&1`,
+          { cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON, env: { ...process.env } },
+        ).toString()
+
+        expect(output).toContain('Hook Keys:')
+        expect(output).toMatch(/(Add|Modify) .* hook/)
+      })
+    })
     /**
      * Creates .git/hooks dir from root
      * @param {string} root

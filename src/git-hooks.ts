@@ -12,6 +12,9 @@ const log = new Logger('git-hooks', {
   showTags: true
 })
 
+// Module-level verbose switch. Default: false
+let VERBOSE = false
+
 export const VALID_GIT_HOOKS = [
   'applypatch-msg',
   'pre-applypatch',
@@ -192,6 +195,9 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
   // Always use the provided configFile if available, otherwise use the cached config
   const configFile = options?.configFile || { ...config }
 
+  // Set module verbosity strictly from options (CLI flag). Ignore config.verbose for logs.
+  VERBOSE = Boolean(options?.verbose)
+
   _validateStagedLintConfig(configFile)
 
   // Only validate hook names that aren't options
@@ -204,7 +210,7 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
   const preserveUnused = Array.isArray(configFile.preserveUnused) ? configFile.preserveUnused : configFile.preserveUnused ? VALID_GIT_HOOKS : []
 
   const logKeys = Object.keys(configFile).filter(key => !VALID_OPTIONS.includes(key as typeof VALID_OPTIONS[number])).sort().map(key => italic(key)).join(', ')
-  log.debug(`Hook Keys: ${logKeys}`)
+  if (VERBOSE) log.debug(`Hook Keys: ${logKeys}`)
   for (const hook of VALID_GIT_HOOKS) {
     if (Object.prototype.hasOwnProperty.call(configFile, hook)) {
       if (!configFile[hook])
@@ -226,7 +232,7 @@ async function getStagedFiles(projectRoot: string = process.cwd()): Promise<stri
     const { stdout } = await execAsync('git diff --cached --name-only --diff-filter=ACMR', { cwd: projectRoot })
     const files = stdout.trim().split('\n').filter(Boolean)
 
-    if (config.verbose && files.length > 0) {
+    if (VERBOSE && files.length > 0) {
       console.info('[INFO] Staged files found:', files)
     }
 
@@ -416,7 +422,7 @@ function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedL
   }
 
   const addOrModify = fs.existsSync(hookPath) ? 'Modify' : 'Add'
-  log.debug(`${addOrModify} ${italic(hook)} hook`)
+  if (VERBOSE) log.debug(`${addOrModify} ${italic(hook)} hook`)
 
   fs.writeFileSync(hookPath, hookCommand, { mode: 0o755 })
 }
@@ -437,7 +443,7 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
   const hookPath = path.normalize(`${gitRoot}/hooks/${hook}`)
 
   if (fs.existsSync(hookPath)){
-    log.debug(`Hook ${hook} is not set, removing!`)
+    if (VERBOSE) log.debug(`Hook ${hook} is not set, removing!`)
     fs.unlinkSync(hookPath)
   }
 
@@ -448,7 +454,7 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
 /**
  * Runs the staged lint tasks defined in the config file
  */
-export async function runStagedLint(hook: string): Promise<boolean> {
+export async function runStagedLint(hook: string, verbose?: boolean): Promise<boolean> {
   const projectRoot = process.cwd()
   const configFile = config
 
@@ -457,6 +463,8 @@ export async function runStagedLint(hook: string): Promise<boolean> {
     return false
   }
 
+  const isVerbose = Boolean(verbose ?? VERBOSE)
+
   // First check for hook-specific configuration
   if (hook in configFile) {
     const hookConfig = configFile[hook as keyof typeof configFile]
@@ -464,14 +472,14 @@ export async function runStagedLint(hook: string): Promise<boolean> {
       const stagedLintConfig = (hookConfig as { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig }).stagedLint ||
                               (hookConfig as { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig })['staged-lint']
       if (stagedLintConfig) {
-        return processStagedLint(stagedLintConfig, projectRoot, configFile.verbose)
+        return processStagedLint(stagedLintConfig, projectRoot, isVerbose)
       }
     }
   }
 
   // If no hook-specific configuration, check for global staged-lint
   if (configFile['staged-lint']) {
-    return processStagedLint(configFile['staged-lint'], projectRoot, configFile.verbose)
+    return processStagedLint(configFile['staged-lint'], projectRoot, isVerbose)
   }
 
   console.error(`[ERROR] No staged lint configuration found for hook ${hook}`)

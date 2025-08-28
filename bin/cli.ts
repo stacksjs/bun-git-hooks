@@ -32,10 +32,10 @@ cli
 
       if (configPath) {
         const config = await import(configPath)
-        setHooksFromConfig(process.cwd(), { configFile: config })
+        setHooksFromConfig(process.cwd(), { configFile: config, verbose: options?.verbose })
       }
       else {
-        setHooksFromConfig(process.cwd())
+        setHooksFromConfig(process.cwd(), { verbose: options?.verbose })
       }
 
       log.success('Successfully set all git hooks')
@@ -80,7 +80,7 @@ cli
         log.debug(`Working directory: ${process.cwd()}`)
       }
 
-      const success = await runStagedLint(hook)
+      const success = await runStagedLint(hook, options?.verbose)
 
       if (success) {
         log.success('Staged lint completed successfully')

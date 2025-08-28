@@ -19,4 +19,5 @@ export type GitHooksConfig = {
 
 export interface SetHooksFromConfigOptions {
   configFile?: GitHooksConfig
+  verbose?: boolean
 }
