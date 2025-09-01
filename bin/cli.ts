@@ -3,7 +3,9 @@ import process from 'node:process'
 import { Logger } from '@stacksjs/clarity'
 import { CAC } from 'cac'
 import { version } from '../package.json'
-import { removeHooks, runStagedLint, setHooksFromConfig } from '../src/git-hooks'
+import { config } from '../src/config'
+import { removeHooks, setHooksFromConfig } from '../src/git-hooks'
+import { runStagedLint } from '../src/staged-lint'
 
 const cli = new CAC('git-hooks')
 const log = new Logger('git-hooks', {
@@ -77,14 +79,14 @@ cli
   .example('git-hooks run-staged-lint pre-commit --verbose')
   .example('git-hooks run-staged-lint pre-commit --auto-restage')
   .example('git-hooks run-staged-lint pre-commit --no-auto-restage')
-  .action(async (hook: string, options?: { verbose?: boolean; autoRestage?: boolean }) => {
+  .action(async (hook: string, options?: { verbose?: boolean, autoRestage?: boolean }) => {
     try {
       if (options?.verbose) {
         log.debug(`Running staged lint for hook: ${hook}`)
         log.debug(`Working directory: ${process.cwd()}`)
       }
 
-      const success = await runStagedLint(hook, options?.verbose)
+      const success = await runStagedLint(hook, config, process.cwd(), options?.verbose)
 
       if (success) {
         log.success('Staged lint completed successfully')

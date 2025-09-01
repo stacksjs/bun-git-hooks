@@ -1,5 +1,4 @@
 import type { StagedLintConfig } from './types'
-
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -31,7 +30,7 @@ export class StagedLintProcessor {
       }
 
       this.log(`Processing ${stagedFiles.length} staged files`)
-      
+
       // Store original staged content for comparison (only if auto-restage is enabled)
       const originalContent = this.autoRestage ? this.captureStagedContent(stagedFiles) : new Map()
 
@@ -40,12 +39,13 @@ export class StagedLintProcessor {
       // Process each pattern in the config
       for (const [pattern, commands] of Object.entries(config)) {
         const matchingFiles = this.getMatchingFiles(stagedFiles, pattern)
-        if (matchingFiles.length === 0) continue
+        if (matchingFiles.length === 0)
+          continue
 
         this.log(`Processing pattern "${pattern}" for ${matchingFiles.length} files`)
 
         const commandArray = Array.isArray(commands) ? commands : [commands]
-        
+
         for (const command of commandArray) {
           const success = await this.runLintCommand(command, matchingFiles)
           if (!success) {
@@ -60,7 +60,7 @@ export class StagedLintProcessor {
         if (modifiedFiles.length > 0) {
           this.log(`Auto-restaging ${modifiedFiles.length} modified files: ${modifiedFiles.join(', ')}`)
           this.restageFiles(modifiedFiles)
-          
+
           // Validate that restaged files still pass lint
           const validationSuccess = await this.validateStagedFiles(config)
           if (!validationSuccess) {
@@ -68,7 +68,8 @@ export class StagedLintProcessor {
             return false
           }
         }
-      } else if (!this.autoRestage) {
+      }
+      else if (!this.autoRestage) {
         // Check if files were modified but not restaged
         const modifiedFiles = this.getModifiedFiles(originalContent)
         if (modifiedFiles.length > 0) {
@@ -79,8 +80,8 @@ export class StagedLintProcessor {
       }
 
       return !hasErrors
-
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`Staged lint process failed: ${error}`)
       return false
     }
@@ -90,71 +91,144 @@ export class StagedLintProcessor {
     try {
       const output = execSync('git diff --cached --name-only', {
         cwd: this.projectRoot,
-        encoding: 'utf-8'
+        encoding: 'utf-8',
       })
       return output.trim().split('\n').filter(Boolean)
-    } catch {
+    }
+    catch {
       return []
     }
   }
 
   private captureStagedContent(files: string[]): Map<string, string> {
     const content = new Map<string, string>()
-    
+
     for (const file of files) {
       try {
         const stagedContent = execSync(`git show :${file}`, {
           cwd: this.projectRoot,
-          encoding: 'utf-8'
+          encoding: 'utf-8',
         })
         content.set(file, stagedContent)
-      } catch {
+      }
+      catch {
         try {
           const workingContent = fs.readFileSync(path.join(this.projectRoot, file), 'utf-8')
           content.set(file, workingContent)
-        } catch {
+        }
+        catch {
           // Skip files that can't be read
         }
       }
     }
-    
+
     return content
   }
 
   private getMatchingFiles(files: string[], pattern: string): string[] {
-    const regexPattern = pattern
-      .replace(/\./g, '\\.')
-      .replace(/\*/g, '.*')
-      .replace(/\?/g, '.')
-    
+    // Handle brace expansion like {js,ts}
+    const expandedPatterns = this.expandBracePattern(pattern)
+
+    // Split into include and exclude patterns
+    const includePatterns = expandedPatterns.filter(p => !p.startsWith('!'))
+    const excludePatterns = expandedPatterns.filter(p => p.startsWith('!'))
+
+    return files.filter((file) => {
+      // If there are include patterns, file must match at least one
+      const isIncluded = includePatterns.length === 0 || includePatterns.some(p => this.matchesGlob(file, p))
+
+      // File must not match any exclude pattern
+      const isExcluded = excludePatterns.some(p => this.matchesGlob(file, p.slice(1)))
+
+      return isIncluded && !isExcluded
+    })
+  }
+
+  /**
+   * Expands brace patterns like {js,ts} into [js, ts]
+   */
+  private expandBracePattern(pattern: string): string[] {
+    const braceMatch = pattern.match(/\{([^}]+)\}/g)
+    if (!braceMatch)
+      return [pattern]
+
+    const results: string[] = [pattern]
+    braceMatch.forEach((brace) => {
+      const options = brace.slice(1, -1).split(',')
+      const newResults: string[] = []
+
+      results.forEach((result) => {
+        options.forEach((option) => {
+          newResults.push(result.replace(brace, option.trim()))
+        })
+      })
+
+      results.length = 0
+      results.push(...newResults)
+    })
+
+    return results
+  }
+
+  /**
+   * Checks if a file matches a glob pattern
+   */
+  private matchesGlob(file: string, pattern: string): boolean {
+    // Handle negation patterns (e.g., !node_modules/**)
+    if (pattern.startsWith('!')) {
+      return !this.matchesGlob(file, pattern.slice(1))
+    }
+
+    // Convert glob pattern to regex step by step
+    let regexPattern = pattern
+
+    // First, escape special regex characters except * and ?
+    regexPattern = regexPattern.replace(/[.+^${}()|[\]\\]/g, '\\$&')
+
+    // Replace ** with a placeholder to avoid conflicts
+    regexPattern = regexPattern.replace(/\*\*/g, '__DOUBLESTAR__')
+
+    // Replace single * with pattern that doesn't cross directory boundaries
+    regexPattern = regexPattern.replace(/\*/g, '[^/]*')
+
+    // Replace ** placeholder with pattern that can cross directories
+    regexPattern = regexPattern.replace(/__DOUBLESTAR__/g, '.*')
+
+    // Handle single character match
+    regexPattern = regexPattern.replace(/\?/g, '[^/]')
+
     const regex = new RegExp(`^${regexPattern}$`)
-    return files.filter(file => regex.test(file))
+    return regex.test(file)
   }
 
   private async runLintCommand(command: string, files: string[]): Promise<boolean> {
     try {
-      const finalCommand = command.includes('{files}') 
+      const finalCommand = command.includes('{files}')
         ? command.replace('{files}', files.join(' '))
         : `${command} ${files.join(' ')}`
 
       this.log(`Running: ${finalCommand}`)
 
-      execSync(finalCommand, {
+      const result = execSync(finalCommand, {
         cwd: this.projectRoot,
-        stdio: this.verbose ? 'inherit' : 'pipe'
+        stdio: this.verbose ? 'inherit' : 'pipe',
+        encoding: 'utf-8',
       })
 
-      return true
-    } catch (error: any) {
-      if (error.status === 1) {
-        // Lint errors
-        console.error(`Lint errors in files: ${files.join(', ')}`)
-        return false
-      } else {
-        // Other errors
-        console.error(`Command failed: ${command} - ${error.message}`)
-        return false
+      if (this.verbose && result) {
+        console.warn(result)
       }
+
+      return true
+    }
+    catch (error: any) {
+      // Any non-zero exit code indicates failure
+      if (error.stdout && this.verbose)
+        console.warn(error.stdout)
+      if (error.stderr)
+        console.error('[ERROR] Command stderr:', error.stderr)
+      console.error(`[ERROR] Command failed: ${command}`)
+      return false
     }
   }
 
@@ -167,7 +241,8 @@ export class StagedLintProcessor {
         if (currentContent !== originalText) {
           modifiedFiles.push(file)
         }
-      } catch {
+      }
+      catch {
         // Skip files that can't be read
       }
     }
@@ -176,31 +251,34 @@ export class StagedLintProcessor {
   }
 
   private restageFiles(files: string[]): void {
-    if (files.length === 0) return
+    if (files.length === 0)
+      return
 
     try {
       execSync(`git add ${files.join(' ')}`, {
         cwd: this.projectRoot,
-        stdio: this.verbose ? 'inherit' : 'pipe'
+        stdio: this.verbose ? 'inherit' : 'pipe',
       })
-    } catch (error) {
+    }
+    catch (error) {
       throw new Error(`Failed to re-stage files: ${error}`)
     }
   }
 
   private async validateStagedFiles(config: StagedLintConfig): Promise<boolean> {
     const stagedFiles = this.getStagedFiles()
-    
+
     for (const [pattern, commands] of Object.entries(config)) {
       const matchingFiles = this.getMatchingFiles(stagedFiles, pattern)
-      if (matchingFiles.length === 0) continue
+      if (matchingFiles.length === 0)
+        continue
 
       const commandArray = Array.isArray(commands) ? commands : [commands]
-      
+
       for (const command of commandArray) {
         // Remove --fix flag for validation
         const validationCommand = command.replace(/--fix\b/g, '').trim()
-        
+
         const success = await this.runLintCommand(validationCommand, matchingFiles)
         if (!success) {
           return false
@@ -224,9 +302,47 @@ export class StagedLintProcessor {
 export async function runEnhancedStagedLint(
   config: StagedLintConfig,
   projectRoot: string = process.cwd(),
-  options: { verbose?: boolean; autoRestage?: boolean } = {}
+  options: { verbose?: boolean, autoRestage?: boolean } = {},
 ): Promise<boolean> {
   const { verbose = false, autoRestage = true } = options
   const processor = new StagedLintProcessor(projectRoot, verbose, autoRestage)
   return processor.process(config)
+}
+
+/**
+ * Main staged lint function that should be used by git hooks
+ * This is the primary entry point for staged lint functionality
+ */
+export async function runStagedLint(
+  hook: string,
+  config: any,
+  projectRoot: string = process.cwd(),
+  verbose: boolean = false,
+): Promise<boolean> {
+  if (!config) {
+    console.error(`[ERROR] No configuration found`)
+    return false
+  }
+
+  // First check for hook-specific configuration
+  if (hook in config) {
+    const hookConfig = config[hook as keyof typeof config]
+    if (typeof hookConfig === 'object' && !Array.isArray(hookConfig)) {
+      const stagedLintConfig = (hookConfig as { 'stagedLint'?: StagedLintConfig, 'staged-lint'?: StagedLintConfig }).stagedLint
+        || (hookConfig as { 'stagedLint'?: StagedLintConfig, 'staged-lint'?: StagedLintConfig })['staged-lint']
+      if (stagedLintConfig) {
+        const processor = new StagedLintProcessor(projectRoot, verbose, true)
+        return processor.process(stagedLintConfig)
+      }
+    }
+  }
+
+  // If no hook-specific configuration, check for global staged-lint
+  if (config['staged-lint']) {
+    const processor = new StagedLintProcessor(projectRoot, verbose, true)
+    return processor.process(config['staged-lint'])
+  }
+
+  console.error(`[ERROR] No staged lint configuration found for hook ${hook}`)
+  return false
 }

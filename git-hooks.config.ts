@@ -1,12 +1,11 @@
 import type { GitHooksConfig } from './src/types'
 
 const config: GitHooksConfig = {
-
   // Hook-specific configuration (takes precedence)
   'pre-commit': {
     'staged-lint': {
       '**/*.{js,ts}': [
-        'bunx --bun eslint --max-warnings=0',
+        'bunx --bun eslint --fix',
         'bunx --bun tsc --noEmit'
       ]
     }

@@ -1,0 +1,14 @@
+{
+  "name": "staged-lint-example",
+  "version": "1.0.0",
+  "git-hooks": {
+    "pre-commit": {
+      "staged-lint": {
+        "**/*.{js,ts}": [
+          "bunx --bun eslint --fix",
+          "bunx --bun tsc --noEmit"
+        ]
+      }
+    }
+  }
+}
