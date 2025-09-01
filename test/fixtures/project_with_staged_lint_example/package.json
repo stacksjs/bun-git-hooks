@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "git-hooks": {
     "pre-commit": {
-      "staged-lint": {
+      "stagedLint": {
         "**/*.{js,ts}": [
           "bunx --bun eslint --fix",
           "bunx --bun tsc --noEmit"

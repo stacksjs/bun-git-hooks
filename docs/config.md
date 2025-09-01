@@ -32,15 +32,15 @@ You can configure your git hooks using any of these file formats:
 import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
-  // Note: staged-lint is only available in pre-commit hook
-  'pre-commit': {
-    'staged-lint': {
+  // Note: stagedLint is only available in preCommit hook
+  'preCommit': {
+    'stagedLint': {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
   },
-  'commit-msg': 'bun commitlint --edit $1',
-  'pre-push': 'bun run build',
+  'commitMsg': 'bun commitlint --edit $1',
+  'prePush': 'bun run build',
 
   // Optional settings
   'verbose': true, // Enable verbose logging
@@ -55,14 +55,14 @@ export default config
 ```json
 {
   "git-hooks": {
-    "pre-commit": {
-      "staged-lint": {
+    "preCommit": {
+      "stagedLint": {
         "*.{js,ts}": "bunx --bun eslint . --fix",
         "*.{css,scss}": "stylelint --fix"
       }
     },
-    "commit-msg": "bun commitlint --edit $1",
-    "pre-push": "bun run build"
+    "commitMsg": "bun commitlint --edit $1",
+    "prePush": "bun run build"
   }
 }
 ```
@@ -76,11 +76,11 @@ Any valid git hook can be configured with either a command string or a staged-li
 ```ts
 const config: GitHooksConfig = {
   // Simple command
-  'pre-commit': 'bun run lint',
+  'preCommit': 'bun run lint',
 
-  // Staged lint configuration (pre-commit only)
-  'pre-commit': {
-    'staged-lint': {
+  // Staged lint configuration (preCommit only)
+  'preCommit': {
+    'stagedLint': {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
@@ -90,12 +90,12 @@ const config: GitHooksConfig = {
 
 ### Staged Lint Configuration
 
-The `staged-lint` feature is only available in the pre-commit hook. It allows you to run specific commands on staged files matching certain patterns:
+The `stagedLint` feature is only available in the preCommit hook. It allows you to run specific commands on staged files matching certain patterns:
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': {
-    'staged-lint': {
+  'preCommit': {
+    'stagedLint': {
       // Run ESLint on JavaScript and TypeScript files
       '*.{js,ts}': 'bunx --bun eslint . --fix',
 
@@ -131,10 +131,10 @@ Some hooks receive arguments from Git that you can use in your commands:
 ```ts
 const config: GitHooksConfig = {
   // $1 is the commit message file path
-  'commit-msg': 'bun commitlint --edit $1',
+  'commitMsg': 'bun commitlint --edit $1',
 
   // $1 is the previous HEAD, $2 is the new HEAD
-  'post-checkout': 'bun run update-deps $1 $2',
+  'postCheckout': 'bun run update-deps $1 $2',
 }
 ```
 
@@ -142,10 +142,10 @@ const config: GitHooksConfig = {
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint',
+  'preCommit': 'bun run lint',
 
   // Keep specific hooks when cleaning up
-  'preserveUnused': ['post-merge', 'post-checkout'],
+  'preserveUnused': ['postMerge', 'postCheckout'],
 }
 ```
 
@@ -154,10 +154,10 @@ const config: GitHooksConfig = {
 ```ts
 const config: GitHooksConfig = {
   // Multiple commands with &&
-  'pre-commit': 'bun run lint && bun run test && bun run build',
+  'preCommit': 'bun run lint && bun run test && bun run build',
 
   // Or using array join for better readability
-  'pre-push': [
+  'prePush': [
     'bun run build',
     'bun run test:e2e',
     'bun run deploy'
@@ -192,5 +192,5 @@ If no configuration is found, an error will be thrown.
 4. **Preserve Critical Hooks**: Use `preserveUnused` for important custom hooks
 5. **Enable Verbose Mode**: When debugging hook issues
 6. **Use Exit Codes**: Hooks should exit with non-zero for failures
-7. **Use Staged Lint**: For efficient file-specific linting (pre-commit only)
-8. **Follow Restrictions**: Remember that staged-lint is only available in pre-commit hook
+7. **Use Staged Lint**: For efficient file-specific linting (preCommit only)
+8. **Follow Restrictions**: Remember that stagedLint is only available in preCommit hook

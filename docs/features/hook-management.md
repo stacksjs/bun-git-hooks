@@ -6,13 +6,13 @@ bun-git-hooks provides a powerful system for managing Git hooks with automatic i
 
 All standard Git hooks are supported:
 
-- `pre-commit`
-- `prepare-commit-msg`
-- `commit-msg`
-- `post-commit`
-- `pre-push`
-- `post-checkout`
-- `pre-rebase`
+- `preCommit`
+- `prepareCommitMsg`
+- `commitMsg`
+- `postCommit`
+- `prePush`
+- `postCheckout`
+- `preRebase`
 - And [many more](https://git-scm.com/docs/githooks)
 
 ## Configuration
@@ -21,9 +21,9 @@ All standard Git hooks are supported:
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint',
-  'commit-msg': 'bun commitlint --edit $1',
-  'pre-push': 'bun run test'
+  'preCommit': 'bun run lint',
+  'commitMsg': 'bun commitlint --edit $1',
+  'prePush': 'bun run test'
 }
 ```
 
@@ -32,17 +32,17 @@ const config: GitHooksConfig = {
 ```ts
 const config: GitHooksConfig = {
   // Hook with staged linting
-  'pre-commit': {
-    'staged-lint': {
+  'preCommit': {
+    'stagedLint': {
       '*.ts': 'eslint --fix'
     }
   },
 
   // Simple command hook
-  'commit-msg': 'bun commitlint --edit $1',
+  'commitMsg': 'bun commitlint --edit $1',
 
   // Preserve specific unused hooks
-  'preserveUnused': ['post-checkout', 'post-merge'],
+  'preserveUnused': ['postCheckout', 'postMerge'],
 
   // Enable verbose logging
   'verbose': true
@@ -73,7 +73,7 @@ Hooks are automatically installed when:
 
 ## Environment Variables
 
-### Configuration
+### Environment Configuration
 
 ```bash
 # Skip hook execution
@@ -110,21 +110,21 @@ SKIP_INSTALL_GIT_HOOKS=1 bun install
 ```ts
 const config: GitHooksConfig = {
   // Quality checks before commit
-  'pre-commit': {
-    'staged-lint': {
+  'preCommit': {
+    'stagedLint': {
       '*.{js,ts}': 'eslint --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
   },
 
   // Validate commit messages
-  'commit-msg': 'bun commitlint --edit $1',
+  'commitMsg': 'bun commitlint --edit $1',
 
   // Run tests before push
-  'pre-push': 'bun run test',
+  'prePush': 'bun run test',
 
   // Update dependencies after branch switch
-  'post-checkout': 'bun install',
+  'postCheckout': 'bun install',
 
   // Verbose output for debugging
   'verbose': true
@@ -136,16 +136,16 @@ const config: GitHooksConfig = {
 ```ts
 const config: GitHooksConfig = {
   // Comprehensive checks before commit
-  'pre-commit': [
+  'preCommit': [
     'bun run lint',
     'bun run test:unit',
     'bun run build'
   ],
 
   // Prevent direct commits to main
-  'pre-push': 'bash scripts/prevent-main-push.sh',
+  'prePush': 'bash scripts/prevent-main-push.sh',
 
   // Run security checks
-  'pre-commit': 'bun run security:audit'
+  'preCommit': 'bun run security:audit'
 }
 ```

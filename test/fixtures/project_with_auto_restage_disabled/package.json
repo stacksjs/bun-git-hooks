@@ -6,7 +6,7 @@
   },
   "git-hooks": {
     "pre-commit": {
-      "staged-lint": {
+      "stagedLint": {
         "*.js": "echo 'linting' && exit 0"
       },
       "autoRestage": false

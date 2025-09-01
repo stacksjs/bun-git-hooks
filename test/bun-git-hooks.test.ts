@@ -878,7 +878,7 @@ describe('bun-git-hooks', () => {
           const config = packageJsonContent['git-hooks']
 
           expect(config['pre-commit']).toHaveProperty('autoRestage', true)
-          expect(config['pre-commit']).toHaveProperty('staged-lint')
+          expect(config['pre-commit']).toHaveProperty('stagedLint')
         })
       })
 
@@ -908,7 +908,7 @@ describe('bun-git-hooks', () => {
           const config = packageJsonContent['git-hooks']
 
           expect(config['pre-commit']).toHaveProperty('autoRestage', false)
-          expect(config['pre-commit']).toHaveProperty('staged-lint')
+          expect(config['pre-commit']).toHaveProperty('stagedLint')
         })
       })
     })

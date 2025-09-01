@@ -6,16 +6,30 @@ export interface StagedLintConfig {
   [pattern: string]: StagedLintTask
 }
 
+// Define camelCase hook names
+type CamelCaseHooks = 
+  | 'preCommit'
+  | 'prepareCommitMsg' 
+  | 'commitMsg'
+  | 'postCommit'
+  | 'prePush'
+  | 'postMerge'
+  | 'postCheckout'
+  | 'preRebase'
+  | 'postRewrite'
+
 export type GitHooksConfig = {
-  [K in typeof VALID_GIT_HOOKS[number]]?: string | {
-    'stagedLint'?: StagedLintConfig
-    'staged-lint'?: StagedLintConfig
+  // Support both kebab-case (from VALID_GIT_HOOKS) and camelCase
+  [K in typeof VALID_GIT_HOOKS[number] | CamelCaseHooks]?: string | {
+    stagedLint?: StagedLintConfig
+    'staged-lint'?: StagedLintConfig // Legacy support
   }
 } & {
-  'preserveUnused'?: boolean | typeof VALID_GIT_HOOKS[number][]
-  'verbose'?: boolean
-  'staged-lint'?: StagedLintConfig
-  'autoRestage'?: boolean
+  preserveUnused?: boolean | (typeof VALID_GIT_HOOKS[number] | CamelCaseHooks)[]
+  verbose?: boolean
+  stagedLint?: StagedLintConfig
+  'staged-lint'?: StagedLintConfig // Legacy support
+  autoRestage?: boolean
 }
 
 export interface SetHooksFromConfigOptions {

@@ -1,4 +1,4 @@
-import type { StagedLintConfig } from './types'
+import type { GitHooksConfig, StagedLintConfig } from './types'
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -310,13 +310,56 @@ export async function runEnhancedStagedLint(
 }
 
 /**
+ * Hook name mapping between camelCase and kebab-case
+ */
+export const HOOK_NAME_MAP: Record<string, string> = {
+  'preCommit': 'pre-commit',
+  'prepareCommitMsg': 'prepare-commit-msg',
+  'commitMsg': 'commit-msg',
+  'postCommit': 'post-commit',
+  'prePush': 'pre-push',
+  'postMerge': 'post-merge',
+  'postCheckout': 'post-checkout',
+  'preRebase': 'pre-rebase',
+  'postRewrite': 'post-rewrite',
+  // Reverse mapping
+  'pre-commit': 'preCommit',
+  'prepare-commit-msg': 'prepareCommitMsg',
+  'commit-msg': 'commitMsg',
+  'post-commit': 'postCommit',
+  'pre-push': 'prePush',
+  'post-merge': 'postMerge',
+  'post-checkout': 'postCheckout',
+  'pre-rebase': 'preRebase',
+  'post-rewrite': 'postRewrite',
+}
+
+/**
+ * Check if a hook name is valid (supports both camelCase and kebab-case)
+ */
+export function isValidHookName(hookName: string, validHooks: readonly string[]): boolean {
+  // Check if it's directly in the valid hooks list (kebab-case)
+  if (validHooks.includes(hookName)) {
+    return true
+  }
+  
+  // Check if it's a camelCase version that maps to a valid kebab-case hook
+  const kebabCase = HOOK_NAME_MAP[hookName]
+  if (kebabCase && validHooks.includes(kebabCase)) {
+    return true
+  }
+  
+  return false
+}
+
+/**
  * Main staged lint function that should be used by git hooks
  * This is the primary entry point for staged lint functionality
  */
 export async function runStagedLint(
   hook: string,
-  config: any,
-  projectRoot: string = process.cwd(),
+  config: GitHooksConfig,
+  projectRoot: string,
   verbose: boolean = false,
 ): Promise<boolean> {
   if (!config) {
@@ -324,23 +367,28 @@ export async function runStagedLint(
     return false
   }
 
+  // Try both the original hook name and its mapped version
+  const hookVariants = [hook, HOOK_NAME_MAP[hook]].filter(Boolean)
+  
   // First check for hook-specific configuration
-  if (hook in config) {
-    const hookConfig = config[hook as keyof typeof config]
-    if (typeof hookConfig === 'object' && !Array.isArray(hookConfig)) {
-      const stagedLintConfig = (hookConfig as { 'stagedLint'?: StagedLintConfig, 'staged-lint'?: StagedLintConfig }).stagedLint
-        || (hookConfig as { 'stagedLint'?: StagedLintConfig, 'staged-lint'?: StagedLintConfig })['staged-lint']
-      if (stagedLintConfig) {
-        const processor = new StagedLintProcessor(projectRoot, verbose, true)
-        return processor.process(stagedLintConfig)
+  for (const hookName of hookVariants) {
+    if (hookName && hookName in config) {
+      const hookConfig = config[hookName as keyof typeof config]
+      if (typeof hookConfig === 'object' && !Array.isArray(hookConfig)) {
+        const stagedLintConfig = (hookConfig as { stagedLint?: StagedLintConfig, 'staged-lint'?: StagedLintConfig }).stagedLint
+          || (hookConfig as { stagedLint?: StagedLintConfig, 'staged-lint'?: StagedLintConfig })['staged-lint']
+        if (stagedLintConfig) {
+          const processor = new StagedLintProcessor(projectRoot, verbose, true)
+          return processor.process(stagedLintConfig)
+        }
       }
     }
   }
 
-  // If no hook-specific configuration, check for global staged-lint
-  if (config['staged-lint']) {
+  // If no hook-specific configuration, check for global stagedLint
+  if (config.stagedLint || config['staged-lint']) {
     const processor = new StagedLintProcessor(projectRoot, verbose, true)
-    return processor.process(config['staged-lint'])
+    return processor.process(config.stagedLint || config['staged-lint']!)
   }
 
   console.error(`[ERROR] No staged lint configuration found for hook ${hook}`)

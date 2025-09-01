@@ -13,22 +13,21 @@ type GitHooksConfig = {
   // Git hook configurations
   [hookName in GitHook]?: string | {
     'stagedLint'?: StagedLintConfig
-    'staged-lint'?: StagedLintConfig
   }
 } & {
   // Global options
   'preserveUnused'?: boolean | GitHook[]
   'verbose'?: boolean
-  'staged-lint'?: StagedLintConfig
+  'stagedLint'?: StagedLintConfig
 }
 ```
 
 #### Properties
 
 - **[hookName]**: Configuration for individual git hooks
-  - Type: `string | { stagedLint?: StagedLintConfig, 'staged-lint'?: StagedLintConfig }`
+  - Type: `string | { stagedLint?: StagedLintConfig }`
   - Optional
-  - Example: `'pre-commit': 'bun run lint'`
+  - Example: `'preCommit': 'bun run lint'`
 
 - **preserveUnused**
   - Type: `boolean | GitHook[]`
@@ -42,7 +41,7 @@ type GitHooksConfig = {
   - Description: Enables verbose logging
   - Default: `false`
 
-- **staged-lint**
+- **stagedLint**
   - Type: `StagedLintConfig`
   - Optional
   - Description: Global staged linting configuration
@@ -59,7 +58,7 @@ interface StagedLintConfig {
 type StagedLintTask = string | string[]
 ```
 
-#### Properties
+#### Pattern Properties
 
 - **[pattern]**: Git-style glob pattern for matching files
   - Type: `string | string[]`
@@ -70,16 +69,16 @@ type StagedLintTask = string | string[]
 
 The following Git hooks are supported:
 
-- `pre-commit`: Run before committing
-- `prepare-commit-msg`: Run before the commit message editor is launched
-- `commit-msg`: Run after the commit message is saved
-- `post-commit`: Run after the commit is created
-- `pre-push`: Run before pushing commits
-- `post-checkout`: Run after checking out a branch
-- `pre-rebase`: Run before rebasing
-- `post-merge`: Run after merging
-- `post-rewrite`: Run after commands that rewrite commits
-- `pre-auto-gc`: Run before garbage collection
+- `preCommit`: Run before committing (supports stagedLint)
+- `prepareCommitMsg`: Run before the commit message editor is opened
+- `commitMsg`: Run to verify commit message
+- `postCommit`: Run after committing
+- `prePush`: Run before pushing
+- `postCheckout`: Run after checking out a branch
+- `preRebase`: Run before rebasing
+- `postMerge`: Run after merging
+- `postRewrite`: Run after commands that rewrite commits
+- `preAutoGc`: Run before garbage collection
 
 ## Environment Variables
 
@@ -117,7 +116,7 @@ Or in `package.json`:
 ```json
 {
   "git-hooks": {
-    "pre-commit": "bun run lint"
+    "preCommit": "bun run lint"
   }
 }
 ```
@@ -128,9 +127,9 @@ Or in `package.json`:
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint',
-  'commit-msg': 'bun commitlint --edit $1',
-  'pre-push': 'bun run test'
+  'preCommit': 'bun run lint',
+  'commitMsg': 'bun commitlint --edit $1',
+  'prePush': 'bun run test'
 }
 ```
 
@@ -138,14 +137,14 @@ const config: GitHooksConfig = {
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': {
-    'staged-lint': {
+  'preCommit': {
+    'stagedLint': {
       '*.{js,ts}': ['eslint --fix', 'prettier --write'],
       '*.{css,scss}': 'stylelint --fix'
     }
   },
   'verbose': true,
-  'preserveUnused': ['post-checkout']
+  'preserveUnused': ['postCheckout']
 }
 ```
 
@@ -153,10 +152,10 @@ const config: GitHooksConfig = {
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': process.env.CI
+  'preCommit': process.env.CI
     ? 'bun run test:ci'
     : {
-        'staged-lint': {
+        'stagedLint': {
           '*.ts': 'eslint --fix'
         }
       },

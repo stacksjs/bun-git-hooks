@@ -17,15 +17,15 @@ Create a `git-hooks.config.{ts,js,mjs,cjs,json}` file in your project root:
 import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
-  // Note: staged-lint is only available in pre-commit hook
-  'pre-commit': {
-    'staged-lint': {
+  // Note: stagedLint is only available in preCommit hook
+  'preCommit': {
+    'stagedLint': {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
   },
-  'commit-msg': 'bun commitlint --edit $1',
-  'pre-push': 'bun run build',
+  'commitMsg': 'bun commitlint --edit $1',
+  'prePush': 'bun run build',
   'verbose': true,
 }
 
@@ -39,14 +39,14 @@ You can also use JSON format in your `package.json`:
 ```json
 {
   "git-hooks": {
-    "pre-commit": {
-      "staged-lint": {
+    "preCommit": {
+      "stagedLint": {
         "*.{js,ts}": "bunx --bun eslint . --fix",
         "*.{css,scss}": "stylelint --fix"
       }
     },
-    "commit-msg": "bun commitlint --edit $1",
-    "pre-push": "bun run build"
+    "commitMsg": "bun commitlint --edit $1",
+    "prePush": "bun run build"
   }
 }
 ```
@@ -73,14 +73,14 @@ git-hooks run-staged-lint pre-commit
 
 ## Staged Lint Usage
 
-The `staged-lint` feature is only available in the pre-commit hook. It allows you to run specific commands on staged files matching certain patterns. This is more efficient than running commands on all files.
+The `stagedLint` feature is only available in the preCommit hook. It allows you to run specific commands on staged files matching certain patterns. This is more efficient than running commands on all files.
 
 ### Basic Staged Lint
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': {
-    'staged-lint': {
+  'preCommit': {
+    'stagedLint': {
       // Run ESLint on JavaScript and TypeScript files
       '*.{js,ts}': 'bunx --bun eslint . --fix',
 
@@ -97,8 +97,8 @@ You can run multiple commands on the same file pattern:
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': {
-    'staged-lint': {
+  'preCommit': {
+    'stagedLint': {
       // Run both ESLint and Prettier on TypeScript files
       '*.{ts,tsx}': [
         'eslint . --fix',
@@ -147,10 +147,10 @@ You can combine multiple commands in a single hook:
 ```ts
 const config: GitHooksConfig = {
   // Using && operator
-  'pre-commit': 'bun run lint && bun run test && bun run build',
+  'preCommit': 'bun run lint && bun run test && bun run build',
 
   // Using array join for better readability
-  'pre-push': [
+  'prePush': [
     'bun run build',
     'bun run test:e2e',
     'bun run deploy'
@@ -164,10 +164,10 @@ You can preserve specific hooks while removing others:
 
 ```ts
 const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint && bun run test',
+  'preCommit': 'bun run lint && bun run test',
 
   // Preserve these hooks even if not configured
-  'preserveUnused': ['post-merge', 'post-checkout']
+  'preserveUnused': ['postMerge', 'postCheckout']
 }
 ```
 
@@ -175,15 +175,16 @@ const config: GitHooksConfig = {
 
 The following git hooks are supported:
 
-- `pre-commit`: Run before committing (supports staged-lint)
-- `prepare-commit-msg`: Run before the commit message editor is opened
-- `commit-msg`: Run to verify commit message
-- `post-commit`: Run after committing
-- `pre-push`: Run before pushing
-- `post-merge`: Run after merging
-- `post-checkout`: Run after checking out
-- `pre-rebase`: Run before rebasing
-- `post-rewrite`: Run after rewriting commits
+- `preCommit`: Run before committing (supports stagedLint)
+- `prepareCommitMsg`: Run before the commit message editor is opened
+- `commitMsg`: Run to verify commit message
+- `postCommit`: Run after committing
+- `prePush`: Run before pushing
+- `postCheckout`: Run after checking out a branch
+- `preRebase`: Run before rebasing
+- `postMerge`: Run after merging
+- `postRewrite`: Run after commands that rewrite commits
+- `preAutoGc`: Run before garbage collection
 
 ## Error Handling
 
@@ -200,8 +201,8 @@ catch (err) {
   else if (err.message.includes('git root')) {
     console.error('Not a Git repository')
   }
-  else if (err.message.includes('staged-lint is only allowed in pre-commit hook')) {
-    console.error('Staged-lint can only be used in pre-commit hook')
+  else if (err.message.includes('stagedLint is only allowed in preCommit hook')) {
+    console.error('stagedLint can only be used in preCommit hook')
   }
 }
 ```
@@ -212,14 +213,14 @@ Full TypeScript support with detailed type definitions:
 
 ```ts
 interface GitHooksConfig {
-  'pre-commit'?: string | {
-    'staged-lint'?: {
+  'preCommit'?: string | {
+    'stagedLint'?: {
       [pattern: string]: string | string[]
     }
   }
-  'pre-push'?: string
-  'commit-msg'?: string
-  'post-merge'?: string
+  'prePush'?: string
+  'commitMsg'?: string
+  'postMerge'?: string
   // ... other git hooks
   'preserveUnused'?: Array<string> | boolean
   'verbose'?: boolean
@@ -238,9 +239,9 @@ git add .
 git commit -m "test: checking if hooks work"
 ```
 
-3. Your pre-commit hook should run staged linting on the changed files
-4. Your commit-msg hook should validate the message
-5. When pushing, your pre-push hook should run
+1. Your preCommit hook should run staged linting on the changed files
+2. Your commitMsg hook should validate the message
+3. When pushing, your prePush hook should run
 
 If you need to bypass hooks temporarily:
 

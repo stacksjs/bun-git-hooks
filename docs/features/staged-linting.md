@@ -130,3 +130,55 @@ Commands can be specified in two ways:
   }
 }
 ```
+
+## Auto-Restaging
+
+The `autoRestage` feature automatically re-stages files that are modified by linting commands (like `--fix` flags). This ensures that auto-fixes are included in your commit.
+
+### How it works
+
+1. **Captures original content** of staged files before running lint commands
+2. **Runs lint commands** which may modify files in the working directory
+3. **Detects modifications** by comparing file content before and after linting
+4. **Automatically re-stages** modified files so fixes are included in the commit
+5. **Validates re-staged files** to ensure they still pass linting
+
+### Configuration
+
+```json
+{
+  "pre-commit": {
+    "stagedLint": {
+      "*.{js,ts}": "eslint --fix"
+    },
+    "autoRestage": true  // Default: true
+  }
+}
+```
+
+### When to disable autoRestage
+
+Set `autoRestage: false` when you want to:
+
+- **Fail builds** if files need fixing (useful in CI)
+- **Manually review** auto-fixes before committing
+- **Debug linting** configurations without side effects
+
+```json
+{
+  "preCommit": {
+    "stagedLint": {
+      "*.js": "eslint --fix"
+    },
+    "autoRestage": false
+  }
+}
+```
+
+When disabled, you'll see a warning if files are modified:
+
+```bash
+⚠️  Lint modified 3 files but auto-restaging is disabled.
+   Modified files: src/utils.js, src/helpers.js, src/main.js
+   You may need to manually stage these files and commit again.
+```
