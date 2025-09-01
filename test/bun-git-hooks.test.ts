@@ -170,6 +170,14 @@ describe('bun-git-hooks', () => {
       path.join(testsFolder, 'project_without_configuration'),
     )
 
+    // AutoRestage configurations
+    const PROJECT_WITH_AUTO_RESTAGE_ENABLED = path.normalize(
+      path.join(testsFolder, 'project_with_auto_restage_enabled'),
+    )
+    const PROJECT_WITH_AUTO_RESTAGE_DISABLED = path.normalize(
+      path.join(testsFolder, 'project_with_auto_restage_disabled'),
+    )
+
     // CLI verbose behavior
     describe('CLI verbose', () => {
       beforeEach(() => {
@@ -708,6 +716,68 @@ describe('bun-git-hooks', () => {
       })
     })
 
+    describe('autoRestage configuration tests', () => {
+      describe('autoRestage enabled', () => {
+        it('creates git hooks with autoRestage enabled configuration', () => {
+          createGitHooksFolder(PROJECT_WITH_AUTO_RESTAGE_ENABLED)
+
+          const packageJsonPath = path.join(PROJECT_WITH_AUTO_RESTAGE_ENABLED, 'package.json')
+          const packageJsonContent = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+          gitHooks.setHooksFromConfig(PROJECT_WITH_AUTO_RESTAGE_ENABLED, {
+            configFile: packageJsonContent['git-hooks'],
+          })
+
+          const installedHooks = getInstalledGitHooks(
+            path.normalize(
+              path.join(PROJECT_WITH_AUTO_RESTAGE_ENABLED, '.git', 'hooks'),
+            ),
+          )
+
+          expect(installedHooks).toHaveProperty('pre-commit')
+          expect(installedHooks['pre-commit']).toContain('bun git-hooks run-staged-lint pre-commit')
+        })
+
+        it('validates autoRestage enabled configuration', () => {
+          const packageJsonPath = path.join(PROJECT_WITH_AUTO_RESTAGE_ENABLED, 'package.json')
+          const packageJsonContent = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+          const config = packageJsonContent['git-hooks']
+
+          expect(config['pre-commit']).toHaveProperty('autoRestage', true)
+          expect(config['pre-commit']).toHaveProperty('staged-lint')
+        })
+      })
+
+      describe('autoRestage disabled', () => {
+        it('creates git hooks with autoRestage disabled configuration', () => {
+          createGitHooksFolder(PROJECT_WITH_AUTO_RESTAGE_DISABLED)
+
+          const packageJsonPath = path.join(PROJECT_WITH_AUTO_RESTAGE_DISABLED, 'package.json')
+          const packageJsonContent = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+          gitHooks.setHooksFromConfig(PROJECT_WITH_AUTO_RESTAGE_DISABLED, {
+            configFile: packageJsonContent['git-hooks'],
+          })
+
+          const installedHooks = getInstalledGitHooks(
+            path.normalize(
+              path.join(PROJECT_WITH_AUTO_RESTAGE_DISABLED, '.git', 'hooks'),
+            ),
+          )
+
+          expect(installedHooks).toHaveProperty('pre-commit')
+          expect(installedHooks['pre-commit']).toContain('bun git-hooks run-staged-lint pre-commit')
+        })
+
+        it('validates autoRestage disabled configuration', () => {
+          const packageJsonPath = path.join(PROJECT_WITH_AUTO_RESTAGE_DISABLED, 'package.json')
+          const packageJsonContent = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+          const config = packageJsonContent['git-hooks']
+
+          expect(config['pre-commit']).toHaveProperty('autoRestage', false)
+          expect(config['pre-commit']).toHaveProperty('staged-lint')
+        })
+      })
+    })
+
     afterEach(() => {
       [
         PROJECT_WITH_CONF_IN_SEPARATE_JS_ALT,
@@ -722,6 +792,8 @@ describe('bun-git-hooks', () => {
         PROJECT_WITH_CONF_IN_PACKAGE_JSON,
         PROJECT_WITH_UNUSED_CONF_IN_PACKAGE_JSON,
         PROJECT_WITH_CUSTOM_CONF,
+        PROJECT_WITH_AUTO_RESTAGE_ENABLED,
+        PROJECT_WITH_AUTO_RESTAGE_DISABLED,
       ].forEach((testCase) => {
         removeGitHooksFolder(testCase)
       })

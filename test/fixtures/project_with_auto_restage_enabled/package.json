@@ -1,0 +1,15 @@
+{
+  "name": "test-auto-restage-enabled",
+  "version": "1.0.0",
+  "devDependencies": {
+    "bun-git-hooks": "^0.1.0"
+  },
+  "git-hooks": {
+    "pre-commit": {
+      "staged-lint": {
+        "*.js": "echo 'linting' && exit 0"
+      },
+      "autoRestage": true
+    }
+  }
+}

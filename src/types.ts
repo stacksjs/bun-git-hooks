@@ -15,6 +15,7 @@ export type GitHooksConfig = {
   'preserveUnused'?: boolean | typeof VALID_GIT_HOOKS[number][]
   'verbose'?: boolean
   'staged-lint'?: StagedLintConfig
+  'autoRestage'?: boolean
 }
 
 export interface SetHooksFromConfigOptions {

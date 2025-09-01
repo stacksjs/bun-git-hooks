@@ -71,9 +71,13 @@ cli
 cli
   .command('run-staged-lint <hook>', 'Run staged lint for a specific git hook')
   .option('--verbose', 'Enable verbose logging')
+  .option('--auto-restage', 'Automatically re-stage files after lint fixes')
+  .option('--no-auto-restage', 'Do not automatically re-stage files after lint fixes')
   .example('git-hooks run-staged-lint pre-commit')
-  .example('git-hooks run-staged-lint pre-push --verbose')
-  .action(async (hook: string, options?: { verbose?: boolean }) => {
+  .example('git-hooks run-staged-lint pre-commit --verbose')
+  .example('git-hooks run-staged-lint pre-commit --auto-restage')
+  .example('git-hooks run-staged-lint pre-commit --no-auto-restage')
+  .action(async (hook: string, options?: { verbose?: boolean; autoRestage?: boolean }) => {
     try {
       if (options?.verbose) {
         log.debug(`Running staged lint for hook: ${hook}`)

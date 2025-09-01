@@ -94,7 +94,8 @@
     "pre-commit": {
       "staged-lint": {
         "*.{js,ts,json,yaml,yml,md}": "bunx --bun eslint --fix"
-      }
+      },
+      "autoRestage": true
     },
     "commit-msg": "bunx gitlint --edit .git/COMMIT_EDITMSG"
   },
