@@ -88,7 +88,7 @@
     "bunfig": "^0.10.1",
     "cac": "^6.7.14",
     "changelogen": "^0.6.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "git-hooks": {
     "pre-commit": {
