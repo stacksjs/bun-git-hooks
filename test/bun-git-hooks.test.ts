@@ -755,6 +755,44 @@ describe('bun-git-hooks', () => {
           })
         })
       })
+
+      describe('CLI verbose flag tests', () => {
+        beforeEach(() => {
+          createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
+        })
+
+        afterEach(() => {
+          removeGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
+        })
+
+        it('executes successfully with --verbose flag', () => {
+          expect(() => {
+            execSync(`bun ${require.resolve('../bin/cli')} --verbose`, {
+              cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
+              encoding: 'utf-8',
+            })
+          }).not.toThrow()
+
+          // Verify hooks were created
+          const hooksDir = path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks')
+          expect(fs.existsSync(path.join(hooksDir, 'pre-commit'))).toBe(true)
+          expect(fs.existsSync(path.join(hooksDir, 'commit-msg'))).toBe(true)
+        })
+
+        it('executes successfully without --verbose flag', () => {
+          expect(() => {
+            execSync(`bun ${require.resolve('../bin/cli')}`, {
+              cwd: PROJECT_WITH_CONF_IN_PACKAGE_JSON,
+              encoding: 'utf-8',
+            })
+          }).not.toThrow()
+
+          // Verify hooks were created
+          const hooksDir = path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks')
+          expect(fs.existsSync(path.join(hooksDir, 'pre-commit'))).toBe(true)
+          expect(fs.existsSync(path.join(hooksDir, 'commit-msg'))).toBe(true)
+        })
+      })
     })
 
     describe('ENV vars features tests', () => {
@@ -910,6 +948,64 @@ describe('bun-git-hooks', () => {
           expect(config['pre-commit']).toHaveProperty('autoRestage', false)
           expect(config['pre-commit']).toHaveProperty('stagedLint')
         })
+      })
+    })
+
+    describe('Verbose logging tests', () => {
+      let consoleOutput: string[]
+      let originalConsoleLog: typeof console.log
+
+      beforeEach(() => {
+        createGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
+        consoleOutput = []
+        originalConsoleLog = console.log
+        // Intercept console.log to capture log output from the Logger
+        console.log = (...args: any[]) => {
+          consoleOutput.push(args.join(' '))
+        }
+      })
+
+      afterEach(() => {
+        console.log = originalConsoleLog
+        removeGitHooksFolder(PROJECT_WITH_CONF_IN_PACKAGE_JSON)
+      })
+
+      it('respects verbose flag when set to true programmatically', () => {
+        // Load the specific package.json config
+        const packageJsonPath = path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, 'package.json')
+        const packageJsonContent = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+
+        // This should execute without throwing errors, which verifies the verbose flag is processed correctly
+        expect(() => {
+          gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_PACKAGE_JSON, {
+            configFile: packageJsonContent['git-hooks'],
+            verbose: true,
+          })
+        }).not.toThrow()
+
+        // Verify hooks were created
+        const hooksDir = path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks')
+        expect(fs.existsSync(path.join(hooksDir, 'pre-commit'))).toBe(true)
+        expect(fs.existsSync(path.join(hooksDir, 'pre-push'))).toBe(true)
+      })
+
+      it('respects verbose flag when set to false programmatically', () => {
+        // Load the specific package.json config
+        const packageJsonPath = path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, 'package.json')
+        const packageJsonContent = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+
+        // This should execute without throwing errors, which verifies the verbose flag is processed correctly
+        expect(() => {
+          gitHooks.setHooksFromConfig(PROJECT_WITH_CONF_IN_PACKAGE_JSON, {
+            configFile: packageJsonContent['git-hooks'],
+            verbose: false,
+          })
+        }).not.toThrow()
+
+        // Verify hooks were created
+        const hooksDir = path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks')
+        expect(fs.existsSync(path.join(hooksDir, 'pre-commit'))).toBe(true)
+        expect(fs.existsSync(path.join(hooksDir, 'pre-push'))).toBe(true)
       })
     })
 

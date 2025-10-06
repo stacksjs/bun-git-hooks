@@ -18,15 +18,15 @@ import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
   // Note: stagedLint is only available in preCommit hook
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
   },
-  'commitMsg': 'bun commitlint --edit $1',
-  'prePush': 'bun run build',
-  'verbose': true,
+  commitMsg: 'bun commitlint --edit $1',
+  prePush: 'bun run build',
+  verbose: true,
 }
 
 export default config
@@ -79,8 +79,8 @@ The `stagedLint` feature is only available in the preCommit hook. It allows you 
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       // Run ESLint on JavaScript and TypeScript files
       '*.{js,ts}': 'bunx --bun eslint . --fix',
 
@@ -97,8 +97,8 @@ You can run multiple commands on the same file pattern:
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       // Run both ESLint and Prettier on TypeScript files
       '*.{ts,tsx}': [
         'eslint . --fix',
@@ -147,10 +147,10 @@ You can combine multiple commands in a single hook:
 ```ts
 const config: GitHooksConfig = {
   // Using && operator
-  'preCommit': 'bun run lint && bun run test && bun run build',
+  preCommit: 'bun run lint && bun run test && bun run build',
 
   // Using array join for better readability
-  'prePush': [
+  prePush: [
     'bun run build',
     'bun run test:e2e',
     'bun run deploy'
@@ -164,10 +164,10 @@ You can preserve specific hooks while removing others:
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': 'bun run lint && bun run test',
+  preCommit: 'bun run lint && bun run test',
 
   // Preserve these hooks even if not configured
-  'preserveUnused': ['postMerge', 'postCheckout']
+  preserveUnused: ['postMerge', 'postCheckout']
 }
 ```
 
@@ -213,17 +213,17 @@ Full TypeScript support with detailed type definitions:
 
 ```ts
 interface GitHooksConfig {
-  'preCommit'?: string | {
-    'stagedLint'?: {
+  preCommit?: string | {
+    stagedLint?: {
       [pattern: string]: string | string[]
     }
   }
-  'prePush'?: string
-  'commitMsg'?: string
-  'postMerge'?: string
+  prePush?: string
+  commitMsg?: string
+  postMerge?: string
   // ... other git hooks
-  'preserveUnused'?: Array<string> | boolean
-  'verbose'?: boolean
+  preserveUnused?: Array<string> | boolean
+  verbose?: boolean
 }
 ```
 

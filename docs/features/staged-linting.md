@@ -151,7 +151,7 @@ The `autoRestage` feature automatically re-stages files that are modified by lin
     "stagedLint": {
       "*.{js,ts}": "eslint --fix"
     },
-    "autoRestage": true  // Default: true
+    "autoRestage": true // Default: true
   }
 }
 ```

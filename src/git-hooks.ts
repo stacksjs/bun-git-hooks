@@ -210,13 +210,18 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
   const preserveUnused = Array.isArray(configFile.preserveUnused) ? configFile.preserveUnused : configFile.preserveUnused ? VALID_GIT_HOOKS : []
 
   const logKeys = Object.keys(configFile).filter(key => !VALID_OPTIONS.includes(key as typeof VALID_OPTIONS[number])).sort().map(key => italic(key)).join(', ')
-  if (VERBOSE) log.debug(`Hook Keys: ${logKeys}`)
+  // For CLI usage, always default to false unless explicitly set
+  // For programmatic usage, fall back to config file setting
+  const verbose = options?.verbose !== undefined ? options.verbose : (configFile.verbose ?? false)
+  if (verbose) {
+    log.debug(`Hook Keys: ${logKeys}`)
+  }
   for (const hook of VALID_GIT_HOOKS) {
     if (Object.prototype.hasOwnProperty.call(configFile, hook)) {
       if (!configFile[hook])
         throw new Error(`[ERROR] Command for ${hook} is not set`)
 
-      _setHook(hook, configFile[hook], projectRootPath)
+      _setHook(hook, configFile[hook], projectRootPath, verbose)
     }
     else if (!preserveUnused.includes(hook)) {
       _removeHook(hook, projectRootPath)
@@ -367,6 +372,7 @@ async function processStagedLint(
   projectRoot: string,
   verbose = false
 ): Promise<boolean> {
+  const startAll = verbose ? Date.now() : 0
   const stagedFiles = await getStagedFiles(projectRoot)
 
   if (stagedFiles.length === 0) {
@@ -374,25 +380,24 @@ async function processStagedLint(
     return true
   }
 
-  let success = true
-
-  for (const [pattern, task] of Object.entries(stagedLintConfig)) {
+  const tasks = Object.entries(stagedLintConfig).map(async ([pattern, task]) => {
+    const start = verbose ? Date.now() : 0
     const matchedFiles = filterFilesByPattern(stagedFiles, pattern)
-    const taskResult = await runCommandOnStagedFiles(task, matchedFiles, projectRoot, verbose)
+    const result = await runCommandOnStagedFiles(task, matchedFiles, projectRoot, verbose)
+    if (verbose) console.info(`[INFO] Pattern "${pattern}" ${result ? 'succeeded' : 'failed'}${start ? ` in ${Date.now() - start}ms` : ''}`)
+    return result
+  })
 
-    if (!taskResult) {
-      success = false
-      break
-    }
-  }
-
-  return success
+  const results = await Promise.all(tasks)
+  const allOk = results.every(Boolean)
+  if (verbose && startAll) console.info(`[INFO] Staged lint ${allOk ? 'succeeded' : 'failed'} in ${Date.now() - startAll}ms`)
+  return allOk
 }
 
 /**
  * Creates or replaces an existing executable script in .git/hooks/<hook> with provided command or stagedLint config
  */
-function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig }, projectRoot: string = process.cwd()): void {
+function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig }, projectRoot: string = process.cwd(), verbose = false): void {
   const gitRoot = getGitProjectRoot(projectRoot)
 
   if (!gitRoot) {
@@ -405,8 +410,7 @@ function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedL
   if (typeof commandOrConfig === 'string') {
     hookCommand = PREPEND_SCRIPT + commandOrConfig
   } else if (commandOrConfig.stagedLint || commandOrConfig['staged-lint']) {
-    // Create a command that will execute the bun-git-hooks stagedLint handler
-    // Use the CLI command directly
+    // Keep original command for compatibility with existing tests and setups
     hookCommand = PREPEND_SCRIPT + `bun git-hooks run-staged-lint ${hook}`
   } else {
     console.error(`[ERROR] Invalid command or config for hook ${hook}`)
@@ -422,7 +426,9 @@ function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedL
   }
 
   const addOrModify = fs.existsSync(hookPath) ? 'Modify' : 'Add'
-  if (VERBOSE) log.debug(`${addOrModify} ${italic(hook)} hook`)
+  if (verbose) {
+    log.debug(`${addOrModify} ${italic(hook)} hook`)
+  }
 
   fs.writeFileSync(hookPath, hookCommand, { mode: 0o755 })
 }

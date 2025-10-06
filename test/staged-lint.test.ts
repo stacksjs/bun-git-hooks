@@ -517,7 +517,7 @@ describe('staged-lint', () => {
       const tsFile = path.join(testProjectRoot, 'utils.ts')
       const phpFile = path.join(testProjectRoot, 'index.php')
       const pyFile = path.join(testProjectRoot, 'script.py')
-      
+
       fs.writeFileSync(jsFile, 'console.log("js file")')
       fs.writeFileSync(tsFile, 'const x: string = "ts file"')
       fs.writeFileSync(phpFile, '<?php echo "php file"; ?>')
@@ -526,7 +526,7 @@ describe('staged-lint', () => {
       try {
         // Stage all files
         execSync('git add .', { cwd: testProjectRoot, stdio: 'ignore' })
-        
+
         // Verify files are staged
         const stagedFiles = execSync('git diff --cached --name-only', {
           cwd: testProjectRoot,
@@ -546,13 +546,13 @@ describe('staged-lint', () => {
 
         const result = await processor.process(config)
         expect(result).toBe(true)
-        
+
         // The key test: verify that only JS/TS and PHP files would be processed
         // Python files should be ignored even though they're staged
         const jstsFiles = (processor as any).getMatchingFiles(stagedFiles, '**/*.{js,ts}')
         const phpFiles = (processor as any).getMatchingFiles(stagedFiles, '**/*.php')
         const pyFiles = (processor as any).getMatchingFiles(stagedFiles, '**/*.py')
-        
+
         expect(jstsFiles.length).toBeGreaterThan(0) // Should match JS/TS files
         expect(phpFiles.length).toBeGreaterThan(0) // Should match PHP files
         expect(pyFiles.length).toBe(0) // Should not match any files since no pattern for .py

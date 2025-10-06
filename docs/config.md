@@ -33,18 +33,18 @@ import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
   // Note: stagedLint is only available in preCommit hook
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
   },
-  'commitMsg': 'bun commitlint --edit $1',
-  'prePush': 'bun run build',
+  commitMsg: 'bun commitlint --edit $1',
+  prePush: 'bun run build',
 
   // Optional settings
-  'verbose': true, // Enable verbose logging
-  'preserveUnused': false, // Remove unused hooks (default)
+  verbose: true, // Enable verbose logging
+  preserveUnused: false, // Remove unused hooks (default)
 }
 
 export default config
@@ -76,11 +76,11 @@ Any valid git hook can be configured with either a command string or a staged-li
 ```ts
 const config: GitHooksConfig = {
   // Simple command
-  'preCommit': 'bun run lint',
+  preCommit: 'bun run lint',
 
   // Staged lint configuration (preCommit only)
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       '*.{js,ts}': 'bunx --bun eslint . --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
@@ -94,8 +94,8 @@ The `stagedLint` feature is only available in the preCommit hook. It allows you 
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       // Run ESLint on JavaScript and TypeScript files
       '*.{js,ts}': 'bunx --bun eslint . --fix',
 
@@ -131,10 +131,10 @@ Some hooks receive arguments from Git that you can use in your commands:
 ```ts
 const config: GitHooksConfig = {
   // $1 is the commit message file path
-  'commitMsg': 'bun commitlint --edit $1',
+  commitMsg: 'bun commitlint --edit $1',
 
   // $1 is the previous HEAD, $2 is the new HEAD
-  'postCheckout': 'bun run update-deps $1 $2',
+  postCheckout: 'bun run update-deps $1 $2',
 }
 ```
 
@@ -142,10 +142,10 @@ const config: GitHooksConfig = {
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': 'bun run lint',
+  preCommit: 'bun run lint',
 
   // Keep specific hooks when cleaning up
-  'preserveUnused': ['postMerge', 'postCheckout'],
+  preserveUnused: ['postMerge', 'postCheckout'],
 }
 ```
 
@@ -154,10 +154,10 @@ const config: GitHooksConfig = {
 ```ts
 const config: GitHooksConfig = {
   // Multiple commands with &&
-  'preCommit': 'bun run lint && bun run test && bun run build',
+  preCommit: 'bun run lint && bun run test && bun run build',
 
   // Or using array join for better readability
-  'prePush': [
+  prePush: [
     'bun run build',
     'bun run test:e2e',
     'bun run deploy'

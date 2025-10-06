@@ -342,13 +342,13 @@ export function isValidHookName(hookName: string, validHooks: readonly string[])
   if (validHooks.includes(hookName)) {
     return true
   }
-  
+
   // Check if it's a camelCase version that maps to a valid kebab-case hook
   const kebabCase = HOOK_NAME_MAP[hookName]
   if (kebabCase && validHooks.includes(kebabCase)) {
     return true
   }
-  
+
   return false
 }
 
@@ -369,14 +369,14 @@ export async function runStagedLint(
 
   // Try both the original hook name and its mapped version
   const hookVariants = [hook, HOOK_NAME_MAP[hook]].filter(Boolean)
-  
+
   // First check for hook-specific configuration
   for (const hookName of hookVariants) {
     if (hookName && hookName in config) {
       const hookConfig = config[hookName as keyof typeof config]
       if (typeof hookConfig === 'object' && !Array.isArray(hookConfig)) {
-        const stagedLintConfig = (hookConfig as { stagedLint?: StagedLintConfig, 'staged-lint'?: StagedLintConfig }).stagedLint
-          || (hookConfig as { stagedLint?: StagedLintConfig, 'staged-lint'?: StagedLintConfig })['staged-lint']
+        const stagedLintConfig = (hookConfig as { 'stagedLint'?: StagedLintConfig, 'staged-lint'?: StagedLintConfig }).stagedLint
+          || (hookConfig as { 'stagedLint'?: StagedLintConfig, 'staged-lint'?: StagedLintConfig })['staged-lint']
         if (stagedLintConfig) {
           const processor = new StagedLintProcessor(projectRoot, verbose, true)
           return processor.process(stagedLintConfig)

@@ -34,10 +34,10 @@ cli
 
       if (configPath) {
         const config = await import(configPath)
-        setHooksFromConfig(process.cwd(), { configFile: config, verbose: options?.verbose })
+        setHooksFromConfig(process.cwd(), { configFile: config, verbose: options?.verbose ?? false })
       }
       else {
-        setHooksFromConfig(process.cwd(), { verbose: options?.verbose })
+        setHooksFromConfig(process.cwd(), { verbose: options?.verbose ?? false })
       }
 
       log.success('Successfully set all git hooks')

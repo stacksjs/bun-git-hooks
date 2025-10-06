@@ -21,9 +21,9 @@ All standard Git hooks are supported:
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': 'bun run lint',
-  'commitMsg': 'bun commitlint --edit $1',
-  'prePush': 'bun run test'
+  preCommit: 'bun run lint',
+  commitMsg: 'bun commitlint --edit $1',
+  prePush: 'bun run test'
 }
 ```
 
@@ -32,20 +32,20 @@ const config: GitHooksConfig = {
 ```ts
 const config: GitHooksConfig = {
   // Hook with staged linting
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       '*.ts': 'eslint --fix'
     }
   },
 
   // Simple command hook
-  'commitMsg': 'bun commitlint --edit $1',
+  commitMsg: 'bun commitlint --edit $1',
 
   // Preserve specific unused hooks
-  'preserveUnused': ['postCheckout', 'postMerge'],
+  preserveUnused: ['postCheckout', 'postMerge'],
 
   // Enable verbose logging
-  'verbose': true
+  verbose: true
 }
 ```
 
@@ -110,24 +110,24 @@ SKIP_INSTALL_GIT_HOOKS=1 bun install
 ```ts
 const config: GitHooksConfig = {
   // Quality checks before commit
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       '*.{js,ts}': 'eslint --fix',
       '*.{css,scss}': 'stylelint --fix'
     }
   },
 
   // Validate commit messages
-  'commitMsg': 'bun commitlint --edit $1',
+  commitMsg: 'bun commitlint --edit $1',
 
   // Run tests before push
-  'prePush': 'bun run test',
+  prePush: 'bun run test',
 
   // Update dependencies after branch switch
-  'postCheckout': 'bun install',
+  postCheckout: 'bun install',
 
   // Verbose output for debugging
-  'verbose': true
+  verbose: true
 }
 ```
 
@@ -136,16 +136,16 @@ const config: GitHooksConfig = {
 ```ts
 const config: GitHooksConfig = {
   // Comprehensive checks before commit
-  'preCommit': [
+  preCommit: [
     'bun run lint',
     'bun run test:unit',
     'bun run build'
   ],
 
   // Prevent direct commits to main
-  'prePush': 'bash scripts/prevent-main-push.sh',
+  prePush: 'bash scripts/prevent-main-push.sh',
 
   // Run security checks
-  'preCommit': 'bun run security:audit'
+  preCommit: 'bun run security:audit'
 }
 ```

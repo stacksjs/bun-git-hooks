@@ -12,13 +12,13 @@ The main configuration type for the package. It defines the structure of your gi
 type GitHooksConfig = {
   // Git hook configurations
   [hookName in GitHook]?: string | {
-    'stagedLint'?: StagedLintConfig
+    stagedLint?: StagedLintConfig
   }
 } & {
   // Global options
-  'preserveUnused'?: boolean | GitHook[]
-  'verbose'?: boolean
-  'stagedLint'?: StagedLintConfig
+  preserveUnused?: boolean | GitHook[]
+  verbose?: boolean
+  stagedLint?: StagedLintConfig
 }
 ```
 
@@ -127,9 +127,9 @@ Or in `package.json`:
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': 'bun run lint',
-  'commitMsg': 'bun commitlint --edit $1',
-  'prePush': 'bun run test'
+  preCommit: 'bun run lint',
+  commitMsg: 'bun commitlint --edit $1',
+  prePush: 'bun run test'
 }
 ```
 
@@ -137,14 +137,14 @@ const config: GitHooksConfig = {
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       '*.{js,ts}': ['eslint --fix', 'prettier --write'],
       '*.{css,scss}': 'stylelint --fix'
     }
   },
-  'verbose': true,
-  'preserveUnused': ['postCheckout']
+  verbose: true,
+  preserveUnused: ['postCheckout']
 }
 ```
 
@@ -152,13 +152,13 @@ const config: GitHooksConfig = {
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': process.env.CI
+  preCommit: process.env.CI
     ? 'bun run test:ci'
     : {
-        'stagedLint': {
+        stagedLint: {
           '*.ts': 'eslint --fix'
         }
       },
-  'verbose': !process.env.CI
+  verbose: !process.env.CI
 }
 ```

@@ -37,10 +37,10 @@ git-hooks.config.json
 import type { GitHooksConfig } from 'bun-git-hooks'
 
 const config: GitHooksConfig = {
-  'preCommit': process.env.CI
+  preCommit: process.env.CI
     ? 'bun run test:ci'
     : {
-        'stagedLint': {
+        stagedLint: {
           '*.ts': 'eslint --fix'
         }
       }
@@ -57,16 +57,16 @@ function getConfig(): GitHooksConfig {
   const isCI = Boolean(process.env.CI)
 
   return {
-    'preCommit': {
-      'stagedLint': {
+    preCommit: {
+      stagedLint: {
         '*.ts': [
           'eslint --fix',
           isProduction ? 'tsc --noEmit' : null,
         ].filter(Boolean)
       }
     },
-    'prePush': isCI ? 'bun run test:ci' : 'bun run test',
-    'verbose': !isCI
+    prePush: isCI ? 'bun run test:ci' : 'bun run test',
+    verbose: !isCI
   }
 }
 
@@ -81,14 +81,14 @@ export default getConfig()
 import { baseConfig } from './base.config'
 
 export const baseConfig: GitHooksConfig = {
-  'preCommit': 'bun run lint',
-  'commitMsg': 'bun commitlint --edit $1'
+  preCommit: 'bun run lint',
+  commitMsg: 'bun commitlint --edit $1'
 }
 
 export default {
   ...baseConfig,
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       '*.ts': 'eslint --fix'
     }
   }
@@ -96,7 +96,7 @@ export default {
 
 export default {
   ...baseConfig,
-  'prePush': [
+  prePush: [
     'bun run test',
     'bun run build',
     'bun run security:check'
@@ -113,10 +113,10 @@ import type { GitHooksConfig } from 'bun-git-hooks'
 import { getAffectedPackages } from './scripts/monorepo'
 
 const config: GitHooksConfig = {
-  'preCommit': async () => {
+  preCommit: async () => {
     const packages = await getAffectedPackages()
     return {
-      'stagedLint': {
+      stagedLint: {
         [`packages/{${packages.join(',')}}/src/**/*.ts`]: [
           'eslint --fix',
           'prettier --write'
@@ -124,7 +124,7 @@ const config: GitHooksConfig = {
       }
     }
   },
-  'prePush': 'bun run test:affected'
+  prePush: 'bun run test:affected'
 }
 ```
 
@@ -132,8 +132,8 @@ const config: GitHooksConfig = {
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       // Custom script for specific files
       '*.graphql': async (files) => {
         const schema = await loadSchema()
@@ -155,8 +155,8 @@ const config: GitHooksConfig = {
 
 ```ts
 const config: GitHooksConfig = {
-  'preCommit': {
-    'stagedLint': {
+  preCommit: {
+    stagedLint: {
       '*.ts': async (files) => {
         // Development: Fast checks
         if (process.env.NODE_ENV === 'development') {
