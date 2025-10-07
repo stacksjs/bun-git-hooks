@@ -1,3 +1,14 @@
+[Compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.3.0...v0.3.1)
+
+### 🧹 Chores
+
+- release v0.3.1 ([66e0e45](https://github.com/stacksjs/bun-git-hooks/commit/66e0e45))
+- ensure bins are zipped ([0c48bb0](https://github.com/stacksjs/bun-git-hooks/commit/0c48bb0))
+
+### Contributors
+
+- Chris <chrisbreuer93@gmail.com>
+
 [Compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.19...v0.3.0)
 
 ### 🧹 Chores
