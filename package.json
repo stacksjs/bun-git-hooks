@@ -58,7 +58,7 @@
     "postinstall": "bun ./scripts/postinstall.ts",
     "uninstall": "bun ./scripts/uninstall.ts",
     "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
-    "prepublishOnly": "bun --bun run build && bun run compile:all",
+    "prepublishOnly": "bun --bun run build && bun run compile:all && bun run zip",
     "test": "bun test",
     "lint": "bunx --bun eslint .",
     "lint:fix": "bunx --bun eslint . --fix",
