@@ -186,6 +186,50 @@ function _getPackageJson(projectPath = process.cwd()): { packageJsonContent: any
 }
 
 /**
+ * Checks if git hooks are already installed and up-to-date
+ */
+export function areHooksInstalled(projectRootPath: string = process.cwd()): boolean {
+  const gitRoot = getGitProjectRoot(projectRootPath)
+  if (!gitRoot) {
+    return false
+  }
+
+  if (!config || Object.keys(config).length === 0) {
+    return false
+  }
+
+  // Check if at least one configured hook exists and contains our script marker
+  const configuredHooks = Object.keys(config).filter(key =>
+    VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number])
+  )
+
+  if (configuredHooks.length === 0) {
+    return false
+  }
+
+  // Check if all configured hooks exist
+  for (const hook of configuredHooks) {
+    const hookPath = path.normalize(path.join(gitRoot, 'hooks', hook))
+    if (!fs.existsSync(hookPath)) {
+      return false
+    }
+
+    // Verify the hook contains our prepend script (marker of our installation)
+    try {
+      const hookContent = fs.readFileSync(hookPath, 'utf-8')
+      if (!hookContent.includes('SKIP_BUN_GIT_HOOKS')) {
+        return false
+      }
+    }
+    catch {
+      return false
+    }
+  }
+
+  return true
+}
+
+/**
  * Parses the config and sets git hooks
  */
 export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: SetHooksFromConfigOptions): void {
@@ -524,6 +568,7 @@ const gitHooks: {
   getGitProjectRoot: typeof getGitProjectRoot
   runStagedLint: typeof runStagedLint
   getStagedFiles: typeof getStagedFiles
+  areHooksInstalled: typeof areHooksInstalled
 } = {
   PREPEND_SCRIPT,
   setHooksFromConfig,
@@ -532,7 +577,8 @@ const gitHooks: {
   getProjectRootDirectoryFromNodeModules,
   getGitProjectRoot,
   runStagedLint,
-  getStagedFiles
+  getStagedFiles,
+  areHooksInstalled
 }
 
 export default gitHooks

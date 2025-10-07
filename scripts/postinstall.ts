@@ -3,7 +3,7 @@
 import { mkdir, symlink } from 'node:fs/promises'
 import { join } from 'node:path'
 import process from 'node:process'
-import { checkBunGitHooksInDependencies, getProjectRootDirectoryFromNodeModules, setHooksFromConfig } from '../src/git-hooks'
+import { areHooksInstalled, checkBunGitHooksInDependencies, getProjectRootDirectoryFromNodeModules, setHooksFromConfig } from '../src/git-hooks'
 
 /**
  * Creates the pre-commit from command in config by default
@@ -42,7 +42,14 @@ async function postinstall() {
 
   if (checkBunGitHooksInDependencies(projectDirectory)) {
     try {
+      // Check if hooks are already installed to avoid unnecessary reinstalls
+      if (areHooksInstalled(projectDirectory)) {
+        console.log('[INFO] Git hooks are already installed, skipping setup')
+        return
+      }
+
       setHooksFromConfig(projectDirectory)
+      console.log('[INFO] Git hooks installed successfully')
     }
     catch (err) {
       console.log(`[ERROR] Was not able to set git hooks. Reason: ${err}`)

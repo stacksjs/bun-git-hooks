@@ -22,14 +22,25 @@ if (['1', 'true'].includes(SKIP_INSTALL_GIT_HOOKS || '')) {
 cli
   .command('[configPath]', 'Install git hooks, optionally from specified config file')
   .option('--verbose', 'Enable verbose logging')
+  .option('--force', 'Force reinstall hooks even if already installed')
   .example('git-hooks')
   .example('git-hooks ../src/config.ts')
   .example('git-hooks --verbose')
-  .action(async (configPath?: string, options?: { verbose?: boolean }) => {
+  .example('git-hooks --force')
+  .action(async (configPath?: string, options?: { verbose?: boolean, force?: boolean }) => {
     try {
       if (options?.verbose) {
         log.debug(`Config path: ${configPath || 'using default'}`)
         log.debug(`Working directory: ${process.cwd()}`)
+      }
+
+      // Check if hooks are already installed unless --force is used
+      if (!options?.force) {
+        const { areHooksInstalled } = await import('../src/git-hooks')
+        if (areHooksInstalled(process.cwd())) {
+          log.info('Git hooks are already installed. Use --force to reinstall.')
+          process.exit(0)
+        }
       }
 
       if (configPath) {
