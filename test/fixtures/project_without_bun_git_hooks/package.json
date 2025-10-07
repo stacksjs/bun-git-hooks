@@ -1,8 +1,6 @@
 {
   "name": "test-package",
-  "version": "1.0.0",
-  "dependencies": {
-  },
-  "devDependencies": {
-  }
+  "version": "0.3.0",
+  "dependencies": {},
+  "devDependencies": {}
 }

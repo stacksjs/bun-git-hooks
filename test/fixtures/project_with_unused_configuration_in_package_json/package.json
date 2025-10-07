@@ -2,6 +2,9 @@
   "name": "test-package",
   "git-hooks": {
     "pre-commit": "exit 1",
-    "preserveUnused": ["commit-msg"]
-  }
+    "preserveUnused": [
+      "commit-msg"
+    ]
+  },
+  "version": "0.3.0"
 }

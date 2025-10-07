@@ -1,3 +1,28 @@
+[Compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.2.19...v0.3.0)
+
+### 🧹 Chores
+
+- release v0.3.0 ([974f9db](https://github.com/stacksjs/bun-git-hooks/commit/974f9db))
+- wip ([be1fae5](https://github.com/stacksjs/bun-git-hooks/commit/be1fae5))
+- wip ([9498a6a](https://github.com/stacksjs/bun-git-hooks/commit/9498a6a))
+- wip ([81ce0ce](https://github.com/stacksjs/bun-git-hooks/commit/81ce0ce))
+- wip ([ac934d2](https://github.com/stacksjs/bun-git-hooks/commit/ac934d2))
+- wip ([214fc4d](https://github.com/stacksjs/bun-git-hooks/commit/214fc4d))
+- wip ([b3c47f2](https://github.com/stacksjs/bun-git-hooks/commit/b3c47f2))
+- wip ([b0c9c2f](https://github.com/stacksjs/bun-git-hooks/commit/b0c9c2f))
+- wip ([ee953ee](https://github.com/stacksjs/bun-git-hooks/commit/ee953ee))
+- **deps**: update all non-major dependencies (#52) ([138f9ea](https://github.com/stacksjs/bun-git-hooks/commit/138f9ea)) ([#52](https://github.com/stacksjs/bun-git-hooks/issues/52), [#52](https://github.com/stacksjs/bun-git-hooks/issues/52))
+- wip ([2350ee6](https://github.com/stacksjs/bun-git-hooks/commit/2350ee6))
+- wip ([49df507](https://github.com/stacksjs/bun-git-hooks/commit/49df507))
+- wip ([b3e7f73](https://github.com/stacksjs/bun-git-hooks/commit/b3e7f73))
+- expand verbose flag usage ([cfaa213](https://github.com/stacksjs/bun-git-hooks/commit/cfaa213))
+- update tools ([08b8dad](https://github.com/stacksjs/bun-git-hooks/commit/08b8dad))
+- update tools ([8fe5e4e](https://github.com/stacksjs/bun-git-hooks/commit/8fe5e4e))
+
+### Contributors
+
+- Adelino Ngomacha <adelinob335@gmail.com>
+- Chris <chrisbreuer93@gmail.com>
 
 ## v0.2.18...main
 

@@ -1,7 +1,7 @@
 {
   "name": "bun-git-hooks",
   "type": "module",
-  "version": "0.2.19",
+  "version": "0.3.0",
   "description": "A modern, zero dependency tool for managing git hooks in Bun projects.",
   "author": "Chris Breuer <chris@stacksjs.org>",
   "license": "MIT",
@@ -41,7 +41,11 @@
     "git-hooks": "./dist/bin/cli.js",
     "bun-git-hooks": "./dist/bin/cli.js"
   },
-  "files": ["README.md", "dist", "scripts"],
+  "files": [
+    "README.md",
+    "dist",
+    "scripts"
+  ],
   "scripts": {
     "build": "bun build.ts && bun run compile",
     "compile": "bun build ./bin/cli.ts --compile --minify --outfile bin/git-hooks",
