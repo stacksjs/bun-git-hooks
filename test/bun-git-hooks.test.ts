@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'

@@ -71,7 +71,9 @@ describe('Performance: staged-lint', () => {
 
   afterAll(() => {
     // Cleanup temp tree
-    try { fs.rmSync(tmpRoot, { recursive: true, force: true }) }
+    try {
+      fs.rmSync(tmpRoot, { recursive: true, force: true })
+    }
     catch {}
   })
 
