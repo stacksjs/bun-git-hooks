@@ -100,7 +100,7 @@ cli
         }
       }
 
-      const success = await runStagedLint(hook, config, process.cwd(), options?.verbose, options?.autoRestage)
+      const success = await runStagedLint(hook, config, process.cwd(), options?.verbose ?? false, options?.autoRestage)
 
       if (success) {
         log.success('Staged lint completed successfully')

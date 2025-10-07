@@ -502,41 +502,6 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
 }
 
 /**
- * Runs the staged lint tasks defined in the config file
- */
-export async function runStagedLint(hook: string, verbose?: boolean): Promise<boolean> {
-  const projectRoot = process.cwd()
-  const configFile = config
-
-  if (!configFile) {
-    console.error(`[ERROR] No configuration found`)
-    return false
-  }
-
-  const isVerbose = Boolean(verbose ?? VERBOSE)
-
-  // First check for hook-specific configuration
-  if (hook in configFile) {
-    const hookConfig = configFile[hook as keyof typeof configFile]
-    if (typeof hookConfig === 'object' && !Array.isArray(hookConfig)) {
-      const stagedLintConfig = (hookConfig as { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig }).stagedLint ||
-                              (hookConfig as { stagedLint?: StagedLintConfig; 'staged-lint'?: StagedLintConfig })['staged-lint']
-      if (stagedLintConfig) {
-        return processStagedLint(stagedLintConfig, projectRoot, isVerbose)
-      }
-    }
-  }
-
-  // If no hook-specific configuration, check for global staged-lint
-  if (configFile['staged-lint']) {
-    return processStagedLint(configFile['staged-lint'], projectRoot, isVerbose)
-  }
-
-  console.error(`[ERROR] No staged lint configuration found for hook ${hook}`)
-  return false
-}
-
-/**
  * Validates the config, checks that every git hook or option is named correctly
  */
 function _validateHooks(config: Record<string, any>): boolean {
@@ -566,7 +531,6 @@ const gitHooks: {
   checkBunGitHooksInDependencies: typeof checkBunGitHooksInDependencies
   getProjectRootDirectoryFromNodeModules: typeof getProjectRootDirectoryFromNodeModules
   getGitProjectRoot: typeof getGitProjectRoot
-  runStagedLint: typeof runStagedLint
   getStagedFiles: typeof getStagedFiles
   areHooksInstalled: typeof areHooksInstalled
 } = {
@@ -576,7 +540,6 @@ const gitHooks: {
   checkBunGitHooksInDependencies,
   getProjectRootDirectoryFromNodeModules,
   getGitProjectRoot,
-  runStagedLint,
   getStagedFiles,
   areHooksInstalled
 }

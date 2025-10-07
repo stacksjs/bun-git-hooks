@@ -31,7 +31,7 @@ function stageAll(repoDir: string) {
 function runStagedLint(repoDir: string): number {
   const start = Date.now()
   // Run the CLI directly to ensure config is loaded from cwd
-  execSync(`bun ${require.resolve('../../bin/cli')} run-staged-lint pre-commit`, {
+  execSync(`bun ${require.resolve('../bin/cli')} run-staged-lint pre-commit`, {
     cwd: repoDir,
     stdio: 'ignore',
   })
