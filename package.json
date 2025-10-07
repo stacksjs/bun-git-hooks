@@ -1,7 +1,7 @@
 {
   "name": "bun-git-hooks",
   "type": "module",
-  "version": "0.2.19",
+  "version": "0.3.1",
   "description": "A modern, zero dependency tool for managing git hooks in Bun projects.",
   "author": "Chris Breuer <chris@stacksjs.org>",
   "license": "MIT",
@@ -41,7 +41,11 @@
     "git-hooks": "./dist/bin/cli.js",
     "bun-git-hooks": "./dist/bin/cli.js"
   },
-  "files": ["README.md", "dist"],
+  "files": [
+    "README.md",
+    "dist",
+    "scripts"
+  ],
   "scripts": {
     "build": "bun build.ts && bun run compile",
     "compile": "bun build ./bin/cli.ts --compile --minify --outfile bin/git-hooks",
@@ -51,10 +55,10 @@
     "compile:windows-x64": "bun build ./bin/cli.ts --compile --minify --target=bun-windows-x64 --outfile bin/git-hooks-windows-x64.exe",
     "compile:darwin-x64": "bun build ./bin/cli.ts --compile --minify --target=bun-darwin-x64 --outfile bin/git-hooks-darwin-x64",
     "compile:darwin-arm64": "bun build ./bin/cli.ts --compile --minify --target=bun-darwin-arm64 --outfile bin/git-hooks-darwin-arm64",
-    "postinstall": "bunx git-hooks && bun ./scripts/postinstall.ts",
+    "postinstall": "bun ./scripts/postinstall.ts",
     "uninstall": "bun ./scripts/uninstall.ts",
     "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
-    "prepublishOnly": "bun --bun run build && bun run compile:all",
+    "prepublishOnly": "bun --bun run build && bun run compile:all && bun run zip",
     "test": "bun test",
     "lint": "bunx --bun eslint .",
     "lint:fix": "bunx --bun eslint . --fix",
@@ -77,17 +81,14 @@
     "@stacksjs/bumpx": "^0.1.84",
     "@stacksjs/clarity": "^0.3.23",
     "@stacksjs/docs": "^0.70.23",
-    "@stacksjs/eslint-config": "^4.10.2-beta.3",
+    "@stacksjs/eslint-config": "^4.14.0-beta.3",
     "@stacksjs/gitlint": "^0.1.5",
     "@stacksjs/logsmith": "^0.1.18",
     "@types/bun": "^1.2.23",
-    "buddy-bot": "^0.8.9",
-    "bumpp": "^10.3.1",
-    "bun-git-hooks": "^0.2.19",
-    "bun-plugin-dtsx": "^0.21.12",
-    "bunfig": "^0.10.1",
+    "buddy-bot": "^0.9.7",
+    "bun-plugin-dtsx": "0.21.12",
+    "bunfig": "^0.15.0",
     "cac": "^6.7.14",
-    "changelogen": "^0.6.2",
     "typescript": "^5.9.3"
   },
   "git-hooks": {
