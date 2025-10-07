@@ -23,13 +23,14 @@ export type GitHooksConfig = {
   [K in typeof VALID_GIT_HOOKS[number] | CamelCaseHooks]?: string | {
     'stagedLint'?: StagedLintConfig
     'staged-lint'?: StagedLintConfig // Legacy support
+    'autoRestage'?: boolean // Allow per-hook autoRestage setting
   }
 } & {
   'preserveUnused'?: boolean | (typeof VALID_GIT_HOOKS[number] | CamelCaseHooks)[]
   'verbose'?: boolean
   'stagedLint'?: StagedLintConfig
   'staged-lint'?: StagedLintConfig // Legacy support
-  'autoRestage'?: boolean
+  'autoRestage'?: boolean // Global autoRestage setting
 }
 
 export interface SetHooksFromConfigOptions {

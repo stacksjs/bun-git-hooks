@@ -84,9 +84,12 @@ cli
       if (options?.verbose) {
         log.debug(`Running staged lint for hook: ${hook}`)
         log.debug(`Working directory: ${process.cwd()}`)
+        if (options?.autoRestage !== undefined) {
+          log.debug(`Auto-restage: ${options.autoRestage}`)
+        }
       }
 
-      const success = await runStagedLint(hook, config, process.cwd(), options?.verbose)
+      const success = await runStagedLint(hook, config, process.cwd(), options?.verbose, options?.autoRestage)
 
       if (success) {
         log.success('Staged lint completed successfully')

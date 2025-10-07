@@ -39,10 +39,15 @@ export class StagedLintProcessor {
       // Process each pattern in the config
       for (const [pattern, commands] of Object.entries(config)) {
         const matchingFiles = this.getMatchingFiles(stagedFiles, pattern)
-        if (matchingFiles.length === 0)
+        if (matchingFiles.length === 0) {
+          this.log(`No files match pattern "${pattern}" - skipping`)
           continue
+        }
 
-        this.log(`Processing pattern "${pattern}" for ${matchingFiles.length} files`)
+        this.log(`Pattern "${pattern}" matched ${matchingFiles.length} file(s)`)
+        if (this.verbose) {
+          this.log(`Matched files: ${matchingFiles.join(', ')}`)
+        }
 
         const commandArray = Array.isArray(commands) ? commands : [commands]
 
@@ -207,7 +212,11 @@ export class StagedLintProcessor {
         ? command.replace('{files}', files.join(' '))
         : `${command} ${files.join(' ')}`
 
-      this.log(`Running: ${finalCommand}`)
+      this.log(`Running command on ${files.length} file(s): ${command}`)
+      if (this.verbose) {
+        this.log(`Files: ${files.join(', ')}`)
+        this.log(`Full command: ${finalCommand}`)
+      }
 
       const result = execSync(finalCommand, {
         cwd: this.projectRoot,
@@ -219,6 +228,7 @@ export class StagedLintProcessor {
         console.warn(result)
       }
 
+      this.log(`Command completed successfully for ${files.length} file(s)`)
       return true
     }
     catch (error: any) {
@@ -228,6 +238,7 @@ export class StagedLintProcessor {
       if (error.stderr)
         console.error('[ERROR] Command stderr:', error.stderr)
       console.error(`[ERROR] Command failed: ${command}`)
+      console.error(`[ERROR] Failed on files: ${files.join(', ')}`)
       return false
     }
   }
@@ -361,11 +372,15 @@ export async function runStagedLint(
   config: GitHooksConfig,
   projectRoot: string,
   verbose: boolean = false,
+  autoRestage?: boolean,
 ): Promise<boolean> {
   if (!config) {
     console.error(`[ERROR] No configuration found`)
     return false
   }
+
+  // Determine autoRestage setting: CLI option > hook config > global config > default true
+  let shouldAutoRestage = autoRestage !== undefined ? autoRestage : true
 
   // Try both the original hook name and its mapped version
   const hookVariants = [hook, HOOK_NAME_MAP[hook]].filter(Boolean)
@@ -377,8 +392,15 @@ export async function runStagedLint(
       if (typeof hookConfig === 'object' && !Array.isArray(hookConfig)) {
         const stagedLintConfig = (hookConfig as { 'stagedLint'?: StagedLintConfig, 'staged-lint'?: StagedLintConfig }).stagedLint
           || (hookConfig as { 'stagedLint'?: StagedLintConfig, 'staged-lint'?: StagedLintConfig })['staged-lint']
+
+        // Check for hook-specific autoRestage setting
+        const hookAutoRestage = (hookConfig as { autoRestage?: boolean }).autoRestage
+        if (autoRestage === undefined && hookAutoRestage !== undefined) {
+          shouldAutoRestage = hookAutoRestage
+        }
+
         if (stagedLintConfig) {
-          const processor = new StagedLintProcessor(projectRoot, verbose, true)
+          const processor = new StagedLintProcessor(projectRoot, verbose, shouldAutoRestage)
           return processor.process(stagedLintConfig)
         }
       }
@@ -387,7 +409,12 @@ export async function runStagedLint(
 
   // If no hook-specific configuration, check for global stagedLint
   if (config.stagedLint || config['staged-lint']) {
-    const processor = new StagedLintProcessor(projectRoot, verbose, true)
+    // Use global autoRestage if no CLI override
+    if (autoRestage === undefined && config.autoRestage !== undefined) {
+      shouldAutoRestage = config.autoRestage
+    }
+
+    const processor = new StagedLintProcessor(projectRoot, verbose, shouldAutoRestage)
     return processor.process(config.stagedLint || config['staged-lint']!)
   }
 
