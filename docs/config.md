@@ -55,14 +55,14 @@ export default config
 ```json
 {
   "git-hooks": {
-    "preCommit": {
-      "stagedLint": {
+    "pre-commit": {
+      "staged-lint": {
         "*.{js,ts}": "bunx --bun eslint . --fix",
         "*.{css,scss}": "stylelint --fix"
       }
     },
-    "commitMsg": "bun commitlint --edit $1",
-    "prePush": "bun run build"
+    "commit-msg": "bun commitlint --edit $1",
+    "pre-push": "bun run build"
   }
 }
 ```
