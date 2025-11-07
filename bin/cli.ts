@@ -1,13 +1,13 @@
 #!/usr/bin/env bun
 import process from 'node:process'
+import { CLI } from '@stacksjs/clapp'
 import { Logger } from '@stacksjs/clarity'
-import { CAC } from 'cac'
 import { version } from '../package.json'
 import { config } from '../src/config'
 import { removeHooks, setHooksFromConfig } from '../src/git-hooks'
 import { runStagedLint } from '../src/staged-lint'
 
-const cli = new CAC('git-hooks')
+const cli = new CLI('git-hooks')
 const log = new Logger('git-hooks', {
   showTags: true,
 })
