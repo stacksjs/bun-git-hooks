@@ -4,7 +4,7 @@
     "": {
       "name": "bun-git-hooks",
       "devDependencies": {
-        "@stacksjs/bumpx": "^0.2.3",
+        "@stacksjs/bumpx": "^0.2.4",
         "@stacksjs/clarity": "^0.3.24",
         "@stacksjs/docs": "^0.70.23",
         "@stacksjs/eslint-config": "^4.14.0-beta.3",
