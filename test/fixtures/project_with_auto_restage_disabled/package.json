@@ -2,7 +2,7 @@
   "name": "test-auto-restage-disabled",
   "version": "0.3.1",
   "devDependencies": {
-    "bun-git-hooks": "^0.1.0"
+    "bun-git-hooks": "^0.3.1"
   },
   "git-hooks": {
     "pre-commit": {
