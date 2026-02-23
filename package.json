@@ -88,7 +88,7 @@
   "git-hooks": {
     "pre-commit": {
       "stagedLint": {
-        "*.{js,ts,json,yaml,yml,md}": "bunx --bun eslint --fix"
+        "*.{js,ts,json,yaml,yml,md}": "bunx --bun pickier lint --fix"
       },
       "autoRestage": true
     },
