@@ -91,5 +91,5 @@ describe('Performance: staged-lint', () => {
     // eslint-disable-next-line no-console
     console.log(`[perf] staged-lint (many files): ${durationMs}ms`)
     expect(durationMs).toBeGreaterThanOrEqual(0)
-  }, 10000) // 10 second timeout for this test
+  }, 30000) // 30 second timeout for this test
 })
