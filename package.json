@@ -83,7 +83,7 @@
     "@stacksjs/clapp": "^0.2.0",
     "@stacksjs/docs": "^0.70.23",
     "better-dx": "^0.2.5",
-    "cac": "^6.7.14"
+    "cac": "^7.0.0"
   },
   "git-hooks": {
     "pre-commit": {
