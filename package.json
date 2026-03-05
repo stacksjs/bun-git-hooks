@@ -60,8 +60,8 @@
     "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
     "prepublishOnly": "bun --bun run build && bun run compile:all && bun run zip",
     "test": "bun test",
-    "lint": "bunx --bun pickier lint .",
-    "lint:fix": "bunx --bun pickier lint . --fix",
+    "lint": "bunx --bun pickier .",
+    "lint:fix": "bunx --bun pickier . --fix",
     "changelog": "bunx logsmith --verbose",
     "changelog:generate": "bunx logsmith --output CHANGELOG.md",
     "release": "bunx --bun bumpx prompt --recursive --all",
@@ -76,8 +76,8 @@
     "zip:windows-x64": "zip -j bin/git-hooks-windows-x64.zip bin/git-hooks-windows-x64.exe",
     "zip:darwin-x64": "zip -j bin/git-hooks-darwin-x64.zip bin/git-hooks-darwin-x64",
     "zip:darwin-arm64": "zip -j bin/git-hooks-darwin-arm64.zip bin/git-hooks-darwin-arm64",
-    "format": "bunx --bun pickier format .",
-    "format:fix": "bunx --bun pickier format . --write"
+    "format": "bunx --bun pickier . --format",
+    "format:fix": "bunx --bun pickier . --format --write"
   },
   "devDependencies": {
     "@stacksjs/clapp": "^0.2.0",
