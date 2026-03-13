@@ -2,7 +2,7 @@
 
 ## About
 
-A modern, zero dependency tool for managing git hooks in Bun projects.
+A Bun-optimized TypeScript library for managing Git hooks through simple configuration files (`git-hooks.config.ts/js/json`). It supports automatic hook installation on `bun install`, all standard Git hooks (pre-commit, commit-msg, pre-push, etc.), environment variables for skipping hooks, optional cleanup of unused hooks, and a staged lint feature that runs linters/formatters only on staged files matching specific glob patterns (similar to lint-staged). The library is zero-dependency and includes both a CLI and programmatic API.
 
 ## Linting
 
