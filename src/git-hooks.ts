@@ -286,7 +286,8 @@ async function getStagedFiles(projectRoot: string = process.cwd()): Promise<stri
     }
 
     return files
-  } catch (error) {
+  }
+catch (error) {
     console.error('[ERROR] Failed to get staged files:', error)
     return []
   }
@@ -307,10 +308,12 @@ function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedL
 
   if (typeof commandOrConfig === 'string') {
     hookCommand = PREPEND_SCRIPT + commandOrConfig
-  } else if (commandOrConfig.stagedLint || commandOrConfig['staged-lint']) {
+  }
+else if (commandOrConfig.stagedLint || commandOrConfig['staged-lint']) {
     // Keep original command for compatibility with existing tests and setups
     hookCommand = PREPEND_SCRIPT + `bun git-hooks run-staged-lint ${hook}`
-  } else {
+  }
+else {
     console.error(`[ERROR] Invalid command or config for hook ${hook}`)
     return
   }
