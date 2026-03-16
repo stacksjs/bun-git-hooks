@@ -307,11 +307,11 @@ function _setHook(hook: string, commandOrConfig: string | { stagedLint?: StagedL
   let hookCommand: string
 
   if (typeof commandOrConfig === 'string') {
-    hookCommand = PREPEND_SCRIPT + commandOrConfig
+    hookCommand = `${PREPEND_SCRIPT}${commandOrConfig}`
   }
 else if (commandOrConfig.stagedLint || commandOrConfig['staged-lint']) {
     // Keep original command for compatibility with existing tests and setups
-    hookCommand = PREPEND_SCRIPT + `bun git-hooks run-staged-lint ${hook}`
+    hookCommand = `${PREPEND_SCRIPT}bun git-hooks run-staged-lint ${hook}`
   }
 else {
     console.error(`[ERROR] Invalid command or config for hook ${hook}`)
