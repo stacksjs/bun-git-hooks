@@ -91,8 +91,5 @@
       "autoRestage": true
     },
     "commit-msg": "bunx gitlint --edit .git/COMMIT_EDITMSG"
-  },
-  "overrides": {
-    "unconfig": "0.3.10"
   }
 }
