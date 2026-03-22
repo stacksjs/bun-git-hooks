@@ -81,7 +81,6 @@
   },
   "devDependencies": {
     "@stacksjs/clapp": "^0.2.0",
-    "@stacksjs/docs": "^0.70.23",
     "better-dx": "^0.2.7"
   },
   "git-hooks": {
