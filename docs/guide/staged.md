@@ -2,23 +2,6 @@
 title: Staged File Linting
 description: Run linters and formatters only on staged files with bun-git-hooks
 ---
-
-### Negation Patterns
-
-Exclude files from matching:
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': {
-    stagedLint: {
-      // All TypeScript except test files
-      '*.ts': 'eslint --fix',
-      '!*.test.ts': '', // Exclude test files
-
-      // Or use glob negation in the pattern
-      '!(*.test).ts': 'eslint --fix',
-    },
-  },
 }
 ```
 

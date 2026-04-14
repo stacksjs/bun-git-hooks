@@ -2,24 +2,6 @@
 title: Getting Started with bun-git-hooks
 description: Learn how to set up and use bun-git-hooks for managing Git hooks in your Bun projects
 ---
-
-```typescript
-// git-hooks.config.ts
-import type { GitHooksConfig } from 'bun-git-hooks'
-
-const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint',
-  'verbose': true,
-}
-
-export default config
-```
-
-### JavaScript
-
-```javascript
-// git-hooks.config.js
-export default {
   'pre-commit': 'bun run lint',
   'commit-msg': 'bun commitlint --edit $1',
 }

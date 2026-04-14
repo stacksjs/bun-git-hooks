@@ -2,23 +2,6 @@
 title: Hook Types
 description: Complete guide to all Git hook types supported by bun-git-hooks
 ---
-  const currentMsg = await Bun.file(commitMsgFile).text()
-  if (!currentMsg.includes(issueMatch[1])) {
-    await Bun.write(commitMsgFile, `[${issueMatch[1]}] ${currentMsg}`)
-  }
-}
-```
-
-### commit-msg
-
-Runs after the commit message is entered. Used to validate commit messages.
-
-```typescript
-const config: GitHooksConfig = {
-  'commit-msg': 'bunx gitlint --edit $1',
-}
-```
-
 **Use cases:**
 
 - Enforce commit message format (conventional commits)
