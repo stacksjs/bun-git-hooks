@@ -9,7 +9,7 @@ bun-git-hooks supports custom initialization scripts and environment setup throu
 Create a `.git-hooks.rc` file in your project root:
 
 ```bash
-#!/bin/sh
+# !/bin/sh
 
 # Set environment variables
 export NODE_ENV=development
@@ -42,7 +42,7 @@ export BUN_GIT_HOOKS_RC=/path/to/custom/init.sh
 ### Environment-specific Setup
 
 ```bash
-#!/bin/sh
+# !/bin/sh
 
 # Load different configurations based on environment
 case "$NODE_ENV" in
@@ -67,7 +67,7 @@ export PATH="$PWD/tools/bin:$PATH"
 Create a shared initialization template:
 
 ```bash
-#!/bin/sh
+# !/bin/sh
 
 # Team-wide configuration
 export TEAM_CONFIG=/path/to/team/config
@@ -96,7 +96,7 @@ fi
 ### Development Tools Setup
 
 ```bash
-#!/bin/sh
+# !/bin/sh
 
 # Ensure development tools are available
 check_tools() {
@@ -122,7 +122,7 @@ init_dev_env() {
   check_tools
   setup_git
 
-  # Load custom paths
+# Load custom paths
   export PATH="$PWD/scripts:$PATH"
 }
 
@@ -132,7 +132,7 @@ init_dev_env
 ### Project-specific Configuration
 
 ```bash
-#!/bin/sh
+# !/bin/sh
 
 # Project configuration
 export PROJECT_ROOT="$PWD"
@@ -149,7 +149,7 @@ fi
 
 # Initialize services
 init_services() {
-  # Start development services if needed
+# Start development services if needed
   if [ "$NODE_ENV" = "development" ]; then
     echo "Starting development services..."
     bun run dev:services

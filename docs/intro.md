@@ -21,7 +21,7 @@
 - ⚡ **Fast**: Built for Bun with performance in mind
 - 🔍 **Verbose Mode**: Detailed logging for troubleshooting
 
-## Why bun-git-hooks?
+## Why bun-git-hooks
 
 Git hooks are powerful tools for automating tasks in your development workflow, but they can be challenging to manage and distribute across a team. `bun-git-hooks` solves this by:
 
@@ -78,7 +78,7 @@ export default config
 Create a `.git-hooks.rc` file to set up environment variables or perform custom initialization:
 
 ```bash
-#!/bin/bash
+# !/bin/bash
 export NODE_ENV=development
 export CUSTOM_VAR=value
 ```

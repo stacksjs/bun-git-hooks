@@ -2,42 +2,6 @@
 title: Getting Started with bun-git-hooks
 description: Learn how to set up and use bun-git-hooks for managing Git hooks in your Bun projects
 ---
-
-# Getting Started
-
-This guide will walk you through setting up bun-git-hooks for your project.
-
-## Installation
-
-Install bun-git-hooks as a development dependency:
-
-```bash
-# Using bun (recommended)
-bun add -D bun-git-hooks
-
-# Using npm
-npm install -D bun-git-hooks
-
-# Using pnpm
-pnpm add -D bun-git-hooks
-
-# Using yarn
-yarn add -D bun-git-hooks
-```
-
-## Quick Setup
-
-### 1. Create Configuration File
-
-Create a `git-hooks.config.ts` file in your project root:
-
-```typescript
-// git-hooks.config.ts
-import type { GitHooksConfig } from 'bun-git-hooks'
-
-const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint && bun run test',
-  'commit-msg': 'bunx gitlint --edit $1',
   'pre-push': 'bun run build',
 }
 
@@ -49,10 +13,13 @@ export default config
 Hooks are installed automatically when you run `bun install`. You can also manually install them:
 
 ```bash
+
 # Using bunx
+
 bunx git-hooks
 
 # Or the bun-git-hooks command
+
 bunx bun-git-hooks
 ```
 
@@ -169,15 +136,19 @@ const config: GitHooksConfig = {
 ### Skip Temporarily
 
 ```bash
+
 # Skip hooks for a single command
-SKIP_BUN_GIT_HOOKS=1 git commit -m "wip: work in progress"
+
+SKIP*BUN*GIT*HOOKS=1 git commit -m "wip: work in progress"
 ```
 
 ### Skip Installation
 
 ```bash
+
 # Skip hook installation during bun install
-SKIP_INSTALL_GIT_HOOKS=1 bun install
+
+SKIP*INSTALL*GIT*HOOKS=1 bun install
 ```
 
 ## Preserving Existing Hooks
@@ -205,27 +176,35 @@ const config: GitHooksConfig = {
 ### Install Hooks
 
 ```bash
+
 # Install hooks from config
+
 bunx git-hooks
 
 # Use specific config file
+
 bunx git-hooks ./custom-config.ts
 
 # Enable verbose logging
+
 bunx git-hooks --verbose
 ```
 
 ### Uninstall Hooks
 
 ```bash
+
 # Remove all hooks
+
 bunx git-hooks uninstall
 ```
 
 ### Run Staged Lint Manually
 
 ```bash
+
 # Run staged lint for pre-commit
+
 bunx git-hooks run-staged-lint pre-commit
 ```
 

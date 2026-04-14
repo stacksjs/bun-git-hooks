@@ -132,10 +132,10 @@ Add a `stagedLint` property to your hook configuration:
 export default {
   'pre-commit': {
     stagedLint: {
-      '*.js': 'eslint --fix',
-      '*.{ts,tsx}': ['eslint --fix', 'prettier --write'],
-      '*.css': 'stylelint --fix',
-      '*.md': 'prettier --write'
+      '_.js': 'eslint --fix',
+      '_.{ts,tsx}': ['eslint --fix', 'prettier --write'],
+      '_.css': 'stylelint --fix',
+      '_.md': 'prettier --write'
     }
   },
   'verbose': true
@@ -163,10 +163,10 @@ For example:
 ```ts
 // git-hooks.config.ts
 export default {
-  '*.{js,jsx}': 'eslint --fix', // Run eslint only on JavaScript files
-  '*.{ts,tsx}': ['eslint --fix', 'prettier --write'], // Run eslint and then prettier on TypeScript files
-  '*.css': 'stylelint --fix', // Run stylelint only on CSS files
-  '*.md': 'prettier --write' // Run prettier only on Markdown files
+  '_.{js,jsx}': 'eslint --fix', // Run eslint only on JavaScript files
+  '_.{ts,tsx}': ['eslint --fix', 'prettier --write'], // Run eslint and then prettier on TypeScript files
+  '_.css': 'stylelint --fix', // Run stylelint only on CSS files
+  '_.md': 'prettier --write' // Run prettier only on Markdown files
 }
 ```
 
@@ -176,14 +176,14 @@ The output will show which files are being processed and which tasks are being r
 $ git commit
 
 ❯ Running tasks for staged files...
-  ❯ *.js — 2 files
+  ❯ _.js — 2 files
     ⠼ eslint --fix
-  ❯ *.{ts,tsx} — 3 files
+  ❯ _.{ts,tsx} — 3 files
     ⠹ eslint --fix
     ⠹ prettier --write
-  ❯ *.css — 1 file
+  ❯ _.css — 1 file
     ⠼ stylelint --fix
-  ❯ *.md — no files [SKIPPED]
+  ❯ _.md — no files [SKIPPED]
 ```
 
 ### Error Handling

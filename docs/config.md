@@ -169,9 +169,9 @@ const config: GitHooksConfig = {
 
 The following environment variables can override configuration:
 
-- `SKIP_INSTALL_GIT_HOOKS`: Skip hook installation (values: "1", "true")
-- `SKIP_BUN_GIT_HOOKS`: Skip hook execution (values: "1", "true")
-- `BUN_GIT_HOOKS_RC`: Path to custom environment file
+- `SKIP*INSTALL*GIT*HOOKS`: Skip hook installation (values: "1", "true")
+- `SKIP*BUN*GIT*HOOKS`: Skip hook execution (values: "1", "true")
+- `BUN*GIT*HOOKS_RC`: Path to custom environment file
 
 ## Configuration Resolution
 

@@ -84,20 +84,20 @@ The following Git hooks are supported:
 
 ### Configuration Variables
 
-- `SKIP_BUN_GIT_HOOKS`
+- `SKIP*BUN*GIT*HOOKS`
   - Type: `string`
   - Description: Skip hook execution when set to "1"
-  - Example: `SKIP_BUN_GIT_HOOKS=1 git commit -m "quick fix"`
+  - Example: `SKIP*BUN*GIT*HOOKS=1 git commit -m "quick fix"`
 
-- `BUN_GIT_HOOKS_RC`
+- `BUN*GIT*HOOKS*RC`
   - Type: `string`
   - Description: Path to custom initialization script
-  - Example: `BUN_GIT_HOOKS_RC=/path/to/init.sh`
+  - Example: `BUN*GIT*HOOKS*RC=/path/to/init.sh`
 
-- `SKIP_INSTALL_GIT_HOOKS`
+- `SKIP*INSTALL*GIT*HOOKS`
   - Type: `string`
   - Description: Skip hook installation when set to "1"
-  - Example: `SKIP_INSTALL_GIT_HOOKS=1 bun install`
+  - Example: `SKIP*INSTALL*GIT*HOOKS=1 bun install`
 
 ## Configuration File
 

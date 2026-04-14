@@ -111,31 +111,31 @@ const config: GitHooksConfig = {
 
 ## Environment Variables
 
-### SKIP_INSTALL_GIT_HOOKS
+### SKIP*INSTALL*GIT*HOOKS
 
 Skip hook installation during package installation:
 
 ```bash
 # Skip hook installation
-SKIP_INSTALL_GIT_HOOKS=1 bun install
+SKIP*INSTALL*GIT*HOOKS=1 bun install
 ```
 
-### SKIP_BUN_GIT_HOOKS
+### SKIP*BUN*GIT*HOOKS
 
 Skip hook execution for a specific git command:
 
 ```bash
 # Skip hook execution
-SKIP_BUN_GIT_HOOKS=1 git commit -m "skipping hooks"
+SKIP*BUN*GIT*HOOKS=1 git commit -m "skipping hooks"
 ```
 
-### BUN_GIT_HOOKS_RC
+### BUN*GIT*HOOKS*RC
 
 Set custom environment for hooks:
 
 ```bash
 # Set custom environment
-BUN_GIT_HOOKS_RC=/path/to/env git-hooks
+BUN*GIT*HOOKS*RC=/path/to/env git-hooks
 ```
 
 ## Advanced Usage
@@ -246,5 +246,5 @@ git commit -m "test: checking if hooks work"
 If you need to bypass hooks temporarily:
 
 ```bash
-SKIP_BUN_GIT_HOOKS=1 git commit -m "bypass: temporary commit"
+SKIP*BUN*GIT_HOOKS=1 git commit -m "bypass: temporary commit"
 ```

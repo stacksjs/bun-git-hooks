@@ -112,8 +112,8 @@ const config: GitHooksConfig = {
   // Quality checks before commit
   preCommit: {
     stagedLint: {
-      '*.{js,ts}': 'eslint --fix',
-      '*.{css,scss}': 'stylelint --fix'
+      '_.{js,ts}': 'eslint --fix',
+      '_.{css,scss}': 'stylelint --fix'
     }
   },
 

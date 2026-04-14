@@ -2,40 +2,6 @@
 title: Hook Types
 description: Complete guide to all Git hook types supported by bun-git-hooks
 ---
-
-# Hook Types
-
-This guide covers all Git hooks supported by bun-git-hooks and their common use cases.
-
-## Overview
-
-Git hooks are scripts that run automatically at specific points in the Git workflow. bun-git-hooks makes it easy to configure these hooks.
-
-## Client-Side Hooks
-
-### pre-commit
-
-Runs before a commit is created. This is the most commonly used hook.
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint && bun run test',
-}
-```
-
-**Use cases:**
-- Run linters (ESLint, Prettier, Stylelint)
-- Run type checking
-- Run unit tests
-- Check for secrets or sensitive data
-- Validate code formatting
-
-**With staged file linting:**
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': {
-    stagedLint: {
       '*.{js,ts,jsx,tsx}': 'eslint --fix',
       '*.css': 'stylelint --fix',
     },
@@ -54,6 +20,7 @@ const config: GitHooksConfig = {
 ```
 
 **Use cases:**
+
 - Add issue number from branch name
 - Add template text to commit message
 - Pre-fill commit message
@@ -86,6 +53,7 @@ const config: GitHooksConfig = {
 ```
 
 **Use cases:**
+
 - Enforce commit message format (conventional commits)
 - Check for required prefixes
 - Validate message length
@@ -93,7 +61,9 @@ const config: GitHooksConfig = {
 **Example with commitlint:**
 
 ```bash
+
 # Install commitlint
+
 bun add -D @commitlint/cli @commitlint/config-conventional
 ```
 
@@ -122,6 +92,7 @@ const config: GitHooksConfig = {
 ```
 
 **Use cases:**
+
 - Send notifications
 - Update local documentation
 - Trigger builds
@@ -137,6 +108,7 @@ const config: GitHooksConfig = {
 ```
 
 **Use cases:**
+
 - Run full test suite
 - Build and verify project
 - Check for uncommitted changes
@@ -177,6 +149,7 @@ const config: GitHooksConfig = {
 ```
 
 **Use cases:**
+
 - Install dependencies when switching branches
 - Clean build artifacts
 - Update environment files
@@ -192,6 +165,7 @@ const config: GitHooksConfig = {
 ```
 
 **Use cases:**
+
 - Install new dependencies
 - Run database migrations
 - Clean caches
@@ -207,6 +181,7 @@ const config: GitHooksConfig = {
 ```
 
 **Use cases:**
+
 - Ensure working directory is clean
 - Prevent rebase on protected branches
 
@@ -221,6 +196,7 @@ const config: GitHooksConfig = {
 ```
 
 **Use cases:**
+
 - Update dependent branches
 - Re-run tests on rewritten commits
 
@@ -371,10 +347,13 @@ const config: GitHooksConfig = {
 Document how to skip hooks for emergencies:
 
 ```bash
+
 # Skip all hooks
-SKIP_BUN_GIT_HOOKS=1 git commit -m "emergency fix"
+
+SKIP*BUN*GIT_HOOKS=1 git commit -m "emergency fix"
 
 # Skip specific hook
+
 git commit --no-verify -m "emergency fix"
 ```
 

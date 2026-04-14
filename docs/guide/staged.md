@@ -2,42 +2,6 @@
 title: Staged File Linting
 description: Run linters and formatters only on staged files with bun-git-hooks
 ---
-
-# Staged File Linting
-
-Run linters and formatters only on files that are staged for commit. This feature is similar to `lint-staged` but built into bun-git-hooks.
-
-## Overview
-
-Staged file linting allows you to run specific commands only on files that match certain patterns and are staged in Git. This makes your pre-commit hooks much faster by only checking files that have actually changed.
-
-## Basic Usage
-
-Configure staged linting in your `pre-commit` hook:
-
-```typescript
-// git-hooks.config.ts
-import type { GitHooksConfig } from 'bun-git-hooks'
-
-const config: GitHooksConfig = {
-  'pre-commit': {
-    stagedLint: {
-      '*.ts': 'eslint --fix',
-      '*.css': 'stylelint --fix',
-    },
-  },
-}
-
-export default config
-```
-
-## Pattern Matching
-
-### File Extensions
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': {
     stagedLint: {
       // Single extension
       '*.js': 'eslint --fix',
@@ -274,10 +238,13 @@ const config: GitHooksConfig = {
 ### Run Staged Lint Manually
 
 ```bash
+
 # Run staged lint for pre-commit hook
+
 bunx git-hooks run-staged-lint pre-commit
 
 # With verbose output
+
 bunx git-hooks run-staged-lint pre-commit --verbose
 ```
 
@@ -311,10 +278,13 @@ const pattern = '*.ts'
 Make sure your command accepts file arguments:
 
 ```bash
+
 # Good - accepts file arguments
+
 eslint --fix file1.ts file2.ts
 
 # Bad - doesn't know what to lint
+
 eslint --fix  # No files!
 ```
 

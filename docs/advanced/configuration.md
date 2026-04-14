@@ -53,7 +53,7 @@ const config: GitHooksConfig = {
 import type { GitHooksConfig } from 'bun-git-hooks'
 
 function getConfig(): GitHooksConfig {
-  const isProduction = process.env.NODE_ENV === 'production'
+  const isProduction = process.env.NODE*ENV === 'production'
   const isCI = Boolean(process.env.CI)
 
   return {
@@ -159,7 +159,7 @@ const config: GitHooksConfig = {
     stagedLint: {
       '*.ts': async (files) => {
         // Development: Fast checks
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE*ENV === 'development') {
           return 'eslint --fix'
         }
 
