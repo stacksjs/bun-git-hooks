@@ -2,38 +2,6 @@
 title: Staged File Linting
 description: Run linters and formatters only on staged files with bun-git-hooks
 ---
-    stagedLint: {
-      // Single extension
-      '*.js': 'eslint --fix',
-
-      // Multiple extensions
-      '*.{ts,tsx}': 'eslint --fix',
-
-      // All JavaScript files
-      '*.{js,jsx,ts,tsx}': 'eslint --fix',
-    },
-  },
-}
-```
-
-### Directory Patterns
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': {
-    stagedLint: {
-      // Files in src directory
-      'src/**/*.ts': 'eslint --fix',
-
-      // Files in any directory
-      '**/*.css': 'stylelint --fix',
-
-      // Specific directory
-      'packages/*/src/**/*.ts': 'eslint --fix',
-    },
-  },
-}
-```
 
 ### Negation Patterns
 

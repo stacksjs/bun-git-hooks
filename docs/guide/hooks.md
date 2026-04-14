@@ -2,39 +2,6 @@
 title: Hook Types
 description: Complete guide to all Git hook types supported by bun-git-hooks
 ---
-      '*.{js,ts,jsx,tsx}': 'eslint --fix',
-      '*.css': 'stylelint --fix',
-    },
-  },
-}
-```
-
-### prepare-commit-msg
-
-Runs after the default commit message is created but before the editor opens.
-
-```typescript
-const config: GitHooksConfig = {
-  'prepare-commit-msg': 'bun run scripts/prepare-commit.ts',
-}
-```
-
-**Use cases:**
-
-- Add issue number from branch name
-- Add template text to commit message
-- Pre-fill commit message
-
-**Example script:**
-
-```typescript
-// scripts/prepare-commit.ts
-const commitMsgFile = Bun.argv[2]
-const branchName = await Bun.$`git branch --show-current`.text()
-
-// Extract issue number from branch (e.g., feature/ISSUE-123)
-const issueMatch = branchName.match(/([A-Z]+-\d+)/)
-if (issueMatch) {
   const currentMsg = await Bun.file(commitMsgFile).text()
   if (!currentMsg.includes(issueMatch[1])) {
     await Bun.write(commitMsgFile, `[${issueMatch[1]}] ${currentMsg}`)

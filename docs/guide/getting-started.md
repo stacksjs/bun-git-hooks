@@ -2,41 +2,6 @@
 title: Getting Started with bun-git-hooks
 description: Learn how to set up and use bun-git-hooks for managing Git hooks in your Bun projects
 ---
-  'pre-push': 'bun run build',
-}
-
-export default config
-```
-
-### 2. Install Hooks
-
-Hooks are installed automatically when you run `bun install`. You can also manually install them:
-
-```bash
-
-# Using bunx
-
-bunx git-hooks
-
-# Or the bun-git-hooks command
-
-bunx bun-git-hooks
-```
-
-### 3. Test Your Setup
-
-Make a commit to test your hooks:
-
-```bash
-git add .
-git commit -m "test: verify hooks are working"
-```
-
-## Configuration File Formats
-
-bun-git-hooks supports multiple configuration formats:
-
-### TypeScript (Recommended)
 
 ```typescript
 // git-hooks.config.ts
