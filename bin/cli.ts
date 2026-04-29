@@ -4,7 +4,7 @@ import { CLI } from '@stacksjs/clapp'
 import { Logger } from '@stacksjs/clarity'
 import { version } from '../package.json'
 import { config } from '../src/config'
-import { removeHooks, setHooksFromConfig } from '../src/git-hooks'
+import { removeHooks, setHooksFromConfig, getConfigFromPackageJson } from '../src/git-hooks'
 import { runStagedLint } from '../src/staged-lint'
 
 const cli = new CLI('git-hooks')
@@ -93,6 +93,7 @@ cli
   .action(async (hook: string, options?: { verbose?: boolean, autoRestage?: boolean }) => {
     try {
       if (options?.verbose) {
+        log.config.level = 'debug'
         log.debug(`Running staged lint for hook: ${hook}`)
         log.debug(`Working directory: ${process.cwd()}`)
         if (options?.autoRestage !== undefined) {
@@ -100,7 +101,8 @@ cli
         }
       }
 
-      const success = await runStagedLint(hook, config, process.cwd(), options?.verbose ?? false, options?.autoRestage)
+      const effectiveConfig = getConfigFromPackageJson(process.cwd()) || config
+      const success = await runStagedLint(hook, effectiveConfig, process.cwd(), options?.verbose ?? false, options?.autoRestage)
 
       if (success) {
         log.success('Staged lint completed successfully')

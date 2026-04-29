@@ -230,17 +230,36 @@ export function areHooksInstalled(projectRootPath: string = process.cwd()): bool
 }
 
 /**
+ * Reads git-hooks config from package.json if present
+ */
+export function getConfigFromPackageJson(projectPath: string): GitHooksConfig | undefined {
+  try {
+    const { packageJsonContent } = _getPackageJson(projectPath)
+    if (packageJsonContent && packageJsonContent['git-hooks']) {
+      return packageJsonContent['git-hooks'] as GitHooksConfig
+    }
+  }
+  catch {
+    // package.json not found or not readable
+  }
+  return undefined
+}
+
+/**
  * Parses the config and sets git hooks
  */
 export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: SetHooksFromConfigOptions): void {
-  if (!config || Object.keys(config).length === 0)
-    throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,json}` or `git-hooks.config.{ts,js,mjs,cjs,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
+  // Always use the provided configFile if available, otherwise try package.json in projectRoot, then cached config
+  const configFile = options?.configFile || getConfigFromPackageJson(projectRootPath) || (config && Object.keys(config).length > 0 ? { ...config } : undefined)
 
-  // Always use the provided configFile if available, otherwise use the cached config
-  const configFile = options?.configFile || { ...config }
+  if (!configFile || Object.keys(configFile).length === 0)
+    throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,json}` or `git-hooks.config.{ts,js,mjs,cjs,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
 
   // Set module verbosity strictly from options (CLI flag). Ignore config.verbose for logs.
   VERBOSE = Boolean(options?.verbose)
+  if (VERBOSE) {
+    log.config.level = 'debug'
+  }
 
   _validateStagedLintConfig(configFile)
 

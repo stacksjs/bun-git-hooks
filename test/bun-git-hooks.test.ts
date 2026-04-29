@@ -730,9 +730,8 @@ describe('bun-git-hooks', () => {
               path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks'),
             ),
           )
-          // CLI tests run in fixture dir and use package.json config with pre-push
+          // CLI tests run in fixture dir and use package.json config with pre-commit and pre-push
           expect(installedHooks).toEqual({
-            'commit-msg': `${gitHooks.PREPEND_SCRIPT}bunx gitlint .git/COMMIT_EDITMSG`,
             'pre-commit': `${gitHooks.PREPEND_SCRIPT}exit 1`,
             'pre-push': `${gitHooks.PREPEND_SCRIPT}exit 1`,
           })
@@ -748,9 +747,8 @@ describe('bun-git-hooks', () => {
               path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks'),
             ),
           )
-          // CLI tests run in fixture dir and use package.json config with pre-push
+          // CLI tests run in fixture dir and use package.json config with pre-commit and pre-push
           expect(installedHooks).toEqual({
-            'commit-msg': `${gitHooks.PREPEND_SCRIPT}bunx gitlint .git/COMMIT_EDITMSG`,
             'pre-commit': `${gitHooks.PREPEND_SCRIPT}exit 1`,
             'pre-push': `${gitHooks.PREPEND_SCRIPT}exit 1`,
           })
@@ -774,10 +772,10 @@ describe('bun-git-hooks', () => {
             })
           }).not.toThrow()
 
-          // Verify hooks were created
+          // Verify hooks were created (fixture has pre-commit and pre-push)
           const hooksDir = path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks')
           expect(fs.existsSync(path.join(hooksDir, 'pre-commit'))).toBe(true)
-          expect(fs.existsSync(path.join(hooksDir, 'commit-msg'))).toBe(true)
+          expect(fs.existsSync(path.join(hooksDir, 'pre-push'))).toBe(true)
         })
 
         it('executes successfully without --verbose flag', () => {
@@ -788,10 +786,10 @@ describe('bun-git-hooks', () => {
             })
           }).not.toThrow()
 
-          // Verify hooks were created
+          // Verify hooks were created (fixture has pre-commit and pre-push)
           const hooksDir = path.join(PROJECT_WITH_CONF_IN_PACKAGE_JSON, '.git', 'hooks')
           expect(fs.existsSync(path.join(hooksDir, 'pre-commit'))).toBe(true)
-          expect(fs.existsSync(path.join(hooksDir, 'commit-msg'))).toBe(true)
+          expect(fs.existsSync(path.join(hooksDir, 'pre-push'))).toBe(true)
         })
       })
     })
