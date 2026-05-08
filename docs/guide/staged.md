@@ -2,54 +2,6 @@
 title: Staged File Linting
 description: Run linters and formatters only on staged files with bun-git-hooks
 ---
-}
-```
-
-## Multiple Commands
-
-### Command Array
-
-Run multiple commands sequentially on matching files:
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': {
-    stagedLint: {
-      '*.{ts,tsx}': [
-        'eslint --fix',
-        'prettier --write',
-      ],
-
-      '*.css': [
-        'stylelint --fix',
-        'prettier --write',
-      ],
-    },
-  },
-}
-```
-
-### Execution Order
-
-Commands run in order. If any command fails, the process stops:
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': {
-    stagedLint: {
-      '*.ts': [
-        'eslint --fix --max-warnings=0', // Lint first
-        'prettier --write',               // Then format
-        'tsc --noEmit',                   // Then type check
-      ],
-    },
-  },
-}
-```
-
-## How It Works
-
-1. When you run `git commit`, the pre-commit hook activates
 2. bun-git-hooks gets the list of staged files
 3. For each pattern, it finds matching staged files
 4. It runs the specified commands with the matched files as arguments

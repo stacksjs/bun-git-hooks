@@ -2,55 +2,6 @@
 title: Getting Started with bun-git-hooks
 description: Learn how to set up and use bun-git-hooks for managing Git hooks in your Bun projects
 ---
-  'pre-commit': 'bun run lint',
-  'commit-msg': 'bun commitlint --edit $1',
-}
-```
-
-### JSON
-
-```json
-// git-hooks.config.json
-{
-  "pre-commit": "bun run lint",
-  "commit-msg": "bun commitlint --edit $1"
-}
-```
-
-### Package.json
-
-```json
-// package.json
-{
-  "name": "my-project",
-  "git-hooks": {
-    "pre-commit": "bun run lint",
-    "commit-msg": "bun commitlint --edit $1"
-  }
-}
-```
-
-## Basic Hook Configuration
-
-### Single Command
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint',
-}
-```
-
-### Multiple Commands
-
-Chain multiple commands with `&&`:
-
-```typescript
-const config: GitHooksConfig = {
-  'pre-commit': 'bun run lint && bun run test && bun run typecheck',
-  'pre-push': 'bun run build && bun run test:e2e',
-}
-```
-
 ### With Staged File Linting
 
 Run linters only on staged files (pre-commit only):

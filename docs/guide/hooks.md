@@ -2,54 +2,6 @@
 title: Hook Types
 description: Complete guide to all Git hook types supported by bun-git-hooks
 ---
-**Use cases:**
-
-- Enforce commit message format (conventional commits)
-- Check for required prefixes
-- Validate message length
-
-**Example with commitlint:**
-
-```bash
-
-# Install commitlint
-
-bun add -D @commitlint/cli @commitlint/config-conventional
-```
-
-```typescript
-// commitlint.config.ts
-export default {
-  extends: ['@commitlint/config-conventional'],
-  rules: {
-    'type-enum': [2, 'always', [
-      'feat', 'fix', 'docs', 'style', 'refactor',
-      'test', 'chore', 'perf', 'ci', 'build',
-    ]],
-    'subject-case': [2, 'always', 'lower-case'],
-  },
-}
-```
-
-### post-commit
-
-Runs after a commit is created. Used for notifications or cleanup.
-
-```typescript
-const config: GitHooksConfig = {
-  'post-commit': 'echo "Commit created successfully!"',
-}
-```
-
-**Use cases:**
-
-- Send notifications
-- Update local documentation
-- Trigger builds
-
-### pre-push
-
-Runs before pushing to a remote. This is where you run expensive checks.
 
 ```typescript
 const config: GitHooksConfig = {
