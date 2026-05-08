@@ -85,11 +85,11 @@
   },
   "git-hooks": {
     "pre-commit": {
-      "stagedLint": {
+      "staged-lint": {
         "*.{js,ts,json,yaml,yml,md}": "bunx --bun pickier lint --fix"
       },
       "autoRestage": true
     },
-    "commit-msg": "bunx --bun @stacksjs/gitlint --edit .git/COMMIT_EDITMSG"
+    "commit-msg": "bunx gitlint --edit .git/COMMIT_EDITMSG"
   }
 }
