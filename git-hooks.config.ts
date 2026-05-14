@@ -1,17 +1,12 @@
 import type { GitHooksConfig } from './src/types'
 
 const config: GitHooksConfig = {
-  // Hook-specific configuration (takes precedence)
   'pre-commit': {
     'staged-lint': {
-      '**/*.{js,ts}': [
-        'bunx --bun eslint --fix',
-        'bunx --bun tsc --noEmit'
-      ]
-    }
+      '**/*.{js,ts,json,yaml,yml,md}': 'bunx --bun pickier {files} --fix',
+    },
   },
   'commit-msg': 'bunx gitlint .git/COMMIT_EDITMSG',
-  verbose: true
 }
 
 export default config

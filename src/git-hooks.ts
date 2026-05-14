@@ -1,16 +1,20 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import { config } from './config'
+import { config as defaultConfig } from './config'
 import type { GitHooksConfig, StagedLintConfig, StagedLintTask, SetHooksFromConfigOptions } from './types'
 import { exec } from 'node:child_process'
 import { promisify } from 'node:util'
 import { Logger, italic, bgRed, green, bgYellow } from '@stacksjs/clarity'
 
 const execAsync = promisify(exec)
-const log = new Logger('git-hooks', {
-  showTags: true
-})
+let log: Logger | undefined
+
+function getLog(): Logger {
+  return log ??= new Logger('git-hooks', {
+    showTags: true,
+  })
+}
 
 // Module-level verbose switch. Default: false
 let VERBOSE = false
@@ -194,12 +198,12 @@ export function areHooksInstalled(projectRootPath: string = process.cwd()): bool
     return false
   }
 
-  if (!config || Object.keys(config).length === 0) {
+  if (!defaultConfig || Object.keys(defaultConfig).length === 0) {
     return false
   }
 
   // Check if at least one configured hook exists and contains our script marker
-  const configuredHooks = Object.keys(config).filter(key =>
+  const configuredHooks = Object.keys(defaultConfig).filter(key =>
     VALID_GIT_HOOKS.includes(key as typeof VALID_GIT_HOOKS[number])
   )
 
@@ -249,8 +253,7 @@ export function getConfigFromPackageJson(projectPath: string): GitHooksConfig | 
  * Parses the config and sets git hooks
  */
 export function setHooksFromConfig(projectRootPath: string = process.cwd(), options?: SetHooksFromConfigOptions): void {
-  // Always use the provided configFile if available, otherwise try package.json in projectRoot, then cached config
-  const configFile = options?.configFile || getConfigFromPackageJson(projectRootPath) || (config && Object.keys(config).length > 0 ? { ...config } : undefined)
+  const configFile = options?.configFile || getConfigFromPackageJson(projectRootPath) || (defaultConfig && Object.keys(defaultConfig).length > 0 ? { ...defaultConfig } : undefined)
 
   if (!configFile || Object.keys(configFile).length === 0)
     throw new Error('[ERROR] Config was not found! Please add `.git-hooks.config.{ts,js,mjs,cjs,json}` or `git-hooks.config.{ts,js,mjs,cjs,json}` or the `git-hooks` entry in package.json.\r\nCheck README for details')
@@ -258,7 +261,7 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
   // Set module verbosity strictly from options (CLI flag). Ignore config.verbose for logs.
   VERBOSE = Boolean(options?.verbose)
   if (VERBOSE) {
-    log.config.level = 'debug'
+    getLog().config.level = 'debug'
   }
 
   _validateStagedLintConfig(configFile)
@@ -277,7 +280,7 @@ export function setHooksFromConfig(projectRootPath: string = process.cwd(), opti
   // For programmatic usage, fall back to config file setting
   const verbose = options?.verbose !== undefined ? options.verbose : (configFile.verbose ?? false)
   if (verbose) {
-    log.debug(`Hook Keys: ${logKeys}`)
+    getLog().debug(`Hook Keys: ${logKeys}`)
   }
   for (const hook of VALID_GIT_HOOKS) {
     if (Object.prototype.hasOwnProperty.call(configFile, hook)) {
@@ -347,7 +350,7 @@ else {
 
   const addOrModify = fs.existsSync(hookPath) ? 'Modify' : 'Add'
   if (verbose) {
-    log.debug(`${addOrModify} ${italic(hook)} hook`)
+    getLog().debug(`${addOrModify} ${italic(hook)} hook`)
   }
 
   fs.writeFileSync(hookPath, hookCommand, { mode: 0o755 })
@@ -369,12 +372,12 @@ function _removeHook(hook: string, projectRoot = process.cwd(), verbose = false)
   const hookPath = path.normalize(`${gitRoot}/hooks/${hook}`)
 
   if (fs.existsSync(hookPath)){
-    if (VERBOSE) log.debug(`Hook ${hook} is not set, removing!`)
+    if (VERBOSE) getLog().debug(`Hook ${hook} is not set, removing!`)
     fs.unlinkSync(hookPath)
   }
 
   if (verbose)
-    log.success(`Successfully removed the ${hook} hook`)
+    getLog().success(`Successfully removed the ${hook} hook`)
 }
 
 /**

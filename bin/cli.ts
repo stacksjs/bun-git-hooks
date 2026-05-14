@@ -3,8 +3,8 @@ import process from 'node:process'
 import { CLI } from '@stacksjs/clapp'
 import { Logger } from '@stacksjs/clarity'
 import { version } from '../package.json'
-import { config } from '../src/config'
-import { removeHooks, setHooksFromConfig, getConfigFromPackageJson } from '../src/git-hooks'
+import { getConfig } from '../src/config'
+import { removeHooks, setHooksFromConfig } from '../src/git-hooks'
 import { runStagedLint } from '../src/staged-lint'
 
 const cli = new CLI('git-hooks')
@@ -44,11 +44,12 @@ cli
       }
 
       if (configPath) {
-        const config = await import(configPath)
-        setHooksFromConfig(process.cwd(), { configFile: config, verbose: options?.verbose ?? false })
+        const importedConfig = await import(configPath)
+        setHooksFromConfig(process.cwd(), { configFile: importedConfig.default ?? importedConfig, verbose: options?.verbose ?? false })
       }
       else {
-        setHooksFromConfig(process.cwd(), { verbose: options?.verbose ?? false })
+        const config = await getConfig()
+        setHooksFromConfig(process.cwd(), { configFile: config, verbose: options?.verbose ?? false })
       }
 
       log.success('Successfully set all git hooks')
@@ -101,8 +102,8 @@ cli
         }
       }
 
-      const effectiveConfig = getConfigFromPackageJson(process.cwd()) || config
-      const success = await runStagedLint(hook, effectiveConfig, process.cwd(), options?.verbose ?? false, options?.autoRestage)
+      const config = await getConfig()
+      const success = await runStagedLint(hook, config, process.cwd(), options?.verbose ?? false, options?.autoRestage)
 
       if (success) {
         log.success('Staged lint completed successfully')
