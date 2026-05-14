@@ -1,3 +1,180 @@
+[Compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.3.1...v0.3.2)
+
+### 🐛 Bug Fixes
+
+- load project staged-lint config ([1bbb26f](https://github.com/stacksjs/bun-git-hooks/commit/1bbb26f))
+- add setup-bun to publish-commit job ([34322bb](https://github.com/stacksjs/bun-git-hooks/commit/34322bb))
+
+### 📚 Documentation
+
+- trim duplicated config snippets; fix gitlint pkg path ([cf43b66](https://github.com/stacksjs/bun-git-hooks/commit/cf43b66))
+
+### 🤖 Continuous Integration
+
+- drop redundant setup-bun (pantry installs bun via deps.yaml) ([c87d536](https://github.com/stacksjs/bun-git-hooks/commit/c87d536))
+
+### 🧹 Chores
+
+- release v0.3.2 ([9b15736](https://github.com/stacksjs/bun-git-hooks/commit/9b15736))
+- add patch release script ([ae66f5d](https://github.com/stacksjs/bun-git-hooks/commit/ae66f5d))
+- ignore pantry directory ([3a1d632](https://github.com/stacksjs/bun-git-hooks/commit/3a1d632))
+- **ci**: bump actions/checkout to v6, actions/cache to v5 ([549a0b2](https://github.com/stacksjs/bun-git-hooks/commit/549a0b2))
+- refresh bun.lock and apply pickier --fix ([55c7db2](https://github.com/stacksjs/bun-git-hooks/commit/55c7db2))
+- refresh bun.lock ([37c1b99](https://github.com/stacksjs/bun-git-hooks/commit/37c1b99))
+- fix CI errors ([a93e385](https://github.com/stacksjs/bun-git-hooks/commit/a93e385))
+- fresh install to pick up dtsx 0.9.14 and bunfig 0.15.9 ([259d177](https://github.com/stacksjs/bun-git-hooks/commit/259d177))
+- fresh install to pick up pickier 0.1.21 ([781c939](https://github.com/stacksjs/bun-git-hooks/commit/781c939))
+- minor updates ([bf17729](https://github.com/stacksjs/bun-git-hooks/commit/bf17729))
+- fix lint errors ([d27db28](https://github.com/stacksjs/bun-git-hooks/commit/d27db28))
+- auto-fix lint errors ([a2c1755](https://github.com/stacksjs/bun-git-hooks/commit/a2c1755))
+- include md in pickier lint extensions ([f8181d9](https://github.com/stacksjs/bun-git-hooks/commit/f8181d9))
+- update dependencies ([13a09df](https://github.com/stacksjs/bun-git-hooks/commit/13a09df))
+- repo cleanup and modernization ([7f3b6dc](https://github.com/stacksjs/bun-git-hooks/commit/7f3b6dc))
+- remove @stacksjs/docs ([415c0dc](https://github.com/stacksjs/bun-git-hooks/commit/415c0dc))
+- use Pantry action for publish-commit and add job dependencies ([f007431](https://github.com/stacksjs/bun-git-hooks/commit/f007431))
+- remove file ignores from pickier config ([a4023b3](https://github.com/stacksjs/bun-git-hooks/commit/a4023b3))
+- fix lint warnings ([01a1b28](https://github.com/stacksjs/bun-git-hooks/commit/01a1b28))
+- fix lint warnings ([91efae9](https://github.com/stacksjs/bun-git-hooks/commit/91efae9))
+- remove .pickierignore ([4f9c43d](https://github.com/stacksjs/bun-git-hooks/commit/4f9c43d))
+- update better-dx to ^0.2.7 ([0b2f6da](https://github.com/stacksjs/bun-git-hooks/commit/0b2f6da))
+- enrich CLAUDE.md with detailed project context from README ([0aabb16](https://github.com/stacksjs/bun-git-hooks/commit/0aabb16))
+- replace cac with @stacksjs/clapp and update CLAUDE.md ([22da3cd](https://github.com/stacksjs/bun-git-hooks/commit/22da3cd))
+- add proper claude code guidelines ([4527f91](https://github.com/stacksjs/bun-git-hooks/commit/4527f91))
+- use pantry monorepo action instead of pantry-setup ([0e6b161](https://github.com/stacksjs/bun-git-hooks/commit/0e6b161))
+- minor updates ([eb0ffb7](https://github.com/stacksjs/bun-git-hooks/commit/eb0ffb7))
+- wip ([e10bc0f](https://github.com/stacksjs/bun-git-hooks/commit/e10bc0f))
+- wip ([066607f](https://github.com/stacksjs/bun-git-hooks/commit/066607f))
+- wip ([f329972](https://github.com/stacksjs/bun-git-hooks/commit/f329972))
+- wip ([902a85d](https://github.com/stacksjs/bun-git-hooks/commit/902a85d))
+- wip ([f9298a3](https://github.com/stacksjs/bun-git-hooks/commit/f9298a3))
+- wip ([585c91b](https://github.com/stacksjs/bun-git-hooks/commit/585c91b))
+- wip ([e6535e0](https://github.com/stacksjs/bun-git-hooks/commit/e6535e0))
+- wip ([8cc97da](https://github.com/stacksjs/bun-git-hooks/commit/8cc97da))
+- wip ([cb37dd0](https://github.com/stacksjs/bun-git-hooks/commit/cb37dd0))
+- wip ([2a5fa76](https://github.com/stacksjs/bun-git-hooks/commit/2a5fa76))
+- wip ([a755a7d](https://github.com/stacksjs/bun-git-hooks/commit/a755a7d))
+- wip ([cbe9f29](https://github.com/stacksjs/bun-git-hooks/commit/cbe9f29))
+- wip ([f92bf35](https://github.com/stacksjs/bun-git-hooks/commit/f92bf35))
+- wip ([8aa1b2a](https://github.com/stacksjs/bun-git-hooks/commit/8aa1b2a))
+- wip ([0ef11c4](https://github.com/stacksjs/bun-git-hooks/commit/0ef11c4))
+- wip ([6c239fd](https://github.com/stacksjs/bun-git-hooks/commit/6c239fd))
+- wip ([bd40922](https://github.com/stacksjs/bun-git-hooks/commit/bd40922))
+- wip ([714fc33](https://github.com/stacksjs/bun-git-hooks/commit/714fc33))
+- **deps**: update all non-major dependencies (#65) ([deeb606](https://github.com/stacksjs/bun-git-hooks/commit/deeb606)) ([#65](https://github.com/stacksjs/bun-git-hooks/issues/65), [#65](https://github.com/stacksjs/bun-git-hooks/issues/65))
+- **deps**: update actions/checkout action to v6 (#67) ([7cef897](https://github.com/stacksjs/bun-git-hooks/commit/7cef897)) ([#67](https://github.com/stacksjs/bun-git-hooks/issues/67), [#67](https://github.com/stacksjs/bun-git-hooks/issues/67))
+- **deps**: update stacksjs/action-releaser action to v1.2.7 (#62) ([88cd294](https://github.com/stacksjs/bun-git-hooks/commit/88cd294)) ([#62](https://github.com/stacksjs/bun-git-hooks/issues/62), [#62](https://github.com/stacksjs/bun-git-hooks/issues/62))
+- wip ([367ebab](https://github.com/stacksjs/bun-git-hooks/commit/367ebab))
+- **deps**: update all non-major dependencies (#61) ([8292457](https://github.com/stacksjs/bun-git-hooks/commit/8292457)) ([#61](https://github.com/stacksjs/bun-git-hooks/issues/61), [#61](https://github.com/stacksjs/bun-git-hooks/issues/61))
+- **deps**: update dependency @stacksjs/bumpx to ^0.2.4 (#60) ([50bf8ef](https://github.com/stacksjs/bun-git-hooks/commit/50bf8ef)) ([#60](https://github.com/stacksjs/bun-git-hooks/issues/60), [#60](https://github.com/stacksjs/bun-git-hooks/issues/60))
+- **deps**: update dependency @stacksjs/bumpx to ^0.2.3 (#59) ([0987760](https://github.com/stacksjs/bun-git-hooks/commit/0987760)) ([#59](https://github.com/stacksjs/bun-git-hooks/issues/59), [#59](https://github.com/stacksjs/bun-git-hooks/issues/59))
+- **deps**: update dependency buddy-bot to ^0.9.11 (#57) ([a4c2d2c](https://github.com/stacksjs/bun-git-hooks/commit/a4c2d2c)) ([#57](https://github.com/stacksjs/bun-git-hooks/issues/57), [#57](https://github.com/stacksjs/bun-git-hooks/issues/57))
+- **deps**: update actions/checkout action to v5 (#43) ([ed81c04](https://github.com/stacksjs/bun-git-hooks/commit/ed81c04)) ([#43](https://github.com/stacksjs/bun-git-hooks/issues/43), [#43](https://github.com/stacksjs/bun-git-hooks/issues/43))
+- update og-image and cover ([a703d02](https://github.com/stacksjs/bun-git-hooks/commit/a703d02))
+- lint ([4f642a2](https://github.com/stacksjs/bun-git-hooks/commit/4f642a2))
+
+### ⏪ Reverts
+
+- keep staged-lint kebab + bunx gitlint shorthand ([987f2a8](https://github.com/stacksjs/bun-git-hooks/commit/987f2a8))
+
+### 📄 Miscellaneous
+
+- Merge pull request #42 from stacksjs/renovate/all-minor-patch ([edabcdc](https://github.com/stacksjs/bun-git-hooks/commit/edabcdc)) ([#42](https://github.com/stacksjs/bun-git-hooks/issues/42), [#42](https://github.com/stacksjs/bun-git-hooks/issues/42))
+
+### Contributors
+
+- Chris <chrisbreuer93@gmail.com>
+- cab-mikee <mike.cabz32@gmail.com>
+- glennmichael123 <gtorregosa@gmail.com>
+- renovate[bot] <29139614+renovate[bot]@users.noreply.github.com>
+
+[Compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.3.1...HEAD)
+
+### 🐛 Bug Fixes
+
+- load project staged-lint config ([1bbb26f](https://github.com/stacksjs/bun-git-hooks/commit/1bbb26f))
+- add setup-bun to publish-commit job ([34322bb](https://github.com/stacksjs/bun-git-hooks/commit/34322bb))
+
+### 📚 Documentation
+
+- trim duplicated config snippets; fix gitlint pkg path ([cf43b66](https://github.com/stacksjs/bun-git-hooks/commit/cf43b66))
+
+### 🤖 Continuous Integration
+
+- drop redundant setup-bun (pantry installs bun via deps.yaml) ([c87d536](https://github.com/stacksjs/bun-git-hooks/commit/c87d536))
+
+### 🧹 Chores
+
+- add patch release script ([ae66f5d](https://github.com/stacksjs/bun-git-hooks/commit/ae66f5d))
+- ignore pantry directory ([3a1d632](https://github.com/stacksjs/bun-git-hooks/commit/3a1d632))
+- **ci**: bump actions/checkout to v6, actions/cache to v5 ([549a0b2](https://github.com/stacksjs/bun-git-hooks/commit/549a0b2))
+- refresh bun.lock and apply pickier --fix ([55c7db2](https://github.com/stacksjs/bun-git-hooks/commit/55c7db2))
+- refresh bun.lock ([37c1b99](https://github.com/stacksjs/bun-git-hooks/commit/37c1b99))
+- fix CI errors ([a93e385](https://github.com/stacksjs/bun-git-hooks/commit/a93e385))
+- fresh install to pick up dtsx 0.9.14 and bunfig 0.15.9 ([259d177](https://github.com/stacksjs/bun-git-hooks/commit/259d177))
+- fresh install to pick up pickier 0.1.21 ([781c939](https://github.com/stacksjs/bun-git-hooks/commit/781c939))
+- minor updates ([bf17729](https://github.com/stacksjs/bun-git-hooks/commit/bf17729))
+- fix lint errors ([d27db28](https://github.com/stacksjs/bun-git-hooks/commit/d27db28))
+- auto-fix lint errors ([a2c1755](https://github.com/stacksjs/bun-git-hooks/commit/a2c1755))
+- include md in pickier lint extensions ([f8181d9](https://github.com/stacksjs/bun-git-hooks/commit/f8181d9))
+- update dependencies ([13a09df](https://github.com/stacksjs/bun-git-hooks/commit/13a09df))
+- repo cleanup and modernization ([7f3b6dc](https://github.com/stacksjs/bun-git-hooks/commit/7f3b6dc))
+- remove @stacksjs/docs ([415c0dc](https://github.com/stacksjs/bun-git-hooks/commit/415c0dc))
+- use Pantry action for publish-commit and add job dependencies ([f007431](https://github.com/stacksjs/bun-git-hooks/commit/f007431))
+- remove file ignores from pickier config ([a4023b3](https://github.com/stacksjs/bun-git-hooks/commit/a4023b3))
+- fix lint warnings ([01a1b28](https://github.com/stacksjs/bun-git-hooks/commit/01a1b28))
+- fix lint warnings ([91efae9](https://github.com/stacksjs/bun-git-hooks/commit/91efae9))
+- remove .pickierignore ([4f9c43d](https://github.com/stacksjs/bun-git-hooks/commit/4f9c43d))
+- update better-dx to ^0.2.7 ([0b2f6da](https://github.com/stacksjs/bun-git-hooks/commit/0b2f6da))
+- enrich CLAUDE.md with detailed project context from README ([0aabb16](https://github.com/stacksjs/bun-git-hooks/commit/0aabb16))
+- replace cac with @stacksjs/clapp and update CLAUDE.md ([22da3cd](https://github.com/stacksjs/bun-git-hooks/commit/22da3cd))
+- add proper claude code guidelines ([4527f91](https://github.com/stacksjs/bun-git-hooks/commit/4527f91))
+- use pantry monorepo action instead of pantry-setup ([0e6b161](https://github.com/stacksjs/bun-git-hooks/commit/0e6b161))
+- minor updates ([eb0ffb7](https://github.com/stacksjs/bun-git-hooks/commit/eb0ffb7))
+- wip ([e10bc0f](https://github.com/stacksjs/bun-git-hooks/commit/e10bc0f))
+- wip ([066607f](https://github.com/stacksjs/bun-git-hooks/commit/066607f))
+- wip ([f329972](https://github.com/stacksjs/bun-git-hooks/commit/f329972))
+- wip ([902a85d](https://github.com/stacksjs/bun-git-hooks/commit/902a85d))
+- wip ([f9298a3](https://github.com/stacksjs/bun-git-hooks/commit/f9298a3))
+- wip ([585c91b](https://github.com/stacksjs/bun-git-hooks/commit/585c91b))
+- wip ([e6535e0](https://github.com/stacksjs/bun-git-hooks/commit/e6535e0))
+- wip ([8cc97da](https://github.com/stacksjs/bun-git-hooks/commit/8cc97da))
+- wip ([cb37dd0](https://github.com/stacksjs/bun-git-hooks/commit/cb37dd0))
+- wip ([2a5fa76](https://github.com/stacksjs/bun-git-hooks/commit/2a5fa76))
+- wip ([a755a7d](https://github.com/stacksjs/bun-git-hooks/commit/a755a7d))
+- wip ([cbe9f29](https://github.com/stacksjs/bun-git-hooks/commit/cbe9f29))
+- wip ([f92bf35](https://github.com/stacksjs/bun-git-hooks/commit/f92bf35))
+- wip ([8aa1b2a](https://github.com/stacksjs/bun-git-hooks/commit/8aa1b2a))
+- wip ([0ef11c4](https://github.com/stacksjs/bun-git-hooks/commit/0ef11c4))
+- wip ([6c239fd](https://github.com/stacksjs/bun-git-hooks/commit/6c239fd))
+- wip ([bd40922](https://github.com/stacksjs/bun-git-hooks/commit/bd40922))
+- wip ([714fc33](https://github.com/stacksjs/bun-git-hooks/commit/714fc33))
+- **deps**: update all non-major dependencies (#65) ([deeb606](https://github.com/stacksjs/bun-git-hooks/commit/deeb606)) ([#65](https://github.com/stacksjs/bun-git-hooks/issues/65), [#65](https://github.com/stacksjs/bun-git-hooks/issues/65))
+- **deps**: update actions/checkout action to v6 (#67) ([7cef897](https://github.com/stacksjs/bun-git-hooks/commit/7cef897)) ([#67](https://github.com/stacksjs/bun-git-hooks/issues/67), [#67](https://github.com/stacksjs/bun-git-hooks/issues/67))
+- **deps**: update stacksjs/action-releaser action to v1.2.7 (#62) ([88cd294](https://github.com/stacksjs/bun-git-hooks/commit/88cd294)) ([#62](https://github.com/stacksjs/bun-git-hooks/issues/62), [#62](https://github.com/stacksjs/bun-git-hooks/issues/62))
+- wip ([367ebab](https://github.com/stacksjs/bun-git-hooks/commit/367ebab))
+- **deps**: update all non-major dependencies (#61) ([8292457](https://github.com/stacksjs/bun-git-hooks/commit/8292457)) ([#61](https://github.com/stacksjs/bun-git-hooks/issues/61), [#61](https://github.com/stacksjs/bun-git-hooks/issues/61))
+- **deps**: update dependency @stacksjs/bumpx to ^0.2.4 (#60) ([50bf8ef](https://github.com/stacksjs/bun-git-hooks/commit/50bf8ef)) ([#60](https://github.com/stacksjs/bun-git-hooks/issues/60), [#60](https://github.com/stacksjs/bun-git-hooks/issues/60))
+- **deps**: update dependency @stacksjs/bumpx to ^0.2.3 (#59) ([0987760](https://github.com/stacksjs/bun-git-hooks/commit/0987760)) ([#59](https://github.com/stacksjs/bun-git-hooks/issues/59), [#59](https://github.com/stacksjs/bun-git-hooks/issues/59))
+- **deps**: update dependency buddy-bot to ^0.9.11 (#57) ([a4c2d2c](https://github.com/stacksjs/bun-git-hooks/commit/a4c2d2c)) ([#57](https://github.com/stacksjs/bun-git-hooks/issues/57), [#57](https://github.com/stacksjs/bun-git-hooks/issues/57))
+- **deps**: update actions/checkout action to v5 (#43) ([ed81c04](https://github.com/stacksjs/bun-git-hooks/commit/ed81c04)) ([#43](https://github.com/stacksjs/bun-git-hooks/issues/43), [#43](https://github.com/stacksjs/bun-git-hooks/issues/43))
+- update og-image and cover ([a703d02](https://github.com/stacksjs/bun-git-hooks/commit/a703d02))
+- lint ([4f642a2](https://github.com/stacksjs/bun-git-hooks/commit/4f642a2))
+
+### ⏪ Reverts
+
+- keep staged-lint kebab + bunx gitlint shorthand ([987f2a8](https://github.com/stacksjs/bun-git-hooks/commit/987f2a8))
+
+### 📄 Miscellaneous
+
+- Merge pull request #42 from stacksjs/renovate/all-minor-patch ([edabcdc](https://github.com/stacksjs/bun-git-hooks/commit/edabcdc)) ([#42](https://github.com/stacksjs/bun-git-hooks/issues/42), [#42](https://github.com/stacksjs/bun-git-hooks/issues/42))
+
+### Contributors
+
+- Chris <chrisbreuer93@gmail.com>
+- cab-mikee <mike.cabz32@gmail.com>
+- glennmichael123 <gtorregosa@gmail.com>
+- renovate[bot] <29139614+renovate[bot]@users.noreply.github.com>
+
 [Compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.3.0...v0.3.1)
 
 ### 🧹 Chores
