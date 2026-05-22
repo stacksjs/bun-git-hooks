@@ -65,7 +65,7 @@
     "changelog": "bunx logsmith --verbose",
     "changelog:generate": "bunx logsmith --output CHANGELOG.md",
     "release": "bunx --bun bumpx prompt --recursive --all",
-    "release:patch": "bun --bun run changelog:generate && bunx --bun bumpx patch --recursive --all --yes",
+    "release:patch": "bunx --bun bumpx patch --recursive --all --yes",
     "dev:docs": "bun --bun vitepress dev docs",
     "build:docs": "bun --bun vitepress build docs",
     "preview:docs": "bun --bun vitepress preview docs",
