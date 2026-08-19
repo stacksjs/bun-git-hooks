@@ -1,12 +1,19 @@
-import type { BunpressConfig } from 'bunpress'
+import type { BunPressConfig } from '@stacksjs/bunpress'
 
-const config: BunpressConfig = {
-  name: 'bun-git-hooks',
+const config: BunPressConfig = {
+  title: 'bun-git-hooks',
   description: 'A Bun-optimized TypeScript library for managing Git hooks with a robust set of configuration options.',
   url: 'https://bun-git-hooks.stacksjs.org',
 
-  theme: {
-    primaryColor: '#10B981',
+  themeConfig: {
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/stacksjs/bun-git-hooks' },
+      { icon: 'discord', link: 'https://discord.gg/stacksjs' },
+      { icon: 'twitter', link: 'https://twitter.com/stacksjs' },
+    ],
+    colors: {
+      primary: '#10B981',
+    },
   },
 
   nav: [
@@ -60,11 +67,6 @@ const config: BunpressConfig = {
     ['meta', { name: 'keywords', content: 'git hooks, bun, typescript, pre-commit, lint-staged, husky alternative' }],
   ],
 
-  socialLinks: [
-    { icon: 'github', link: 'https://github.com/stacksjs/bun-git-hooks' },
-    { icon: 'discord', link: 'https://discord.gg/stacksjs' },
-    { icon: 'twitter', link: 'https://twitter.com/stacksjs' },
-  ],
 }
 
 export default config
