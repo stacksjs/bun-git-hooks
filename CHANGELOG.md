@@ -1,3 +1,34 @@
+[Compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.3.2...v0.3.3)
+
+## 🐛 Bug Fixes
+
+- **scripts**: stop double-generating CHANGELOG on release ([8b5ed23](https://github.com/stacksjs/bun-git-hooks/commit/8b5ed23)) _(by Glenn Michael Torregosa <gtorregosa@gmail.com>)_
+
+## ⚡ Performance Improvements
+
+- **build**: minify the published bundles ([418d4b7](https://github.com/stacksjs/bun-git-hooks/commit/418d4b7)) _(by Chris <chrisbreuer93@gmail.com>)_
+
+## 📚 Documentation
+
+- link the community as stacksjs.com/discord ([e270862](https://github.com/stacksjs/bun-git-hooks/commit/e270862)) _(by Chris <chrisbreuer93@gmail.com>)_
+
+## 🧹 Chores
+
+- release v0.3.3 ([75a80ab](https://github.com/stacksjs/bun-git-hooks/commit/75a80ab)) _(by Chris <chrisbreuer93@gmail.com>)_
+- upgrade to TypeScript 7 ([716861d](https://github.com/stacksjs/bun-git-hooks/commit/716861d)) _(by Chris <chrisbreuer93@gmail.com>)_
+- **deps**: refresh bun.lock to pick up pickier 0.1.37 ([3cfefed](https://github.com/stacksjs/bun-git-hooks/commit/3cfefed)) _(by glennmichael123 <gtorregosa@gmail.com>)_
+- **deps**: refresh bun.lock to pick up pickier 0.1.35 ([6f460dc](https://github.com/stacksjs/bun-git-hooks/commit/6f460dc)) _(by glennmichael123 <gtorregosa@gmail.com>)_
+- **deps**: refresh bun.lock to pick up pickier 0.1.33 ([bb618eb](https://github.com/stacksjs/bun-git-hooks/commit/bb618eb)) _(by glennmichael123 <gtorregosa@gmail.com>)_
+- **deps**: refresh bun.lock to pick up @stacksjs/logsmith 0.2.3 ([dcaabf7](https://github.com/stacksjs/bun-git-hooks/commit/dcaabf7)) _(by glennmichael123 <gtorregosa@gmail.com>)_
+- **deps**: refresh bun.lock to pick up buddy-bot 0.9.20 ([b84c30f](https://github.com/stacksjs/bun-git-hooks/commit/b84c30f)) _(by glennmichael123 <gtorregosa@gmail.com>)_
+- **deps**: bump better-dx to ^0.2.15 ([b6356ee](https://github.com/stacksjs/bun-git-hooks/commit/b6356ee)) _(by glennmichael123 <gtorregosa@gmail.com>)_
+
+## Contributors
+
+- _Chris <chrisbreuer93@gmail.com>_
+- _Glenn Michael Torregosa <gtorregosa@gmail.com>_
+- _glennmichael123 <gtorregosa@gmail.com>_
+
 [Compare changes](https://github.com/stacksjs/bun-git-hooks/compare/v0.3.1...v0.3.2)
 
 ### 🐛 Bug Fixes

@@ -1,6 +1,6 @@
 {
   "name": "staged-lint-example",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "git-hooks": {
     "pre-commit": {
       "stagedLint": {
