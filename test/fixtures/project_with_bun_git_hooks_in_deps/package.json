@@ -2,6 +2,6 @@
   "name": "test-package",
   "version": "0.3.3",
   "dependencies": {
-    "bun-git-hooks": "*"
+    "bun-git-hooks": "*0.3.3"
   }
 }
