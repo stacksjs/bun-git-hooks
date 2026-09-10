@@ -81,9 +81,9 @@
     "format:fix": "bunx --bun pickier . --format --write"
   },
   "devDependencies": {
-    "@stacksjs/bunpress": "^0.2.11",
-    "@stacksjs/clapp": "^0.2.0",
-    "better-dx": "^0.2.15"
+    "@stacksjs/bunpress": "^0.2.14",
+    "@stacksjs/clapp": "^0.2.16",
+    "better-dx": "^0.2.25"
   },
   "git-hooks": {
     "pre-commit": {
