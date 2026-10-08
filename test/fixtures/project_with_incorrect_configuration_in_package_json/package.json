@@ -2,7 +2,7 @@
   "name": "bun-git-hooks-test-package",
   "version": "0.3.3",
   "devDependencies": {
-    "bun-git-hooks": "0.1.0"
+    "bun-git-hooks": "0.3.3"
   },
   "git-hooks": {
     "invalid-hook-name": "echo test",
